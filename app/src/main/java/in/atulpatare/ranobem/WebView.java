@@ -15,7 +15,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import in.atulpatare.ranobem.databinding.ActivityWebViewBinding;
 

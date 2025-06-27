@@ -51,6 +51,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final ItemPageBinding binding;
+
         public MyViewHolder(@NonNull ItemPageBinding binding) {
             super(binding.getRoot());
             this.binding = binding;

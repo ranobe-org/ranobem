@@ -12,17 +12,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 
-import java.util.Objects;
-
 import in.atulpatare.core.models.Manga;
-import in.atulpatare.ranobem.databinding.ActivityDetailsBinding;
 import in.atulpatare.ranobem.config.Config;
+import in.atulpatare.ranobem.databinding.ActivityDetailsBinding;
 import in.atulpatare.ranobem.ui.chapters.ChapterFragment;
 
 public class DetailsActivity extends AppCompatActivity {
     private ActivityDetailsBinding binding;
 
-    private  Manga manga;
+    private Manga manga;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +41,7 @@ public class DetailsActivity extends AppCompatActivity {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 //            manga = getIntent().getParcelableExtra(Config.KEY_MANGA, Manga.class);
 //        } else {
-            manga = getIntent().getParcelableExtra(Config.KEY_MANGA);
+        manga = getIntent().getParcelableExtra(Config.KEY_MANGA);
 //        }
 
         Log.d("DEBUG", manga.toString());

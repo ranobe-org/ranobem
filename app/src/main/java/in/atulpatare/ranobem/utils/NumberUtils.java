@@ -30,7 +30,7 @@ public class NumberUtils {
     }
 
 
-    public static String normalize(float value ) {
+    public static String normalize(float value) {
         DecimalFormat formatter = new DecimalFormat("0.#");
         return formatter.format(value);
     }

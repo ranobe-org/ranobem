@@ -13,31 +13,31 @@
         android:orientation="vertical"
         android:padding="15dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:text="@string/manga_downloader"
-        android:textSize="70sp"
-        android:fontFamily="monospace"
-        android:textColor="?colorPrimary"
-        android:letterSpacing="0.2"
-        android:textStyle="bold"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.2"
+            android:text="@string/manga_downloader"
+            android:textColor="?colorPrimary"
+            android:textSize="70sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/build_with"
-            android:textSize="15sp"
             android:fontFamily="monospace"
             android:letterSpacing="0.2"
-            android:textStyle="bold"/>
+            android:text="@string/build_with"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
             android:layout_marginTop="30dp"
+            android:gravity="end"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
@@ -45,17 +45,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                app:backgroundTint="@color/black"
+                android:text="@string/follow_me_on_x"
                 android:textColor="@color/white"
-                android:text="@string/follow_me_on_x"/>
+                app:backgroundTint="@color/black" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/discord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:backgroundTint="@color/discord"
+                android:text="@string/join_discord"
                 android:textColor="@color/white"
-                android:text="@string/join_discord"/>
+                app:backgroundTint="@color/discord" />
 
         </LinearLayout>
 
@@ -69,15 +69,15 @@
                 android:id="@+id/lightnovels"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:backgroundTint="@color/white"
-                android:text="@string/light_novels"/>
+                android:text="@string/light_novels"
+                app:backgroundTint="@color/white" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/browse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="@string/browse"/>
+                android:text="@string/browse" />
 
         </LinearLayout>
 

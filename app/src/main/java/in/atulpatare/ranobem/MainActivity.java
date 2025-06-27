@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        binding.browse.setOnClickListener( v -> startActivity(new Intent(this, BrowseActivity.class)));
+        binding.browse.setOnClickListener(v -> startActivity(new Intent(this, BrowseActivity.class)));
         binding.discord.setOnClickListener(v -> navigateToLink("https://discord.gg/6CQ6u64dca"));
         binding.x.setOnClickListener(v -> navigateToLink("https://x.com/atul_patare"));
         binding.lightnovels.setOnClickListener(v -> navigateToLink("https://play.google.com/store/apps/details?id=org.ranobe.downloader"));

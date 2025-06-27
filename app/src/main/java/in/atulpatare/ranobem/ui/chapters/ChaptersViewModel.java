@@ -3,7 +3,6 @@ package in.atulpatare.ranobem.ui.chapters;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-
 import java.util.List;
 
 import in.atulpatare.core.models.Chapter;

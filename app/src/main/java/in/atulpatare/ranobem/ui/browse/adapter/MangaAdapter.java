@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-
 import java.util.List;
 
 import in.atulpatare.core.models.Manga;

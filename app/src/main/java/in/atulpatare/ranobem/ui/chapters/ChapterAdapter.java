@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import java.text.DecimalFormat;
 import java.util.List;
 
 import in.atulpatare.core.models.Chapter;

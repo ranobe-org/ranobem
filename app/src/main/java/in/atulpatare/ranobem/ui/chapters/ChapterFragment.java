@@ -32,7 +32,7 @@ import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentChapterBinding;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
 
-public class ChapterFragment extends BottomSheetDialogFragment implements ChapterAdapter.OnChapterItemClickListener{
+public class ChapterFragment extends BottomSheetDialogFragment implements ChapterAdapter.OnChapterItemClickListener {
     private final List<Chapter> originalItems = new ArrayList<>();
     private FragmentChapterBinding binding;
     private ChaptersViewModel viewModel;

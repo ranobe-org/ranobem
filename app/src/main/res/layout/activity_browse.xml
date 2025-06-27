@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.browse.BrowseActivity">
 
     <LinearLayout
@@ -20,8 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search_text"
-            app:endIconDrawable="@drawable/ic_search"
             app:endIconCheckable="true"
+            app:endIconDrawable="@drawable/ic_search"
             app:endIconMode="custom"
             app:placeholderText="@string/start_typing">
 
@@ -34,21 +34,21 @@
                 android:lines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/sort_option_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/sort_options_text"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/sort_option_container"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"
-            android:autofillHints="off"
-            android:id="@+id/sort_options"/>
+            android:hint="@string/sort_options_text">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/sort_options"
+                style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="off" />
+
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

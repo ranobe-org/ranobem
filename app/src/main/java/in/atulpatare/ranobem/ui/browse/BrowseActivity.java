@@ -2,9 +2,6 @@ package in.atulpatare.ranobem.ui.browse;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import androidx.activity.EdgeToEdge;
@@ -22,35 +19,27 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.R;
+import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.ActivityBrowseBinding;
 import in.atulpatare.ranobem.ui.browse.adapter.MangaAdapter;
-import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.ui.details.DetailsActivity;
 import in.atulpatare.ranobem.utils.DisplayUtils;
 import in.atulpatare.ranobem.utils.SpacingDecorator;
 
 public class BrowseActivity extends AppCompatActivity implements MangaAdapter.OnMangaItemClickListener {
 
-    private ActivityBrowseBinding binding;
-
-    private BrowseViewModel viewModel;
-
-    private MangaAdapter adapter;
-
+    private static final int SOURCE_ID = 1;
     private final List<Manga> list = new ArrayList<>();
-
+    private ActivityBrowseBinding binding;
+    private BrowseViewModel viewModel;
+    private MangaAdapter adapter;
     private boolean isLoading = false;
-
     private String selectedSortOption = null;
     private String searchQuery = null;
-
     private int page = 1;
-
-    private static final int SOURCE_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +104,10 @@ public class BrowseActivity extends AppCompatActivity implements MangaAdapter.On
     }
 
     private HashMap<String, String> getQueries() {
-            return  new HashMap<>() {{
-                put("sort", selectedSortOption);
-                put("search", searchQuery);
-            }};
+        return new HashMap<>() {{
+            put("sort", selectedSortOption);
+            put("search", searchQuery);
+        }};
     }
 
     private void setUpSortOptions(HashMap<String, String> stringStringHashMap) {

@@ -1,22 +1,0 @@
-
-§
-;
-android*http://schemas.android.com/apk/res/android9
-4
-app'http://schemas.android.com/apk/res-auto9menu*š
-‘item"O
-'http://schemas.android.com/apk/res-autoshowAsActionifRoom"	(Ê‡Œø2:8"g
-*http://schemas.android.com/apk/res/androidtitle@string/search"	(áƒ„2
-©Àøstring/search0"p
-*http://schemas.android.com/apk/res/androidicon@drawable/ic_search"	(‚€„2
-šœødrawable/ic_search0"]
-*http://schemas.android.com/apk/res/androidid@+id/search"	(Ğ„2
-ƒ ø	id/search0	%*
-…item"O
-'http://schemas.android.com/apk/res-autoshowAsActionifRoom"(Ê‡Œø2:8"c
-*http://schemas.android.com/apk/res/androidtitle@string/sort"(áƒ„2
-°Àøstring/sort0"l
-*http://schemas.android.com/apk/res/androidicon@drawable/ic_sort"(‚€„2
-œødrawable/ic_sort0"Y
-*http://schemas.android.com/apk/res/androidid	@+id/sort"(Ğ„2
-¯ƒ øid/sort0%9
