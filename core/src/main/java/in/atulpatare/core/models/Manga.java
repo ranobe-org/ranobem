@@ -5,11 +5,23 @@ import android.os.Parcelable;
 
 
 public class Manga implements Parcelable {
+    public static final Creator<Manga> CREATOR = new Creator<Manga>() {
+        @Override
+        public Manga createFromParcel(Parcel in) {
+            return new Manga(in);
+        }
+
+        @Override
+        public Manga[] newArray(int size) {
+            return new Manga[size];
+        }
+    };
     public String id, name, url, cover, status, type, summary, author;
     public int rating, sourceId; // out of 10
 
-    public  Manga() {}
 
+    public Manga() {
+    }
 
     protected Manga(Parcel in) {
         id = in.readString();
@@ -23,18 +35,6 @@ public class Manga implements Parcelable {
         rating = in.readInt();
         sourceId = in.readInt();
     }
-
-    public static final Creator<Manga> CREATOR = new Creator<Manga>() {
-        @Override
-        public Manga createFromParcel(Parcel in) {
-            return new Manga(in);
-        }
-
-        @Override
-        public Manga[] newArray(int size) {
-            return new Manga[size];
-        }
-    };
 
     @Override
     public String toString() {

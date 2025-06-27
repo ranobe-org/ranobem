@@ -32,7 +32,7 @@ public class Repository {
                 List<Manga> result;
                 if (queries != null && !queries.isEmpty()) {
                     result = source.search(queries, page);
-                }  else {
+                } else {
                     result = source.mangas(page);
                 }
                 callback.onComplete(result);

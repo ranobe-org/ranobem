@@ -8,7 +8,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ import in.atulpatare.core.util.NumberUtils;
 public class MangaFireTo implements Source {
     private static final int sourceId = 1;
     private static final String baseUrl = "https://mangafire.to";
-    private static final HashMap<String, String>  headers = new HashMap<>() {{
+    private static final HashMap<String, String> headers = new HashMap<>() {{
         put("referer", "https://mangafire.to");
         put("user-agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36");
     }};
@@ -42,7 +41,7 @@ public class MangaFireTo implements Source {
         );
     }
 
-    private String extractIdFromLink (String link) {
+    private String extractIdFromLink(String link) {
         String[] parts = link.split("/");
         String last = parts[parts.length - 1];
         String[] nameParts = last.split("\\.");
@@ -60,7 +59,7 @@ public class MangaFireTo implements Source {
             throw new Exception("Site was unable to load.");
         }
 
-        for (Element e: doc.select("div.unit > div.inner")) {
+        for (Element e : doc.select("div.unit > div.inner")) {
             String link = e.select("a.poster").attr("href").trim();
             String cover = e.select("img").attr("src").trim();
             String name = e.select("div.info > a").text().trim();
@@ -86,7 +85,7 @@ public class MangaFireTo implements Source {
             throw new Exception("Site was unable to load.");
         }
 
-        for (Element e: doc.select("div.unit > div.inner")) {
+        for (Element e : doc.select("div.unit > div.inner")) {
             String link = e.select("a.poster").attr("href").trim();
             String cover = e.select("img").attr("src").trim();
             String name = e.select("div.info > a").text().trim();
@@ -125,10 +124,10 @@ public class MangaFireTo implements Source {
         String html = object.getJSONObject("result").getString("html");
         Element doc = Jsoup.parse(html);
 
-        for (Element e: doc.select("ul > li")) {
+        for (Element e : doc.select("ul > li")) {
             String link = e.select("a").attr("href").trim();
             String name = e.select("a").attr("title").trim();
-            float index =Float.parseFloat(e.select("a").attr("data-number").trim());
+            float index = Float.parseFloat(e.select("a").attr("data-number").trim());
             int id = Integer.parseInt(e.select("a").attr("data-id").trim());
             Chapter item = new Chapter();
             item.id = id;
@@ -162,13 +161,13 @@ public class MangaFireTo implements Source {
     @Override
     public List<Manga> search(Map<String, String> queries, int page) throws Exception {
         String url = baseUrl.concat("/filter?").concat("page=" + page);
-        if(queries.get("sort") != null) {
-            url = url.concat("&sort="+queries.get("sort"));
+        if (queries.get("sort") != null) {
+            url = url.concat("&sort=" + queries.get("sort"));
         } else {
             url = url.concat("&sort=trending");
         }
         if (queries.get("search") != null) {
-            url = url.concat("&keyword="+queries.get("search"));
+            url = url.concat("&keyword=" + queries.get("search"));
         }
         Log.d("DEBUG", url);
         return this.parse(url);

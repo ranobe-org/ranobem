@@ -7,6 +7,17 @@ import java.util.List;
 
 public class Chapter implements Parcelable {
 
+    public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
+        @Override
+        public Chapter createFromParcel(Parcel in) {
+            return new Chapter(in);
+        }
+
+        @Override
+        public Chapter[] newArray(int size) {
+            return new Chapter[size];
+        }
+    };
     public String url;
     public String mangaId;
     public List<String> pages;
@@ -44,18 +55,6 @@ public class Chapter implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
-        @Override
-        public Chapter createFromParcel(Parcel in) {
-            return new Chapter(in);
-        }
-
-        @Override
-        public Chapter[] newArray(int size) {
-            return new Chapter[size];
-        }
-    };
 
     @Override
     public String toString() {
