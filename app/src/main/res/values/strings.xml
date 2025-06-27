@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">MangaD</string>
+    <string name="manga_cover">manga cover</string>
+    <string name="read_info">Read</string>
+    <string name="search">search</string>
+    <string name="sort">sort</string>
+    <string name="start_typing">Start typing...</string>
+    <string name="page">page</string>
+    <string name="manga_downloader">manga now</string>
+    <string name="browse">browse</string>
+    <string name="join_discord">join discord</string>
+    <string name="build_with">build with ❤️</string>
+    <string name="follow_me_on_x">follow me on x</string>
+    <string name="light_novels">light novels?</string>
+    <string name="sort_options_text">Sort</string>
+    <string name="search_text">Search</string>
+</resources>
