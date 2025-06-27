@@ -1,7 +1,5 @@
 package in.atulpatare.core.sources.en;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -52,7 +50,6 @@ public class MangaFireTo implements Source {
     public List<Manga> mangas(int page) throws Exception {
         List<Manga> items = new ArrayList<>();
         String url = baseUrl.concat("/filter?keyword=&sort=trending").concat("&page=" + page);
-        Log.d("DEBUG", url);
         Element doc = Jsoup.parse(HttpClient.GET(url, headers)).selectFirst("div.original");
 
         if (doc == null) {
@@ -169,7 +166,6 @@ public class MangaFireTo implements Source {
         if (queries.get("search") != null) {
             url = url.concat("&keyword=" + queries.get("search"));
         }
-        Log.d("DEBUG", url);
         return this.parse(url);
     }
 

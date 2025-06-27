@@ -32,6 +32,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull PageAdapter.MyViewHolder holder, int position) {
         String page = pages.get(position);
+        holder.binding.pageNumber.setText(String.format("%s/%s", position + 1, pages.size()));
         Glide.with(holder.binding.image.getContext())
                 .load(getGlideWithHeaders(page))
                 .override(Target.SIZE_ORIGINAL)

@@ -30,6 +30,7 @@ import in.atulpatare.core.util.ListUtils;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentChapterBinding;
+import in.atulpatare.ranobem.model.ChapterList;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
 
 public class ChapterFragment extends BottomSheetDialogFragment implements ChapterAdapter.OnChapterItemClickListener {
@@ -118,6 +119,7 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     public void onChapterItemClick(Chapter item) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Config.KEY_CHAPTER, item);
+        bundle.putParcelable(Config.KEY_CHAPTER_LIST, new ChapterList(ListUtils.sortByIndex(originalItems)));
 
         requireActivity().startActivity(new Intent(requireActivity(), ReaderActivity.class).putExtras(bundle));
     }

@@ -18,9 +18,9 @@ public class ListUtils {
         return result;
     }
 
-    public static List<Chapter> sortById(List<Chapter> items) {
+    public static List<Chapter> sortByIndex(List<Chapter> items) {
         List<Chapter> sorted = new ArrayList<>(items);
-        Collections.sort(sorted, (a, b) -> Float.compare(a.id, b.id));
+        Collections.sort(sorted, (a, b) -> Float.compare(a.index, b.index));
         return sorted;
     }
 }
