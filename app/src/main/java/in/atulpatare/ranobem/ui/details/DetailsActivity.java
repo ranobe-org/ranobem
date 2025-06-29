@@ -29,26 +29,8 @@ import in.atulpatare.ranobem.ui.details.sheet.WatchVideoSheet;
 public class DetailsActivity extends AppCompatActivity {
     private ActivityDetailsBinding binding;
 
-    private Manga manga;  private RewardedAd rewardedAd;
-    private final FullScreenContentCallback callback = new FullScreenContentCallback() {
-
-        @Override
-        public void onAdDismissedFullScreenContent() {
-            rewardedAd = null;
-        }
-
-        @Override
-        public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-            rewardedAd = null;
-            loadVideoAd();
-        }
-
-        @Override
-        public void onAdImpression() {
-            rewardedAd = null;
-        }
-
-    };
+    private Manga manga;
+    private RewardedAd rewardedAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +60,25 @@ public class DetailsActivity extends AppCompatActivity {
         if (Config.isFree()) {
             loadVideoAd();
         }
-    }
+    }    private final FullScreenContentCallback callback = new FullScreenContentCallback() {
+
+        @Override
+        public void onAdDismissedFullScreenContent() {
+            rewardedAd = null;
+        }
+
+        @Override
+        public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+            rewardedAd = null;
+            loadVideoAd();
+        }
+
+        @Override
+        public void onAdImpression() {
+            rewardedAd = null;
+        }
+
+    };
 
     @Override
     protected void onDestroy() {
@@ -134,7 +134,6 @@ public class DetailsActivity extends AppCompatActivity {
         binding.progress.hide();
     }
 
-
     private void navigateToChapterList() {
         if (manga == null) return;
         Bundle bundle = new Bundle();
@@ -143,4 +142,7 @@ public class DetailsActivity extends AppCompatActivity {
         chapters.setArguments(bundle);
         chapters.show(getSupportFragmentManager(), "chapters-sheet");
     }
+
+
+
 }
