@@ -2,7 +2,6 @@ package in.atulpatare.ranobem.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -11,16 +10,6 @@ import java.util.List;
 import in.atulpatare.core.models.Chapter;
 
 public class ChapterList implements Parcelable {
-    public List<Chapter> chapters;
-
-    public ChapterList(List<Chapter> chapters) {
-        this.chapters = chapters;
-    }
-
-    protected ChapterList(Parcel in) {
-        chapters = in.createTypedArrayList(Chapter.CREATOR);
-    }
-
     public static final Creator<ChapterList> CREATOR = new Creator<ChapterList>() {
         @Override
         public ChapterList createFromParcel(Parcel in) {
@@ -32,6 +21,15 @@ public class ChapterList implements Parcelable {
             return new ChapterList[size];
         }
     };
+    public List<Chapter> chapters;
+
+    public ChapterList(List<Chapter> chapters) {
+        this.chapters = chapters;
+    }
+
+    protected ChapterList(Parcel in) {
+        chapters = in.createTypedArrayList(Chapter.CREATOR);
+    }
 
     @Override
     public int describeContents() {

@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+Properties values = new Properties()
+values.load(new FileInputStream(project.rootProject.file('local.properties')))
+
 android {
     namespace 'in.atulpatare.ranobem'
     compileSdk 35
@@ -14,6 +17,24 @@ android {
         versionName "2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        resValue("string", "ad_app_id", values.getProperty("ad_app_id", "ca-app-pub-3940256099942544~3347511713"))
+        resValue("string", "ad_read_manga_video_id", values.getProperty("ad_read_manga_video_id", "ca-app-pub-3940256099942544/5224354917"))
+    }
+
+    flavorDimensions "version"
+    productFlavors {
+        free {
+            dimension "version"
+            buildConfigField "boolean", "IS_PRO", "false"
+        }
+        pro {
+            dimension "version"
+            applicationIdSuffix ".pro"
+            versionNameSuffix "-pro"
+
+            buildConfigField "boolean", "IS_PRO", "true"
+        }
     }
 
     buildTypes {
@@ -26,6 +47,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 
     compileOptions {
@@ -39,6 +61,7 @@ dependencies {
     implementation libs.glide
     annotationProcessor libs.compiler
     implementation libs.touchimageview
+    implementation(libs.play.services.ads)
 
     implementation libs.appcompat
     implementation libs.material

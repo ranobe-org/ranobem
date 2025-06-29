@@ -10,34 +10,32 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/toolbar"/>
+        android:layout_above="@id/toolbar" />
 
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:paddingHorizontal="10dp"
-        android:paddingVertical="2dp"
-        android:layout_alignParentBottom="true">
+        android:paddingVertical="2dp">
 
         <TextView
             android:id="@+id/chapter_title"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textAlignment="viewStart"
-            android:maxLines="1"
             style="@style/Widget.Material3.Button.OutlinedButton"
-            />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:textAlignment="viewStart" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/next_chapter"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/next_chapter"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            />
+            android:text="@string/next_chapter" />
     </LinearLayout>
 
 </RelativeLayout>

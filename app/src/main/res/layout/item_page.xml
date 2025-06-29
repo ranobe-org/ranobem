@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/page_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:textAlignment="center"/>
+        android:textAlignment="center" />
 
-<com.ortiz.touchview.TouchImageView
-    android:id="@+id/image"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/page_number"
-    android:adjustViewBounds="true"
-    android:contentDescription="@string/page" />
+    <com.ortiz.touchview.TouchImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/page_number"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/page" />
 
 </RelativeLayout>

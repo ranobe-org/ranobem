@@ -12,8 +12,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import in.atulpatare.core.models.Chapter;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
@@ -61,11 +59,11 @@ public class ReaderActivity extends AppCompatActivity {
         int index = -1;
         for (int i = 0; i < list.chapters.size(); i++) {
             Chapter c = list.chapters.get(i);
-            if (c.index == currentChapter.index ) {
+            if (c.index == currentChapter.index) {
                 index = i;
             }
         }
-        if(index > -1 && list.chapters.size() > (index + 1) ) {
+        if (index > -1 && list.chapters.size() > (index + 1)) {
             Log.d("DEBUG", index + " " + index + 1);
             Log.d("DEBUG first", currentChapter.toString());
             Log.d("DEBUG second", list.chapters.get(index + 1).toString());
