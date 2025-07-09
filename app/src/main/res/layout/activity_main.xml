@@ -81,6 +81,23 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/download_pro_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/download_pro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download_pro"
+                app:backgroundTint="@color/white" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 
