@@ -95,6 +95,24 @@ public class DetailsActivity extends AppCompatActivity {
         if (rewardedAd != null) {
             rewardedAd = null;
         }
+    }
+
+    private void loadVideoAd() {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        RewardedAd.load(this, getString(R.string.ad_read_manga_video_id),
+                adRequest, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        rewardedAd = null;
+                    }
+
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd ad) {
+                        Log.d("DEBUG", "AD LOADED,.....");
+                        rewardedAd = ad;
+                        rewardedAd.setFullScreenContentCallback(callback);
+                    }
+                });
     }    private final FullScreenContentCallback callback = new FullScreenContentCallback() {
 
         @Override
@@ -114,24 +132,6 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
     };
-
-    private void loadVideoAd() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-        RewardedAd.load(this, getString(R.string.ad_read_manga_video_id),
-                adRequest, new RewardedAdLoadCallback() {
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        rewardedAd = null;
-                    }
-
-                    @Override
-                    public void onAdLoaded(@NonNull RewardedAd ad) {
-                        Log.d("DEBUG", "AD LOADED,.....");
-                        rewardedAd = ad;
-                        rewardedAd.setFullScreenContentCallback(callback);
-                    }
-                });
-    }
 
     private void showAdOrNavigate() {
         if (Config.isFree()) {

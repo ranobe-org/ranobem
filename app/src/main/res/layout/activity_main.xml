@@ -100,7 +100,7 @@
                 android:id="@+id/download_pro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:text="@string/download_pro"
                 app:backgroundTint="@color/white" />
 

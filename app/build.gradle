@@ -7,14 +7,14 @@ values.load(new FileInputStream(project.rootProject.file('local.properties')))
 
 android {
     namespace 'in.atulpatare.ranobem'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "in.atulpatare.ranobem"
         minSdk 24
         targetSdk 36
-        versionCode 3
-        versionName "3"
+        versionCode 4
+        versionName "4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

@@ -21,7 +21,7 @@ import in.atulpatare.ranobem.ui.details.DetailsActivity;
 import in.atulpatare.ranobem.utils.DisplayUtils;
 import in.atulpatare.ranobem.utils.SpacingDecorator;
 
-public class LibraryActivity extends AppCompatActivity implements MangaAdapter.OnMangaItemClickListener{
+public class LibraryActivity extends AppCompatActivity implements MangaAdapter.OnMangaItemClickListener {
     private ActivityLibraryBinding binding;
 
     @Override
