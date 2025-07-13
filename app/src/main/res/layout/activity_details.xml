@@ -119,6 +119,23 @@
                 app:icon="@drawable/ic_share" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/remove_from_library"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:text="@string/remove_from_library" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/add_to_library"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:text="@string/add_to_library" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/read_chapter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -16,7 +16,7 @@ import java.util.List;
 import in.atulpatare.ranobem.databinding.ItemPageBinding;
 
 public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> {
-    private List<String> pages;
+    private final List<String> pages;
 
     public PageAdapter(List<String> pages) {
         this.pages = pages;

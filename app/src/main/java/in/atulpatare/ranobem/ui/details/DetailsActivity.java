@@ -2,6 +2,8 @@ package in.atulpatare.ranobem.ui.details;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
+import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.ActivityDetailsBinding;
 import in.atulpatare.ranobem.ui.chapters.ChapterFragment;
 import in.atulpatare.ranobem.ui.details.sheet.WatchVideoSheet;
@@ -44,21 +47,53 @@ public class DetailsActivity extends AppCompatActivity {
             return insets;
         });
 
-        binding.readChapter.setOnClickListener(v -> showAdOrNavigate());
-
         DetailsViewModel viewModel = new ViewModelProvider(this).get(DetailsViewModel.class);
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//            manga = getIntent().getParcelableExtra(Config.KEY_MANGA, Manga.class);
-//        } else {
         manga = getIntent().getParcelableExtra(Config.KEY_MANGA);
-//        }
-
         assert manga != null;
         viewModel.getDetails(manga.sourceId, manga).observe(this, this::setUpUi);
 
+        binding.readChapter.setOnClickListener(v -> showAdOrNavigate());
+        binding.addToLibrary.setOnClickListener(v -> addToLibrary(manga));
+        binding.removeFromLibrary.setOnClickListener(v -> removeFromLibrary(manga));
+
+        checkIfMangaInLibrary(manga.id);
+
         if (Config.isFree()) {
             loadVideoAd();
+        }
+    }
+
+    private void removeFromLibrary(Manga manga) {
+        AppDatabase.databaseExecutor.execute(() ->
+                AppDatabase.getDatabase().mangaDao().delete(manga)
+        );
+        Toast.makeText(this, "Manga deleted from the library", Toast.LENGTH_LONG).show();
+    }
+
+    private void checkIfMangaInLibrary(String id) {
+        AppDatabase.getDatabase().mangaDao().getById(id).observe(this, m -> {
+            if (m != null) {
+                binding.addToLibrary.setVisibility(View.GONE);
+                binding.removeFromLibrary.setVisibility(View.VISIBLE);
+            } else {
+                binding.addToLibrary.setVisibility(View.VISIBLE);
+                binding.removeFromLibrary.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void addToLibrary(Manga manga) {
+        AppDatabase.databaseExecutor.execute(() ->
+                AppDatabase.getDatabase().mangaDao().insert(manga)
+        );
+        Toast.makeText(this, "Manga added to the library", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (rewardedAd != null) {
+            rewardedAd = null;
         }
     }    private final FullScreenContentCallback callback = new FullScreenContentCallback() {
 
@@ -79,14 +114,6 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
     };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (rewardedAd != null) {
-            rewardedAd = null;
-        }
-    }
 
     private void loadVideoAd() {
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -142,6 +169,7 @@ public class DetailsActivity extends AppCompatActivity {
         chapters.setArguments(bundle);
         chapters.show(getSupportFragmentManager(), "chapters-sheet");
     }
+
 
 
 

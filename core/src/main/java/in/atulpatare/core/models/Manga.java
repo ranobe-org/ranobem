@@ -3,7 +3,13 @@ package in.atulpatare.core.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
+@Entity
 public class Manga implements Parcelable {
     public static final Creator<Manga> CREATOR = new Creator<Manga>() {
         @Override
@@ -16,15 +22,19 @@ public class Manga implements Parcelable {
             return new Manga[size];
         }
     };
-    public String id, name, url, cover, status, type, summary, author;
+    @NonNull
+    @PrimaryKey
+    public String id;
+    public String name, url, cover, status, type, summary, author;
     public int rating, sourceId; // out of 10
 
 
     public Manga() {
+        id = "";
     }
 
     protected Manga(Parcel in) {
-        id = in.readString();
+        id = Objects.requireNonNull(in.readString());
         name = in.readString();
         url = in.readString();
         cover = in.readString();

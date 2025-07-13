@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.ActivityMainBinding;
 import in.atulpatare.ranobem.ui.browse.BrowseActivity;
+import in.atulpatare.ranobem.ui.library.LibraryActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,9 +32,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (Config.isFree()) {
-            binding.downloadProContainer.setVisibility(View.VISIBLE);
+            binding.downloadPro.setVisibility(View.VISIBLE);
         }
 
+        binding.library.setOnClickListener(v -> startActivity(new Intent(this, LibraryActivity.class)));
         binding.browse.setOnClickListener(v -> startActivity(new Intent(this, BrowseActivity.class)));
         binding.discord.setOnClickListener(v -> navigateToLink("https://discord.gg/6CQ6u64dca"));
         binding.x.setOnClickListener(v -> navigateToLink("https://x.com/atul_patare"));
