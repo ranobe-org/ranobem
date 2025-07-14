@@ -89,14 +89,6 @@
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/lightnovels"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="@string/light_novels"
-                app:backgroundTint="@color/white" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/download_pro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
