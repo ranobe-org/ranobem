@@ -1,6 +1,8 @@
 package in.atulpatare.ranobem.ui.reader;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,13 +15,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import in.atulpatare.core.models.Chapter;
+import in.atulpatare.ranobem.utils.VrfFetcher;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.ActivityReaderBinding;
 import in.atulpatare.ranobem.model.ChapterList;
 import in.atulpatare.ranobem.ui.chapters.ChaptersViewModel;
 
-public class ReaderActivity extends AppCompatActivity {
+public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCompleteListener {
     ActivityReaderBinding binding;
     Chapter currentChapter;
     ChapterList list;
@@ -46,13 +49,29 @@ public class ReaderActivity extends AppCompatActivity {
         });
 
         viewModel = new ViewModelProvider(this).get(ChaptersViewModel.class);
-        viewModel.getChapter(currentChapter).observe(this, this::setUI);
+//        viewModel.getChapter(currentChapter).observe(this, this::setUI);
+        // patch work
+        loadChapters();
 
         binding.nextChapter.setOnClickListener(v -> loadNextChapter());
 
         if (getNextChapter() == null) {
             binding.nextChapter.setEnabled(false);
         }
+    }
+
+    private void loadChapters() {
+        VrfFetcher.fetchVrf(getApplicationContext(), "https://mangafire.to" + currentChapter.url, "/ajax/read/chapter" , this);
+    }
+    @Override
+    public void onVrf(String vrf) {
+        Chapter c = currentChapter;
+        // https://mangafire.to/ajax/read/kw9j9/chapter/en?vrf=ZBYeRCjYBk0tkZnKW4kTuWBYw641e-csvu6vl7UY4zcaviixmK7VJ-tjpFEsOUq42nE5ZBdEYGJfpA
+        c.url = vrf.replace("https://mangafire.to", "");
+        Log.d("VRF", "chapter url -> " + c.url);
+        new Handler(Looper.getMainLooper()).post(() -> {
+            viewModel.getChapter(c).observe(this, this::setUI);
+        });
     }
 
     private Chapter getNextChapter() {
@@ -77,7 +96,8 @@ public class ReaderActivity extends AppCompatActivity {
         if (next != null) {
             Toast.makeText(ReaderActivity.this, "Getting next chapter", Toast.LENGTH_LONG).show();
             currentChapter = next;
-            viewModel.getChapter(currentChapter).observe(this, this::setUI);
+            VrfFetcher.fetchVrf(getApplicationContext(), "https://mangafire.to" + currentChapter.url, "/ajax/read/chapter" , this);
+//            viewModel.getChapter(currentChapter).observe(this, this::setUI);
         }
     }
 

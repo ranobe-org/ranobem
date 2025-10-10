@@ -3,8 +3,11 @@ package in.atulpatare.ranobem.ui.chapters;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,13 +30,15 @@ import java.util.Locale;
 import in.atulpatare.core.models.Chapter;
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.util.ListUtils;
+import in.atulpatare.core.util.VrfExtractor;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentChapterBinding;
 import in.atulpatare.ranobem.model.ChapterList;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
+import in.atulpatare.ranobem.utils.VrfFetcher;
 
-public class ChapterFragment extends BottomSheetDialogFragment implements ChapterAdapter.OnChapterItemClickListener {
+public class ChapterFragment extends BottomSheetDialogFragment implements ChapterAdapter.OnChapterItemClickListener, VrfFetcher.onCompleteListener {
     private final List<Chapter> originalItems = new ArrayList<>();
     private FragmentChapterBinding binding;
     private ChaptersViewModel viewModel;
@@ -66,7 +71,22 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
 
     private void setUpObservers() {
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
-        viewModel.getChapters(manga).observe(getViewLifecycleOwner(), this::setChapter);
+//        viewModel.getChapters(manga).observe(getViewLifecycleOwner(), this::setChapter);
+        // patch work
+        String url = "https://mangafire.to" + manga.url.replace("/manga", "/read");
+        Log.d("VRF", url);
+        VrfFetcher.fetchVrf(requireContext(), url, "/ajax/read/" + manga.id, this);
+    }
+
+    @Override
+    public void onVrf(String vrf) {
+        Manga m = manga;
+        m.url = vrf.replace("https://mangafire.to", "");
+        Log.d("VRF", "manga url -> " + m.url);
+
+        new Handler(Looper.getMainLooper()).post(() -> {
+            viewModel.getChapters(manga).observe(this, this::setChapter);
+        });
     }
 
     private void setUpUi() {
@@ -134,6 +154,7 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
         }
         return true;
     }
+
 
     public class SearchBarTextWatcher implements TextWatcher {
 

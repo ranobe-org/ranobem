@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         binding.discord.setOnClickListener(v -> navigateToLink("https://discord.gg/6CQ6u64dca"));
         binding.x.setOnClickListener(v -> navigateToLink("https://x.com/atul_patare"));
         binding.downloadPro.setOnClickListener(v -> navigateToLink("https://play.google.com/store/apps/details?id=in.atulpatare.ranobem.pro"));
+        binding.goo.setOnClickListener(v -> startActivity(new Intent(this, WebviewActivity.class)));
     }
 
     private void navigateToLink(String url) {
