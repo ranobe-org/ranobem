@@ -1,0 +1,72 @@
+package in.atulpatare.ranobem.utils;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import androidx.lifecycle.MutableLiveData;
+
+import in.atulpatare.core.util.VrfExtractor;
+
+public class VrfFetcher {
+
+    public interface onCompleteListener {
+        public void onVrf(String vrf);
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    public static void fetchVrf(Context context, String pageUrl, String containing, onCompleteListener listener) {
+        WebView webView = new WebView(context);
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setUserAgentString(
+                "Mozilla/5.0 (Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99 Mobile Safari/537.36"
+        );
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                Log.d("VRF", "Loading: " + url);
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                String reqUrl = request.getUrl().toString();
+                if (reqUrl.contains(containing)) {
+                    Log.d("VRF", reqUrl);
+
+                    if (listener != null) {
+                        listener.onVrf(reqUrl);
+                    }
+
+                    // Clean up shortly after to avoid race condition with LiveData
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> cleanupWebView(webView), 150);
+                }
+                return super.shouldInterceptRequest(view, request);
+            }
+        });
+
+        webView.loadUrl(pageUrl);
+    }
+
+    private static void cleanupWebView(WebView webView) {
+        try {
+            webView.stopLoading();
+            webView.clearHistory();
+            webView.clearCache(true);
+            webView.destroy();
+            Log.d("VRF", "✅ WebView cleaned up");
+        } catch (Exception e) {
+            Log.e("VRF", "Error cleaning up WebView", e);
+        }
+    }
+}

@@ -96,6 +96,15 @@
                 android:text="@string/download_pro"
                 app:backgroundTint="@color/white" />
 
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/goo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="goo"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/discord"/>
+
         </LinearLayout>
 
     </LinearLayout>

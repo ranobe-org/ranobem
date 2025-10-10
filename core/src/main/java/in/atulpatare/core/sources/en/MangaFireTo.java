@@ -115,7 +115,7 @@ public class MangaFireTo implements Source {
     @Override
     public List<Chapter> chapters(Manga m) throws Exception {
         List<Chapter> items = new ArrayList<>();
-        String url = baseUrl.concat("/ajax/read/").concat(m.id).concat("/chapter/en");
+        String url = baseUrl.concat(m.url);
         String response = HttpClient.GET(url, headers);
         JSONObject object = new JSONObject(response);
         String html = object.getJSONObject("result").getString("html");
@@ -142,14 +142,14 @@ public class MangaFireTo implements Source {
     @Override
     public Chapter chapter(Chapter c) throws Exception {
         List<String> items = new ArrayList<>();
-        String url = baseUrl.concat("/ajax/read/chapter/").concat(String.valueOf(c.id));
+        String url = baseUrl.concat(c.url);
         String response = HttpClient.GET(url, headers);
         JSONObject object = new JSONObject(response);
         JSONArray images = object.getJSONObject("result").getJSONArray("images");
 
         for (int i = 0; i < images.length(); i++) {
             JSONArray a = images.getJSONArray(i);
-            items.add(a.getString(0));
+            items.add(a.getString(0).replace("https", "http"));
         }
         c.pages = items;
         return c;
