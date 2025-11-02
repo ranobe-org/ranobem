@@ -64,15 +64,6 @@
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/x"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="@string/follow_me_on_x"
-                android:textColor="@color/white"
-                app:backgroundTint="@color/black" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/discord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -95,15 +86,6 @@
                 android:visibility="gone"
                 android:text="@string/download_pro"
                 app:backgroundTint="@color/white" />
-
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/goo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="goo"
-                android:textColor="@color/white"
-                app:backgroundTint="@color/discord"/>
 
         </LinearLayout>
 

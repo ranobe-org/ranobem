@@ -2,14 +2,13 @@ package in.atulpatare.ranobem.ui.browse;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,17 +22,16 @@ import java.util.List;
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
-import in.atulpatare.ranobem.databinding.ActivityBrowseBinding;
+import in.atulpatare.ranobem.databinding.FragmentBrowseBinding;
 import in.atulpatare.ranobem.ui.browse.adapter.MangaAdapter;
 import in.atulpatare.ranobem.ui.details.DetailsActivity;
 import in.atulpatare.ranobem.utils.DisplayUtils;
 import in.atulpatare.ranobem.utils.SpacingDecorator;
 
-public class BrowseActivity extends AppCompatActivity implements MangaAdapter.OnMangaItemClickListener {
+public class BrowseFragment extends Fragment implements MangaAdapter.OnMangaItemClickListener {
 
     private static final int SOURCE_ID = 1;
     private final List<Manga> list = new ArrayList<>();
-    private ActivityBrowseBinding binding;
     private BrowseViewModel viewModel;
     private MangaAdapter adapter;
     private boolean isLoading = false;
@@ -41,23 +39,18 @@ public class BrowseActivity extends AppCompatActivity implements MangaAdapter.On
     private String searchQuery = null;
     private int page = 1;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        binding = ActivityBrowseBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+    private FragmentBrowseBinding binding;
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentBrowseBinding.inflate(inflater);
 
         viewModel = new ViewModelProvider(this).get(BrowseViewModel.class);
 
         adapter = new MangaAdapter(list, this);
-        DisplayUtils utils = new DisplayUtils(this, R.layout.item_manga);
-        binding.novelList.setLayoutManager(new GridLayoutManager(this, utils.noOfCols()));
+        DisplayUtils utils = new DisplayUtils(requireActivity(), R.layout.item_manga);
+        binding.novelList.setLayoutManager(new GridLayoutManager(requireActivity(), utils.noOfCols()));
         binding.novelList.addItemDecoration(new SpacingDecorator(utils.spacing()));
         binding.novelList.setAdapter(adapter);
         binding.novelList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -80,7 +73,7 @@ public class BrowseActivity extends AppCompatActivity implements MangaAdapter.On
                 isLoading = true;
                 binding.progress.show();
                 page = 1;
-                viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(BrowseActivity.this, (mangas) -> {
+                viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(getViewLifecycleOwner(), (mangas) -> {
                     binding.progress.hide();
                     isLoading = false;
                     list.clear();
@@ -90,8 +83,8 @@ public class BrowseActivity extends AppCompatActivity implements MangaAdapter.On
             }
         });
 
-        viewModel.getError().observe(this, this::setUpError);
-        viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(this, (mangas) -> {
+        viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
+        viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(getViewLifecycleOwner(), (mangas) -> {
             binding.progress.hide();
             isLoading = false;
             int old = list.size();
@@ -100,8 +93,17 @@ public class BrowseActivity extends AppCompatActivity implements MangaAdapter.On
             adapter.notifyItemRangeInserted(old, list.size());
         });
 
-        viewModel.getSortOptions(SOURCE_ID).observe(this, this::setUpSortOptions);
+        viewModel.getSortOptions(SOURCE_ID).observe(getViewLifecycleOwner(), this::setUpSortOptions);
+        return binding.getRoot();
+
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
 
     private HashMap<String, String> getQueries() {
         return new HashMap<>() {{
@@ -112,14 +114,14 @@ public class BrowseActivity extends AppCompatActivity implements MangaAdapter.On
 
     private void setUpSortOptions(HashMap<String, String> stringStringHashMap) {
         List<String> options = new ArrayList<>(stringStringHashMap.keySet());
-        binding.sortOptions.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, options));
+        binding.sortOptions.setAdapter(new ArrayAdapter<String>(requireActivity(), android.R.layout.simple_list_item_1, options));
         binding.sortOptions.setOnItemClickListener((parent, view, position, id) -> {
             selectedSortOption = stringStringHashMap.get(options.get(position));
             viewModel.clearItems();
             isLoading = true;
             binding.progress.show();
             page = 1;
-            viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(BrowseActivity.this, (mangas) -> {
+            viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(this, (mangas) -> {
                 binding.progress.hide();
                 isLoading = false;
                 list.clear();
@@ -139,6 +141,6 @@ public class BrowseActivity extends AppCompatActivity implements MangaAdapter.On
 
     @Override
     public void onMangaItemClick(Manga item) {
-        startActivity(new Intent(this, DetailsActivity.class).putExtra(Config.KEY_MANGA, item));
+        startActivity(new Intent(requireActivity(), DetailsActivity.class).putExtra(Config.KEY_MANGA, item));
     }
 }

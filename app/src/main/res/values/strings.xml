@@ -9,9 +9,7 @@
     <string name="manga_downloader">manga now</string>
     <string name="browse">browse</string>
     <string name="join_discord">join discord</string>
-    <string name="build_with">build with ❤️</string>
-    <string name="follow_me_on_x">follow me on x</string>
-    <string name="light_novels">light novels?</string>
+    <string name="build_with">built with ❤️</string>
     <string name="sort_options_text">Sort</string>
     <string name="search_text">Search</string>
     <string name="next_chapter">next chapter</string>
@@ -23,4 +21,8 @@
     <string name="library">view library</string>
     <string name="remove_from_library">Remove from library</string>
     <string name="no_items_in_the_library">No items in the library!</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_browse">Browse</string>
+    <string name="title_search">Search</string>
+    <string name="title_library">Library</string>
 </resources>

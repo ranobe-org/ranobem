@@ -12,6 +12,12 @@ constraintlayout = "2.2.1"
 okhttp = "4.12.0"
 playServicesAds = "24.4.0"
 touchimageview = "3.7.1"
+lifecycleLivedataKtx = "2.6.1"
+lifecycleViewmodelKtx = "2.6.1"
+navigationFragment = "2.6.0"
+navigationUi = "2.6.0"
+navigationFragmentVersion = "2.9.5"
+navigationUiVersion = "2.9.5"
 
 [libraries]
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
@@ -27,6 +33,12 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 touchimageview = { module = "com.github.MikeOrtiz:TouchImageView", version.ref = "touchimageview" }
+lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
+navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
+androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragmentVersion" }
+androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUiVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
