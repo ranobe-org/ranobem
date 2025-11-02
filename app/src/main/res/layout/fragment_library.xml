@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.library.LibraryActivity">
+    tools:context=".ui.library.LibraryFragment">
 
     <TextView
         android:id="@+id/empty_lib"
@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textSize="20sp"
+        android:visibility="gone"
         android:text="@string/no_items_in_the_library"
         />
 
@@ -30,5 +31,4 @@
         android:layout_alignParentTop="true"
         android:indeterminate="true"
         android:visibility="visible" />
-
 </RelativeLayout>

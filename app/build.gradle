@@ -59,6 +59,12 @@ android {
 dependencies {
     implementation project(path: ':core')
     implementation libs.glide
+    implementation libs.lifecycle.livedata.ktx
+    implementation libs.lifecycle.viewmodel.ktx
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.navigation.ui
     annotationProcessor libs.compiler
     implementation libs.touchimageview
     implementation(libs.play.services.ads)
