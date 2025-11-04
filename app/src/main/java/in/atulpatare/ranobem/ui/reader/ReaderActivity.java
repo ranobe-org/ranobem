@@ -49,7 +49,6 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
         });
 
         viewModel = new ViewModelProvider(this).get(ChaptersViewModel.class);
-//        viewModel.getChapter(currentChapter).observe(this, this::setUI);
         // patch work
         loadChapters();
 
@@ -61,8 +60,14 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
     }
 
     private void loadChapters() {
-        VrfFetcher.fetchVrf(getApplicationContext(), "https://mangafire.to" + currentChapter.url, "/ajax/read/chapter" , this);
+        if (currentChapter.sourceId == 1) {
+
+            VrfFetcher.fetchVrf(getApplicationContext(), "https://mangafire.to" + currentChapter.url, "/ajax/read/chapter", this);
+        } else {
+            viewModel.getChapter(currentChapter).observe(this, this::setUI);
+        }
     }
+
     @Override
     public void onVrf(String vrf) {
         Chapter c = currentChapter;
@@ -96,14 +101,16 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
         if (next != null) {
             Toast.makeText(ReaderActivity.this, "Getting next chapter", Toast.LENGTH_LONG).show();
             currentChapter = next;
-            VrfFetcher.fetchVrf(getApplicationContext(), "https://mangafire.to" + currentChapter.url, "/ajax/read/chapter" , this);
-//            viewModel.getChapter(currentChapter).observe(this, this::setUI);
+            if (currentChapter.sourceId == 1) {
+                VrfFetcher.fetchVrf(getApplicationContext(), "https://mangafire.to" + currentChapter.url, "/ajax/read/chapter", this);
+            } else {
+                viewModel.getChapter(currentChapter).observe(this, this::setUI);
+            }
         }
     }
 
     private void setUI(Chapter chapter) {
-        Log.d("DEBUG", "got next chapter " + chapter);
-        binding.chapterTitle.setText(String.format("%s %s", chapter.index, chapter.name));
+        binding.chapterTitle.setText(String.format("Chapter %s %s", chapter.index, chapter.name));
         binding.list.setLayoutManager(new LinearLayoutManager(this));
         binding.list.setHasFixedSize(false);
         binding.list.setAdapter(new PageAdapter(chapter.pages));

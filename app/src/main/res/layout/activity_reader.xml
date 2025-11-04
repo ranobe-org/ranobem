@@ -26,6 +26,7 @@
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:ellipsize="marquee"
             android:layout_weight="1"
             android:maxLines="1"
             android:textAlignment="viewStart" />

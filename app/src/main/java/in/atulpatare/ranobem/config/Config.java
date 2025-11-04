@@ -8,6 +8,6 @@ public class Config {
     public static final String KEY_CHAPTER_LIST = "chapter_list";
 
     public static boolean isFree() {
-        return !BuildConfig.IS_PRO;
+        return false;
     }
 }

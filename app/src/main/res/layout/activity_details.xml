@@ -68,6 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
+                    android:textAlignment="center"
                     android:textColor="?colorOnSurface"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -97,8 +98,14 @@
             android:layout_below="@id/header_layout"
             android:layout_marginBottom="10dp"
             android:padding="20dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:breakStrategy="simple"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textIsSelectable="true" />
+            android:textIsSelectable="true"
+            android:ellipsize="none"
+            android:singleLine="false"
+            android:scrollHorizontally="false" />
 
         <LinearLayout
             android:id="@+id/buttons_panel"
@@ -142,6 +149,16 @@
                 android:text="@string/read_info" />
 
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/open_in_browser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttons_panel"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentEnd="true"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:text="@string/open_in_browser" />
 
     </RelativeLayout>
 
