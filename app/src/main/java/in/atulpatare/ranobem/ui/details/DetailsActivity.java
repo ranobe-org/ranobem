@@ -1,5 +1,7 @@
 package in.atulpatare.ranobem.ui.details;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -158,6 +160,7 @@ public class DetailsActivity extends AppCompatActivity {
         binding.summary.setText(manga.summary);
         binding.status.setText(manga.status);
         binding.authors.setText(manga.author);
+        binding.openInBrowser.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(manga.url))));
         binding.progress.hide();
     }
 

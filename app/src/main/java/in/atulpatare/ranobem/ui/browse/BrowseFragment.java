@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import in.atulpatare.core.models.Manga;
@@ -30,13 +28,11 @@ import in.atulpatare.ranobem.utils.SpacingDecorator;
 
 public class BrowseFragment extends Fragment implements MangaAdapter.OnMangaItemClickListener {
 
-    private static final int SOURCE_ID = 1;
+    private static final int SOURCE_ID = 2;
     private final List<Manga> list = new ArrayList<>();
     private BrowseViewModel viewModel;
     private MangaAdapter adapter;
     private boolean isLoading = false;
-    private String selectedSortOption = null;
-    private String searchQuery = null;
     private int page = 1;
 
 
@@ -61,30 +57,13 @@ public class BrowseFragment extends Fragment implements MangaAdapter.OnMangaItem
                     binding.progress.show();
                     isLoading = true;
                     page += 1;
-                    viewModel.getMangas(SOURCE_ID, page, getQueries());
+                    viewModel.getMangas(SOURCE_ID, page, null);
                 }
             }
         });
 
-        binding.searchView.setEndIconOnClickListener(v -> {
-            if (binding.searchField.getText() != null) {
-                searchQuery = binding.searchField.getText().toString().trim();
-                viewModel.clearItems();
-                isLoading = true;
-                binding.progress.show();
-                page = 1;
-                viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(getViewLifecycleOwner(), (mangas) -> {
-                    binding.progress.hide();
-                    isLoading = false;
-                    list.clear();
-                    list.addAll(mangas);
-                    adapter.notifyDataSetChanged();
-                });
-            }
-        });
-
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
-        viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(getViewLifecycleOwner(), (mangas) -> {
+        viewModel.getMangas(SOURCE_ID, page, null).observe(getViewLifecycleOwner(), (mangas) -> {
             binding.progress.hide();
             isLoading = false;
             int old = list.size();
@@ -92,8 +71,6 @@ public class BrowseFragment extends Fragment implements MangaAdapter.OnMangaItem
             list.addAll(mangas);
             adapter.notifyItemRangeInserted(old, list.size());
         });
-
-        viewModel.getSortOptions(SOURCE_ID).observe(getViewLifecycleOwner(), this::setUpSortOptions);
         return binding.getRoot();
 
     }
@@ -102,33 +79,6 @@ public class BrowseFragment extends Fragment implements MangaAdapter.OnMangaItem
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-
-    private HashMap<String, String> getQueries() {
-        return new HashMap<>() {{
-            put("sort", selectedSortOption);
-            put("search", searchQuery);
-        }};
-    }
-
-    private void setUpSortOptions(HashMap<String, String> stringStringHashMap) {
-        List<String> options = new ArrayList<>(stringStringHashMap.keySet());
-        binding.sortOptions.setAdapter(new ArrayAdapter<String>(requireActivity(), android.R.layout.simple_list_item_1, options));
-        binding.sortOptions.setOnItemClickListener((parent, view, position, id) -> {
-            selectedSortOption = stringStringHashMap.get(options.get(position));
-            viewModel.clearItems();
-            isLoading = true;
-            binding.progress.show();
-            page = 1;
-            viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(this, (mangas) -> {
-                binding.progress.hide();
-                isLoading = false;
-                list.clear();
-                list.addAll(mangas);
-                adapter.notifyDataSetChanged();
-            });
-        });
     }
 
     private void setUpError(String error) {

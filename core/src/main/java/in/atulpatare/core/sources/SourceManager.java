@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import in.atulpatare.core.sources.en.MangaFireTo;
+import in.atulpatare.core.sources.en.WeebCentral;
 
 public class SourceManager {
     private SourceManager() throws IllegalAccessException {
@@ -25,6 +26,7 @@ public class SourceManager {
     public static Map<Integer, Class<?>> getSources() {
         HashMap<Integer, Class<?>> sources = new HashMap<>();
         sources.put(1, MangaFireTo.class);
+        sources.put(2, WeebCentral.class);
 
 
         return sources;

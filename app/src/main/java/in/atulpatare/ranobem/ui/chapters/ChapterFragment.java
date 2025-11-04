@@ -70,12 +70,16 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     }
 
     private void setUpObservers() {
-        viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
+        if (manga.sourceId == 1) {
+            viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
 //        viewModel.getChapters(manga).observe(getViewLifecycleOwner(), this::setChapter);
-        // patch work
-        String url = "https://mangafire.to" + manga.url.replace("/manga", "/read");
-        Log.d("VRF", url);
-        VrfFetcher.fetchVrf(requireContext(), url, "/ajax/read/" + manga.id, this);
+            // patch work
+            String url = "https://mangafire.to" + manga.url.replace("/manga", "/read");
+            Log.d("VRF", url);
+            VrfFetcher.fetchVrf(requireContext(), url, "/ajax/read/" + manga.id, this);
+        } else {
+            viewModel.getChapters(manga).observe(this, this::setChapter);
+        }
     }
 
     @Override
@@ -85,7 +89,7 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
         Log.d("VRF", "manga url -> " + m.url);
 
         new Handler(Looper.getMainLooper()).post(() -> {
-            viewModel.getChapters(manga).observe(this, this::setChapter);
+            viewModel.getChapters(m).observe(this, this::setChapter);
         });
     }
 
