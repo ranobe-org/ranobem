@@ -31,9 +31,8 @@ import in.atulpatare.ranobem.utils.SpacingDecorator;
 public class BrowseFragment extends Fragment implements MangaAdapter.OnMangaItemClickListener {
 
     private static final String ARG_SOURCE_ID = "source_id";
-
-    private int SOURCE_ID;
     private final List<Manga> list = new ArrayList<>();
+    private int SOURCE_ID;
     private BrowseViewModel viewModel;
     private MangaAdapter adapter;
     private boolean isLoading = false;

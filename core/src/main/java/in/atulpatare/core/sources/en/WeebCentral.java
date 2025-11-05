@@ -8,15 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import in.atulpatare.core.models.Chapter;
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.models.Metadata;
 import in.atulpatare.core.network.HttpClient;
 import in.atulpatare.core.sources.Source;
-import in.atulpatare.core.util.NumberUtils;
 
 public class WeebCentral implements Source {
     private static final int sourceId = 2;
@@ -88,7 +85,7 @@ public class WeebCentral implements Source {
         m.rating = 7;
         m.type = "Unknown";
 
-        for (Element e: doc.select("section > ul > li")) {
+        for (Element e : doc.select("section > ul > li")) {
             String heading = e.select("strong").text().trim();
             if (heading.contains("Author")) {
                 m.author = e.select("span").text().trim();
@@ -104,7 +101,7 @@ public class WeebCentral implements Source {
     private String lastPart(String text, String splitBy) {
         String[] splits = text.split(splitBy);
         if (splits.length > 1) {
-         return splits[splits.length - 1];
+            return splits[splits.length - 1];
         }
         return "";
     }
@@ -147,7 +144,7 @@ public class WeebCentral implements Source {
         String response = HttpClient.GET(c.url, headers);
         Element doc = Jsoup.parse(response);
 
-        for(Element e: doc.select("img")) {
+        for (Element e : doc.select("img")) {
             items.add(e.attr("src").trim());
         }
 

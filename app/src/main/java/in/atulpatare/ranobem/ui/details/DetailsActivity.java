@@ -132,6 +132,18 @@ public class DetailsActivity extends AppCompatActivity {
         } else {
             navigateToChapterList();
         }
+    }
+
+    private void setUpUi(Manga manga) {
+        this.manga = manga;
+        Glide.with(binding.novelCover.getContext()).load(manga.cover).into(binding.novelCover);
+        binding.novelName.setText(manga.name);
+        binding.rating.setRating((float) manga.rating / 2);
+        binding.summary.setText(manga.summary);
+        binding.status.setText(manga.status);
+        binding.authors.setText(manga.author);
+        binding.openInBrowser.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(manga.url))));
+        binding.progress.hide();
     }    private final FullScreenContentCallback callback = new FullScreenContentCallback() {
 
         @Override
@@ -151,18 +163,6 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
     };
-
-    private void setUpUi(Manga manga) {
-        this.manga = manga;
-        Glide.with(binding.novelCover.getContext()).load(manga.cover).into(binding.novelCover);
-        binding.novelName.setText(manga.name);
-        binding.rating.setRating((float) manga.rating / 2);
-        binding.summary.setText(manga.summary);
-        binding.status.setText(manga.status);
-        binding.authors.setText(manga.author);
-        binding.openInBrowser.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(manga.url))));
-        binding.progress.hide();
-    }
 
     private void navigateToChapterList() {
         if (manga == null) return;
