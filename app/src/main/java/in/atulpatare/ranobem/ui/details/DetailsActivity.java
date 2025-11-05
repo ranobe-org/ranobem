@@ -153,7 +153,9 @@ public class DetailsActivity extends AppCompatActivity {
         ChapterFragment chapters = new ChapterFragment();
         chapters.setArguments(bundle);
         chapters.show(getSupportFragmentManager(), "chapters-sheet");
-    }    private final FullScreenContentCallback callback = new FullScreenContentCallback() {
+    }
+
+    private final FullScreenContentCallback callback = new FullScreenContentCallback() {
 
         @Override
         public void onAdDismissedFullScreenContent() {
@@ -172,8 +174,6 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
     };
-
-
 
 
 }
