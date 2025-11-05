@@ -115,25 +115,7 @@ public class DetailsActivity extends AppCompatActivity {
                         rewardedAd.setFullScreenContentCallback(callback);
                     }
                 });
-    }    private final FullScreenContentCallback callback = new FullScreenContentCallback() {
-
-        @Override
-        public void onAdDismissedFullScreenContent() {
-            rewardedAd = null;
-        }
-
-        @Override
-        public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-            rewardedAd = null;
-            loadVideoAd();
-        }
-
-        @Override
-        public void onAdImpression() {
-            rewardedAd = null;
-        }
-
-    };
+    }
 
     private void showAdOrNavigate() {
         if (Config.isFree()) {
@@ -171,7 +153,25 @@ public class DetailsActivity extends AppCompatActivity {
         ChapterFragment chapters = new ChapterFragment();
         chapters.setArguments(bundle);
         chapters.show(getSupportFragmentManager(), "chapters-sheet");
-    }
+    }    private final FullScreenContentCallback callback = new FullScreenContentCallback() {
+
+        @Override
+        public void onAdDismissedFullScreenContent() {
+            rewardedAd = null;
+        }
+
+        @Override
+        public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+            rewardedAd = null;
+            loadVideoAd();
+        }
+
+        @Override
+        public void onAdImpression() {
+            rewardedAd = null;
+        }
+
+    };
 
 
 

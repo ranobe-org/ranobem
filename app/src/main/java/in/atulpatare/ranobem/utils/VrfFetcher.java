@@ -12,15 +12,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import androidx.lifecycle.MutableLiveData;
-
-import in.atulpatare.core.util.VrfExtractor;
-
 public class VrfFetcher {
-
-    public interface onCompleteListener {
-        public void onVrf(String vrf);
-    }
 
     @SuppressLint("SetJavaScriptEnabled")
     public static void fetchVrf(Context context, String pageUrl, String containing, onCompleteListener listener) {
@@ -68,5 +60,9 @@ public class VrfFetcher {
         } catch (Exception e) {
             Log.e("VRF", "Error cleaning up WebView", e);
         }
+    }
+
+    public interface onCompleteListener {
+        public void onVrf(String vrf);
     }
 }

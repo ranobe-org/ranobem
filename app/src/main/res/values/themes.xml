@@ -6,4 +6,7 @@
     </style>
 
     <style name="Theme.RanobeM" parent="Base.Theme.RanobeM" />
+
+    <style name="Theme.RanobeM.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
 </resources>

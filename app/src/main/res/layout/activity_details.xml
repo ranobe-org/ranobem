@@ -97,15 +97,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/header_layout"
             android:layout_marginBottom="10dp"
-            android:padding="20dp"
-            android:gravity="center"
-            android:textAlignment="center"
             android:breakStrategy="simple"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textIsSelectable="true"
             android:ellipsize="none"
+            android:gravity="center"
+            android:padding="20dp"
+            android:scrollHorizontally="false"
             android:singleLine="false"
-            android:scrollHorizontally="false" />
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textIsSelectable="true" />
 
         <LinearLayout
             android:id="@+id/buttons_panel"
@@ -127,19 +127,19 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/remove_from_library"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:visibility="gone"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:text="@string/remove_from_library" />
+                android:text="@string/remove_from_library"
+                android:visibility="gone" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/add_to_library"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:text="@string/add_to_library" />
 
             <com.google.android.material.button.MaterialButton
@@ -152,12 +152,12 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/open_in_browser"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/buttons_panel"
-            android:layout_marginEnd="10dp"
             android:layout_alignParentEnd="true"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_marginEnd="10dp"
             android:text="@string/open_in_browser" />
 
     </RelativeLayout>

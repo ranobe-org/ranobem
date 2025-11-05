@@ -30,7 +30,6 @@ import java.util.Locale;
 import in.atulpatare.core.models.Chapter;
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.util.ListUtils;
-import in.atulpatare.core.util.VrfExtractor;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentChapterBinding;
