@@ -144,6 +144,15 @@ public class DetailsActivity extends AppCompatActivity {
         binding.authors.setText(manga.author);
         binding.openInBrowser.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(manga.url))));
         binding.progress.hide();
+    }
+
+    private void navigateToChapterList() {
+        if (manga == null) return;
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Config.KEY_MANGA, manga);
+        ChapterFragment chapters = new ChapterFragment();
+        chapters.setArguments(bundle);
+        chapters.show(getSupportFragmentManager(), "chapters-sheet");
     }    private final FullScreenContentCallback callback = new FullScreenContentCallback() {
 
         @Override
@@ -163,15 +172,6 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
     };
-
-    private void navigateToChapterList() {
-        if (manga == null) return;
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Config.KEY_MANGA, manga);
-        ChapterFragment chapters = new ChapterFragment();
-        chapters.setArguments(bundle);
-        chapters.show(getSupportFragmentManager(), "chapters-sheet");
-    }
 
 
 

@@ -7,12 +7,6 @@
 
     <style name="Theme.RanobeM" parent="Base.Theme.RanobeM" />
 
-    <style name="Theme.RanobeM.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <style name="Theme.RanobeM.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.RanobeM.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
