@@ -115,6 +115,23 @@ public class DetailsActivity extends AppCompatActivity {
                         rewardedAd.setFullScreenContentCallback(callback);
                     }
                 });
+    }
+
+    private void showAdOrNavigate() {
+        if (Config.isFree()) {
+            // show ad
+            WatchVideoSheet sheet = new WatchVideoSheet(() -> {
+                // show ad
+                if (rewardedAd != null) {
+                    rewardedAd.show(this, rewardItem -> navigateToChapterList());
+                } else {
+                    navigateToChapterList();
+                }
+            });
+            sheet.show(getSupportFragmentManager(), WatchVideoSheet.TAG);
+        } else {
+            navigateToChapterList();
+        }
     }    private final FullScreenContentCallback callback = new FullScreenContentCallback() {
 
         @Override
@@ -134,23 +151,6 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
     };
-
-    private void showAdOrNavigate() {
-        if (Config.isFree()) {
-            // show ad
-            WatchVideoSheet sheet = new WatchVideoSheet(() -> {
-                // show ad
-                if (rewardedAd != null) {
-                    rewardedAd.show(this, rewardItem -> navigateToChapterList());
-                } else {
-                    navigateToChapterList();
-                }
-            });
-            sheet.show(getSupportFragmentManager(), WatchVideoSheet.TAG);
-        } else {
-            navigateToChapterList();
-        }
-    }
 
     private void setUpUi(Manga manga) {
         this.manga = manga;

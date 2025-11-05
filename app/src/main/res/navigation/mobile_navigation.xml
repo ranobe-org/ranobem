@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_browse"
-        android:name="in.atulpatare.ranobem.ui.browse.BrowseFragment"
+        android:name="in.atulpatare.ranobem.ui.browse.BrowseTabbedFragment"
         android:label="@string/title_browse"
         tools:layout="@layout/fragment_browse" />
 
     <fragment
         android:id="@+id/navigation_search"
-        android:name="in.atulpatare.ranobem.ui.search.SearchFragment"
+        android:name="in.atulpatare.ranobem.ui.search.SearchTabbedFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
 

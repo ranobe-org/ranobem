@@ -15,12 +15,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import in.atulpatare.core.models.Chapter;
-import in.atulpatare.ranobem.utils.VrfFetcher;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.ActivityReaderBinding;
 import in.atulpatare.ranobem.model.ChapterList;
 import in.atulpatare.ranobem.ui.chapters.ChaptersViewModel;
+import in.atulpatare.ranobem.utils.VrfFetcher;
 
 public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCompleteListener {
     ActivityReaderBinding binding;

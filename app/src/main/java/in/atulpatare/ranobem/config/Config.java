@@ -1,7 +1,5 @@
 package in.atulpatare.ranobem.config;
 
-import in.atulpatare.ranobem.BuildConfig;
-
 public class Config {
     public static final String KEY_MANGA = "manga";
     public static final String KEY_CHAPTER = "chapter";

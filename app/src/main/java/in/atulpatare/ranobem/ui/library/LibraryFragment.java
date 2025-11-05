@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import in.atulpatare.core.models.Manga;
@@ -23,7 +21,7 @@ import in.atulpatare.ranobem.utils.DisplayUtils;
 import in.atulpatare.ranobem.utils.SpacingDecorator;
 
 
-public class LibraryFragment extends Fragment implements MangaAdapter.OnMangaItemClickListener{
+public class LibraryFragment extends Fragment implements MangaAdapter.OnMangaItemClickListener {
 
     private FragmentLibraryBinding binding;
 

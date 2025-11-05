@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.atulpatare.core.models.Manga;
+import in.atulpatare.core.models.Metadata;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentBrowseBinding;
@@ -28,15 +30,33 @@ import in.atulpatare.ranobem.utils.SpacingDecorator;
 
 public class BrowseFragment extends Fragment implements MangaAdapter.OnMangaItemClickListener {
 
-    private static final int SOURCE_ID = 2;
+    private static final String ARG_SOURCE_ID = "source_id";
+
+    private int SOURCE_ID;
     private final List<Manga> list = new ArrayList<>();
     private BrowseViewModel viewModel;
     private MangaAdapter adapter;
     private boolean isLoading = false;
     private int page = 1;
-
-
     private FragmentBrowseBinding binding;
+
+    public static BrowseFragment newInstance(Metadata meta) {
+        BrowseFragment fragment = new BrowseFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ARG_SOURCE_ID, meta.sourceId);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            SOURCE_ID = getArguments().getInt(ARG_SOURCE_ID);
+        } else {
+            SOURCE_ID = 1;
+        }
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

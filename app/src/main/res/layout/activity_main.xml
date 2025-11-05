@@ -43,9 +43,9 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/library"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:text="@string/library" />
 
             <com.google.android.material.button.MaterialButton
@@ -83,8 +83,8 @@
                 android:id="@+id/download_pro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:text="@string/download_pro"
+                android:visibility="gone"
                 app:backgroundTint="@color/white" />
 
         </LinearLayout>
