@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep all sources (reflectively instantiated)
+-keep class in.atulpatare.core.sources.** { *; }
+
+# Keep the Source interface too
+-keep interface in.atulpatare.core.sources.Source
