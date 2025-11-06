@@ -91,7 +91,7 @@ public class MangaFireTo implements Source {
             Manga m = new Manga();
             m.sourceId = sourceId;
             m.name = name;
-            m.url = link;
+            m.url = baseUrl.concat(link);
             m.cover = cover;
             m.id = id;
             items.add(m);
@@ -102,7 +102,7 @@ public class MangaFireTo implements Source {
 
     @Override
     public Manga details(Manga m) throws Exception {
-        String url = baseUrl.concat(m.url);
+        String url = m.url.startsWith("https") ? m.url : baseUrl.concat(m.url);
         Element doc = Jsoup.parse(HttpClient.GET(url, headers));
         m.author = doc.selectFirst("a[itemprop=\"author\"]").text().trim();
         m.summary = doc.selectFirst("div.description").text().trim();
