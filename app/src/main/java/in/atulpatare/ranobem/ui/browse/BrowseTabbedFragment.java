@@ -34,11 +34,12 @@ public class BrowseTabbedFragment extends Fragment {
 
         for (Class<?> source : SourceManager.getSources().values()) {
             try {
-                Source s = (Source) source.newInstance();
-                Metadata metadata = s.meta();
+                Source klass = (Source) source.newInstance();
+                Metadata metadata = klass.meta();
                 sources.add(metadata);
             } catch (IllegalAccessException | java.lang.InstantiationException e) {
-                throw new RuntimeException(e);
+                // do nothing
+                e.printStackTrace();
             }
         }
 
