@@ -142,8 +142,13 @@ public class DetailsActivity extends AppCompatActivity {
         binding.summary.setText(manga.summary);
         binding.status.setText(manga.status);
         binding.authors.setText(manga.author);
-        binding.openInBrowser.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(manga.url))));
+        binding.openInBrowser.setOnClickListener(v -> openInBrowser(manga));
         binding.progress.hide();
+    }
+
+    private void openInBrowser(Manga m) {
+        String url = m.sourceId == 1 && !m.url.startsWith("https") ? "https://mangafire.to".concat(m.url) : m.url;
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
     private void navigateToChapterList() {

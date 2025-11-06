@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,8 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +36,6 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
     private BrowseViewModel viewModel;
     private MangaAdapter adapter;
     private boolean isLoading = false;
-    private String selectedSortOption = null;
     private String searchQuery = null;
     private int page = 1;
 
@@ -117,7 +115,6 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
 
     private HashMap<String, String> getQueries() {
         return new HashMap<>() {{
-            put("sort", selectedSortOption);
             put("search", searchQuery);
         }};
     }
@@ -126,7 +123,7 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
         binding.progress.hide();
         // error on the first call
         if (list.isEmpty()) {
-            Snackbar.make(binding.getRoot(), error, Snackbar.LENGTH_LONG).show();
+            Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
         }
     }
 
