@@ -25,7 +25,7 @@ import java.util.List;
 import in.atulpatare.ranobem.databinding.ItemPageBinding;
 
 public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> {
-    private  final List<String> pages;
+    private final List<String> pages;
 
     public PageAdapter(List<String> pages) {
         this.pages = pages;
@@ -71,7 +71,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
                 .build());
     }
 
-    public void loadImage (ItemPageBinding binding, int position) {
+    public void loadImage(ItemPageBinding binding, int position) {
         String page = pages.get(position);
         binding.retryImage.setVisibility(View.GONE);
         binding.progress.setVisibility(View.VISIBLE);
@@ -100,7 +100,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
 
     }
 
-    public  class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         private final ItemPageBinding binding;
 
         public MyViewHolder(@NonNull ItemPageBinding binding) {
