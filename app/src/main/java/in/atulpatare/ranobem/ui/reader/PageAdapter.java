@@ -40,29 +40,8 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull PageAdapter.MyViewHolder holder, int position) {
-        String page = pages.get(position);
         holder.binding.pageNumber.setText(String.format("%s/%s", position + 1, pages.size()));
-        Glide.with(holder.binding.image.getContext())
-                .load(getGlideWithHeaders(page))
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .skipMemoryCache(false)
-                .override(Target.SIZE_ORIGINAL)
-                .priority(getPriorityForPage(position))
-                .transition(DrawableTransitionOptions.withCrossFade(200))
-                .listener(new RequestListener<>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        holder.binding.progress.setVisibility(View.GONE);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        holder.binding.progress.setVisibility(View.GONE);
-                        return false;
-                    }
-                })
-                .into(holder.binding.image);
+        loadImage(holder.binding, position);
     }
 
     private Priority getPriorityForPage(int currentPosition) {
@@ -92,13 +71,42 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
                 .build());
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public void loadImage(ItemPageBinding binding, int position) {
+        String page = pages.get(position);
+        binding.retryImage.setVisibility(View.GONE);
+        binding.progress.setVisibility(View.VISIBLE);
+        Glide.with(binding.image.getContext())
+                .load(getGlideWithHeaders(page))
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .skipMemoryCache(false)
+                .override(Target.SIZE_ORIGINAL)
+                .priority(getPriorityForPage(position))
+                .transition(DrawableTransitionOptions.withCrossFade(200))
+                .listener(new RequestListener<>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        binding.retryImage.setVisibility(View.VISIBLE);
+                        binding.progress.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        binding.progress.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .into(binding.image);
+
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         private final ItemPageBinding binding;
 
         public MyViewHolder(@NonNull ItemPageBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-
+            binding.retryImage.setOnClickListener(v -> loadImage(this.binding, getAdapterPosition()));
         }
     }
 }

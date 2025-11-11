@@ -21,6 +21,16 @@
         android:layout_centerInParent="true"
         android:indeterminate="true" />
 
+    <Button
+        android:id="@+id/retry_image"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/page_number"
+        android:layout_centerHorizontal="true"
+        android:text="@string/retry"
+        android:visibility="gone" />
+
     <com.ortiz.touchview.TouchImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
