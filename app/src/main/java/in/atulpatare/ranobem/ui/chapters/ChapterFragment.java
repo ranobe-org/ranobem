@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +32,6 @@ import in.atulpatare.core.util.ListUtils;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentChapterBinding;
-import in.atulpatare.ranobem.model.ChapterList;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
 import in.atulpatare.ranobem.utils.VrfFetcher;
 
@@ -69,12 +67,9 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     }
 
     private void setUpObservers() {
+        viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
         if (manga.sourceId == 1) {
-            viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
-//        viewModel.getChapters(manga).observe(getViewLifecycleOwner(), this::setChapter);
-            // patch work
             String url = "https://mangafire.to" + manga.url.replace("/manga", "/read");
-            Log.d("VRF", url);
             VrfFetcher.fetchVrf(requireContext(), url, "/ajax/read/" + manga.id, this);
         } else {
             viewModel.getChapters(manga).observe(this, this::setChapter);
@@ -85,8 +80,6 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     public void onVrf(String vrf) {
         Manga m = manga;
         m.url = vrf.replace("https://mangafire.to", "");
-        Log.d("VRF", "manga url -> " + m.url);
-
         new Handler(Looper.getMainLooper()).post(() -> {
             viewModel.getChapters(m).observe(this, this::setChapter);
         });
@@ -142,8 +135,8 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     public void onChapterItemClick(Chapter item) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Config.KEY_CHAPTER, item);
-        bundle.putParcelable(Config.KEY_CHAPTER_LIST, new ChapterList(ListUtils.sortByIndex(originalItems)));
-
+        bundle.putParcelable(Config.KEY_MANGA, manga);
+        bundle.putString(Config.KEY_PAGE, Config.PAGE_DETAILS);
         requireActivity().startActivity(new Intent(requireActivity(), ReaderActivity.class).putExtras(bundle));
     }
 
@@ -157,7 +150,6 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
         }
         return true;
     }
-
 
     public class SearchBarTextWatcher implements TextWatcher {
 

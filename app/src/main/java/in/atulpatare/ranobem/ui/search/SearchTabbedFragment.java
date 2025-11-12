@@ -36,7 +36,9 @@ public class SearchTabbedFragment extends Fragment {
             try {
                 Source s = (Source) source.newInstance();
                 Metadata metadata = s.meta();
-                sources.add(metadata);
+                if (metadata.isSearchSupported) {
+                    sources.add(metadata);
+                }
             } catch (IllegalAccessException | java.lang.InstantiationException e) {
                 throw new RuntimeException(e);
             }

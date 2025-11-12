@@ -10,7 +10,9 @@ public class Metadata {
     public Boolean isActive;
     public Boolean isEnabled;
 
-    public Metadata(int sourceId, String url, String name, String lang, String logo, String dev, Boolean isActive, Boolean isEnabled) {
+    public Boolean isSearchSupported;
+
+    public Metadata(int sourceId, String url, String name, String lang, String logo, String dev, Boolean isActive, Boolean isEnabled, Boolean isSearchSupported) {
         this.sourceId = sourceId;
         this.url = url;
         this.name = name;
@@ -19,11 +21,13 @@ public class Metadata {
         this.dev = dev;
         this.isActive = isActive;
         this.isEnabled = isEnabled;
+        this.isSearchSupported = isSearchSupported;
     }
 
     public Metadata() {
         isActive = true;
         isEnabled = true;
+        isSearchSupported = false;
     }
 
     @Override

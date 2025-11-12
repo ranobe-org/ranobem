@@ -41,5 +41,4 @@ public class ChapterList implements Parcelable {
         dest.writeTypedList(chapters);
     }
 
-
 }

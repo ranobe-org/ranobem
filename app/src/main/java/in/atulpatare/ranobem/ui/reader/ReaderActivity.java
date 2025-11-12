@@ -1,5 +1,6 @@
 package in.atulpatare.ranobem.ui.reader;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,18 +15,28 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
+
 import in.atulpatare.core.models.Chapter;
+import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
+import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.ActivityReaderBinding;
 import in.atulpatare.ranobem.model.ChapterList;
+import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.ui.chapters.ChaptersViewModel;
+import in.atulpatare.ranobem.ui.details.DetailsActivity;
 import in.atulpatare.ranobem.utils.VrfFetcher;
 
 public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCompleteListener {
     ActivityReaderBinding binding;
     Chapter currentChapter;
     ChapterList list;
+
+    Manga manga;
 
     ChaptersViewModel viewModel;
 
@@ -37,10 +48,24 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
         setContentView(binding.getRoot());
 
         currentChapter = getIntent().getParcelableExtra(Config.KEY_CHAPTER);
-        list = getIntent().getParcelableExtra(Config.KEY_CHAPTER_LIST);
+        manga = getIntent().getParcelableExtra(Config.KEY_MANGA);
+        String from = getIntent().getStringExtra(Config.KEY_PAGE);
 
         assert currentChapter != null;
-        assert list != null;
+        assert manga != null;
+        assert from != null;
+
+        binding.appbar.setTitle(manga.name);
+        binding.appbar.setNavigationOnClickListener(v -> {
+            // if previous page is history, clear reader activity
+            if (from.equals(Config.PAGE_HISTORY)) {
+                startActivity(new Intent(this, DetailsActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        .putExtra(Config.KEY_MANGA, manga));
+            }
+            // finish stuff
+            this.finish();
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -49,19 +74,40 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
         });
 
         viewModel = new ViewModelProvider(this).get(ChaptersViewModel.class);
-        // patch work
+        viewModel.getError().observe(this, this::setUpError);
+
         loadChapters();
+        loadAllChapters();
 
         binding.nextChapter.setOnClickListener(v -> loadNextChapter());
+    }
 
-        if (getNextChapter() == null) {
-            binding.nextChapter.setEnabled(false);
+    private void setUpError(String error) {
+        Snackbar.make(binding.getRoot(), error, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void loadAllChapters() {
+        if (manga.sourceId == 1) {
+            String url = "https://mangafire.to" + manga.url.replace("/manga", "/read");
+            VrfFetcher.fetchVrf(this, url, "/ajax/read/" + manga.id, vrf -> {
+                Manga m = manga;
+                m.url = vrf.replace("https://mangafire.to", "");
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    viewModel.getChapters(m).observe(ReaderActivity.this, this::setAllChapters);
+                });
+            });
+        } else {
+            viewModel.getChapters(manga).observe(this, this::setAllChapters);
         }
+    }
+
+    private void setAllChapters(List<Chapter> chapters) {
+        list = new ChapterList(chapters);
+        binding.nextChapter.setEnabled(getNextChapter() != null);
     }
 
     private void loadChapters() {
         if (currentChapter.sourceId == 1) {
-
             VrfFetcher.fetchVrf(getApplicationContext(), "https://mangafire.to" + currentChapter.url, "/ajax/read/chapter", this);
         } else {
             viewModel.getChapter(currentChapter).observe(this, this::setUI);
@@ -110,9 +156,15 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
     }
 
     private void setUI(Chapter chapter) {
+        saveChapterToHistory(chapter);
         binding.chapterTitle.setText(String.format("Chapter %s %s", chapter.index, chapter.name));
         binding.list.setLayoutManager(new LinearLayoutManager(this));
         binding.list.setHasFixedSize(false);
         binding.list.setAdapter(new PageAdapter(chapter.pages));
+    }
+
+    private void saveChapterToHistory(Chapter item) {
+        History history = new History(manga, item);
+        AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().historyDao().insert(history));
     }
 }

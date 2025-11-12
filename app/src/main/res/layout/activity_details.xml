@@ -98,7 +98,7 @@
             android:layout_marginBottom="10dp"
             android:breakStrategy="simple"
             android:ellipsize="none"
-            android:padding="20dp"
+            android:paddingHorizontal="20dp"
             android:scrollHorizontally="false"
             android:singleLine="false"
             android:textAlignment="textStart"

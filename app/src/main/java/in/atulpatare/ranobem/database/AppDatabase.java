@@ -1,5 +1,6 @@
 package in.atulpatare.ranobem.database;
 
+import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -9,9 +10,12 @@ import java.util.concurrent.Executors;
 
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.App;
+import in.atulpatare.ranobem.model.History;
 
 
-@Database(entities = {Manga.class}, version = 1, exportSchema = false)
+@Database(entities = {Manga.class, History.class}, version = 2, exportSchema = true, autoMigrations = {
+        @AutoMigration(from = 1, to = 2)
+})
 public abstract class AppDatabase extends RoomDatabase {
     public static final ExecutorService databaseExecutor = Executors.newSingleThreadExecutor();
     private static AppDatabase database;
@@ -25,4 +29,6 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract MangaDao mangaDao();
+
+    public abstract HistoryDao historyDao();
 }
