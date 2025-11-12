@@ -18,7 +18,7 @@ public interface HistoryDao {
     @Query("SELECT * FROM history WHERE id = :id")
     LiveData<History> getById(String id);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(History history);
 
     @Query("DELETE FROM history WHERE 1")

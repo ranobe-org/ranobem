@@ -13,7 +13,7 @@ import in.atulpatare.ranobem.App;
 import in.atulpatare.ranobem.model.History;
 
 
-@Database(entities = {Manga.class, History.class}, version = 2, autoMigrations = {
+@Database(entities = {Manga.class, History.class}, version = 2, exportSchema = true, autoMigrations = {
         @AutoMigration(from = 1, to = 2)
 })
 public abstract class AppDatabase extends RoomDatabase {
