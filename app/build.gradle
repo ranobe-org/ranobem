@@ -18,6 +18,12 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+
         resValue("string", "ad_app_id", values.getProperty("ad_app_id", "ca-app-pub-3940256099942544~3347511713"))
         resValue("string", "ad_read_manga_video_id", values.getProperty("ad_read_manga_video_id", "ca-app-pub-3940256099942544/5224354917"))
     }

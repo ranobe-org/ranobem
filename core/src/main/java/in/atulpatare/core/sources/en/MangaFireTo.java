@@ -35,7 +35,8 @@ public class MangaFireTo implements Source {
                 "",
                 "atul",
                 true,
-                true
+                true,
+                false
         );
     }
 

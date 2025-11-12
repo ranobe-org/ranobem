@@ -15,10 +15,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import in.atulpatare.core.models.Chapter;
+import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
+import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.ActivityReaderBinding;
 import in.atulpatare.ranobem.model.ChapterList;
+import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.ui.chapters.ChaptersViewModel;
 import in.atulpatare.ranobem.utils.VrfFetcher;
 
@@ -26,6 +29,8 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
     ActivityReaderBinding binding;
     Chapter currentChapter;
     ChapterList list;
+
+    Manga manga;
 
     ChaptersViewModel viewModel;
 
@@ -38,9 +43,11 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
 
         currentChapter = getIntent().getParcelableExtra(Config.KEY_CHAPTER);
         list = getIntent().getParcelableExtra(Config.KEY_CHAPTER_LIST);
+        manga = getIntent().getParcelableExtra(Config.KEY_MANGA);
 
         assert currentChapter != null;
         assert list != null;
+        assert manga != null;
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -61,7 +68,6 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
 
     private void loadChapters() {
         if (currentChapter.sourceId == 1) {
-
             VrfFetcher.fetchVrf(getApplicationContext(), "https://mangafire.to" + currentChapter.url, "/ajax/read/chapter", this);
         } else {
             viewModel.getChapter(currentChapter).observe(this, this::setUI);
@@ -110,9 +116,15 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
     }
 
     private void setUI(Chapter chapter) {
+        saveChapterToHistory(chapter);
         binding.chapterTitle.setText(String.format("Chapter %s %s", chapter.index, chapter.name));
         binding.list.setLayoutManager(new LinearLayoutManager(this));
         binding.list.setHasFixedSize(false);
         binding.list.setAdapter(new PageAdapter(chapter.pages));
+    }
+
+    private void saveChapterToHistory(Chapter item) {
+        History history = new History(manga, item);
+        AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().historyDao().insert(history));
     }
 }

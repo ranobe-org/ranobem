@@ -85,8 +85,6 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     public void onVrf(String vrf) {
         Manga m = manga;
         m.url = vrf.replace("https://mangafire.to", "");
-        Log.d("VRF", "manga url -> " + m.url);
-
         new Handler(Looper.getMainLooper()).post(() -> {
             viewModel.getChapters(m).observe(this, this::setChapter);
         });
@@ -142,6 +140,7 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     public void onChapterItemClick(Chapter item) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Config.KEY_CHAPTER, item);
+        bundle.putParcelable(Config.KEY_MANGA, manga);
         bundle.putParcelable(Config.KEY_CHAPTER_LIST, new ChapterList(ListUtils.sortByIndex(originalItems)));
 
         requireActivity().startActivity(new Intent(requireActivity(), ReaderActivity.class).putExtras(bundle));
@@ -157,7 +156,6 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
         }
         return true;
     }
-
 
     public class SearchBarTextWatcher implements TextWatcher {
 
