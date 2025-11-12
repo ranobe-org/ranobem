@@ -2,7 +2,6 @@ package in.atulpatare.ranobem.database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -22,6 +21,6 @@ public interface HistoryDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(History history);
 
-    @Delete
-    void delete(History history);
+    @Query("DELETE FROM history WHERE 1")
+    void deleteAll();
 }

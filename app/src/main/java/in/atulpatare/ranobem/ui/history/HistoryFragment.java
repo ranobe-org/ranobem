@@ -1,5 +1,6 @@
 package in.atulpatare.ranobem.ui.history;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import in.atulpatare.core.models.Chapter;
 import in.atulpatare.core.models.Manga;
+import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.FragmentHistoryBinding;
@@ -50,6 +52,24 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     private void setHistories(List<History> histories) {
         binding.progress.hide();
         binding.mangaList.setAdapter(new HistoryAdapter(histories, this));
+        if (histories.isEmpty()) {
+            binding.emptyHistory.setVisibility(View.VISIBLE);
+        }
+
+        binding.appbar.setTitle("Reading history");
+        binding.appbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.delete) {
+                new AlertDialog.Builder(requireContext())
+                        .setCancelable(true)
+                        .setTitle("Are you sure you want to delete all the reading history?")
+                        .setPositiveButton("Yes", (dialog, which) -> AppDatabase.databaseExecutor.execute(() -> {
+                            AppDatabase.getDatabase().historyDao().deleteAll();
+                        }))
+                        .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                        .show();
+            }
+            return true;
+        });
     }
 
     @Override

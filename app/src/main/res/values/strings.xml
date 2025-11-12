@@ -20,6 +20,7 @@
     <string name="library">view library</string>
     <string name="remove_from_library">Remove from library</string>
     <string name="no_items_in_the_library">Your library is empty — start exploring and add your favorites!</string>
+    <string name="no_items_in_ths_history">Your history is empty — start exploring to see items here!</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_browse">Browse</string>
     <string name="title_search">Search</string>
@@ -27,4 +28,5 @@
     <string name="open_in_browser">Open in browser</string>
     <string name="retry">Retry</string>
     <string name="title_history">History</string>
+    <string name="delete">Delete</string>
 </resources>
