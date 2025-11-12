@@ -69,12 +69,9 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     }
 
     private void setUpObservers() {
+        viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
         if (manga.sourceId == 1) {
-            viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
-//        viewModel.getChapters(manga).observe(getViewLifecycleOwner(), this::setChapter);
-            // patch work
             String url = "https://mangafire.to" + manga.url.replace("/manga", "/read");
-            Log.d("VRF", url);
             VrfFetcher.fetchVrf(requireContext(), url, "/ajax/read/" + manga.id, this);
         } else {
             viewModel.getChapters(manga).observe(this, this::setChapter);
@@ -141,8 +138,7 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
         Bundle bundle = new Bundle();
         bundle.putParcelable(Config.KEY_CHAPTER, item);
         bundle.putParcelable(Config.KEY_MANGA, manga);
-        bundle.putParcelable(Config.KEY_CHAPTER_LIST, new ChapterList(ListUtils.sortByIndex(originalItems)));
-
+        bundle.putString(Config.KEY_PAGE, Config.PAGE_DETAILS);
         requireActivity().startActivity(new Intent(requireActivity(), ReaderActivity.class).putExtras(bundle));
     }
 
