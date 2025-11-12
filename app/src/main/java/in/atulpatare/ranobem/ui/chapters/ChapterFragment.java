@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +32,6 @@ import in.atulpatare.core.util.ListUtils;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentChapterBinding;
-import in.atulpatare.ranobem.model.ChapterList;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
 import in.atulpatare.ranobem.utils.VrfFetcher;
 

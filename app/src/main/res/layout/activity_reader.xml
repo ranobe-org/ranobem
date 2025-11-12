@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,20 +11,21 @@
         android:id="@+id/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:navigationIconTint="?colorOnBackground"
-            app:navigationIcon="@drawable/ic_back" />
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationIconTint="?colorOnBackground" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_layout"
-        android:layout_above="@id/toolbar" />
+        android:layout_above="@id/toolbar"
+        android:layout_below="@id/toolbar_layout" />
 
     <LinearLayout
         android:id="@+id/toolbar"
