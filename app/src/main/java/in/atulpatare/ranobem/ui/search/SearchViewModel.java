@@ -24,7 +24,7 @@ public class SearchViewModel extends ViewModel {
             items = new MutableLiveData<>();
             currentSourceId = sourceId;
         }
-        new Repository(sourceId).mangas(page, queries, new Repository.Callback<List<Manga>>() {
+        new Repository(sourceId).mangas(page, queries, new Repository.Callback<>() {
             @Override
             public void onComplete(List<Manga> result) {
                 List<Manga> old = items.getValue();

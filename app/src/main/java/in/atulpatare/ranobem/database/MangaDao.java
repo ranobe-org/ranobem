@@ -12,7 +12,7 @@ import in.atulpatare.core.models.Manga;
 
 @Dao
 public interface MangaDao {
-    @Query("SELECT * FROM manga")
+    @Query("SELECT * FROM manga ORDER BY name ASC")
     LiveData<List<Manga>> getAll();
 
     @Query("SELECT * FROM manga WHERE id = :id")

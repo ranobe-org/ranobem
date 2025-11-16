@@ -31,9 +31,7 @@ public class BrowseViewModel extends ViewModel {
                 if (old == null) {
                     old = new ArrayList<>();
                 }
-                if (page > 1) {
-                    old.addAll(result);
-                }
+                old.addAll(result);
                 items.postValue(old);
             }
 
