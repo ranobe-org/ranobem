@@ -1,4 +1,4 @@
-package in.atulpatare.ranobem.ui.browse;
+package in.atulpatare.ranobem.ui.search;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,7 +10,7 @@ import java.util.List;
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.network.repository.Repository;
 
-public class BrowseViewModel extends ViewModel {
+public class SearchViewModel extends ViewModel {
     private MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<List<Manga>> items;
     private int currentSourceId = -1;
@@ -24,16 +24,14 @@ public class BrowseViewModel extends ViewModel {
             items = new MutableLiveData<>();
             currentSourceId = sourceId;
         }
-        new Repository(sourceId).mangas(page, queries, new Repository.Callback<>() {
+        new Repository(sourceId).mangas(page, queries, new Repository.Callback<List<Manga>>() {
             @Override
             public void onComplete(List<Manga> result) {
                 List<Manga> old = items.getValue();
                 if (old == null) {
                     old = new ArrayList<>();
                 }
-                if (page > 1) {
-                    old.addAll(result);
-                }
+                old.addAll(result);
                 items.postValue(old);
             }
 
@@ -43,5 +41,9 @@ public class BrowseViewModel extends ViewModel {
             }
         });
         return items;
+    }
+
+    public void clearItems() {
+        items = new MutableLiveData<>();
     }
 }
