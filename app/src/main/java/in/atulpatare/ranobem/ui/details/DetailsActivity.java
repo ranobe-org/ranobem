@@ -110,7 +110,6 @@ public class DetailsActivity extends AppCompatActivity {
 
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd ad) {
-                        Log.d("DEBUG", "AD LOADED,.....");
                         rewardedAd = ad;
                         rewardedAd.setFullScreenContentCallback(callback);
                     }

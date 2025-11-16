@@ -120,7 +120,6 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
         Chapter c = currentChapter;
         // https://mangafire.to/ajax/read/kw9j9/chapter/en?vrf=ZBYeRCjYBk0tkZnKW4kTuWBYw641e-csvu6vl7UY4zcaviixmK7VJ-tjpFEsOUq42nE5ZBdEYGJfpA
         c.url = vrf.replace("https://mangafire.to", "");
-        Log.d("VRF", "chapter url -> " + c.url);
         new Handler(Looper.getMainLooper()).post(() -> {
             viewModel.getChapter(c).observe(this, this::setUI);
         });
