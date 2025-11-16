@@ -23,8 +23,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="2dp"
-            android:hint="@string/start_typing"
+            android:layout_marginHorizontal="10dp"
+            android:hint="@string/search_in_library"
             android:visibility="gone">
 
             <com.google.android.material.textfield.TextInputEditText
