@@ -2,6 +2,7 @@ package in.atulpatare.ranobem.ui.search;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,27 +85,38 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
             }
         });
 
-        binding.searchView.setEndIconOnClickListener(v -> {
-            if (binding.searchField.getText() != null) {
-                binding.progress.show();
-                searchQuery = binding.searchField.getText().toString().trim();
-                viewModel.clearItems();
-                isLoading = true;
-                binding.progress.show();
-                page = 1;
-                viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(getViewLifecycleOwner(), (mangas) -> {
-                    binding.progress.hide();
-                    isLoading = false;
-                    list.clear();
-                    list.addAll(mangas);
-                    adapter.notifyDataSetChanged();
-                });
+        // search events
+        binding.searchView.setEndIconOnClickListener(v -> handleSearch());
+        binding.searchField.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                handleSearch();
+                return true;
             }
+            return false;
         });
 
+        // listening to errors
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
 
         return root;
+    }
+
+    public void handleSearch() {
+        if (binding.searchField.getText() != null) {
+            binding.progress.show();
+            searchQuery = binding.searchField.getText().toString().trim();
+            viewModel.clearItems();
+            isLoading = true;
+            binding.progress.show();
+            page = 1;
+            viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(getViewLifecycleOwner(), (mangas) -> {
+                binding.progress.hide();
+                isLoading = false;
+                list.clear();
+                list.addAll(mangas);
+                adapter.notifyDataSetChanged();
+            });
+        }
     }
 
     @Override
