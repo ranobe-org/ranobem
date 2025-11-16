@@ -58,9 +58,9 @@ public class LibraryFragment extends Fragment implements MangaAdapter.OnMangaIte
         binding.appbar.setTitle("Library");
         binding.appbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.sort) {
+                sortingOrder = sortingOrder.equals(SORTING_ORDER_DESC) ? SORTING_ORDER_ASC : SORTING_ORDER_DESC;
                 String message = sortingOrder.equals(SORTING_ORDER_ASC) ? "Sorting with name in ascending order" : "Sorting with name in descending order";
                 Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
-                sortingOrder = sortingOrder.equals(SORTING_ORDER_DESC) ? SORTING_ORDER_ASC : SORTING_ORDER_DESC;
                 loadLibrary();
             }
             if (item.getItemId() == R.id.search) {
