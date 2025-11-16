@@ -14,6 +14,7 @@ import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.models.Metadata;
 import in.atulpatare.core.network.HttpClient;
 import in.atulpatare.core.sources.Source;
+import in.atulpatare.core.util.ListUtils;
 
 public class WeebCentral implements Source {
     private static final int sourceId = 2;
@@ -135,8 +136,7 @@ public class WeebCentral implements Source {
             i++;
         }
 
-
-        return items;
+        return ListUtils.sortByIndex(items);
     }
 
     @Override

@@ -15,6 +15,7 @@ import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.models.Metadata;
 import in.atulpatare.core.network.HttpClient;
 import in.atulpatare.core.sources.Source;
+import in.atulpatare.core.util.ListUtils;
 import in.atulpatare.core.util.NumberUtils;
 
 public class MangaFireTo implements Source {
@@ -137,7 +138,7 @@ public class MangaFireTo implements Source {
             items.add(item);
         }
 
-        return items;
+        return ListUtils.sortByIndex(new ArrayList<>(items));
     }
 
     @Override
