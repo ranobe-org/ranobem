@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -27,15 +26,13 @@ public class VrfFetcher {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                Log.d("VRF", "Loading: " + url);
+                // nothing as of now
             }
 
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String reqUrl = request.getUrl().toString();
                 if (reqUrl.contains(containing)) {
-                    Log.d("VRF", reqUrl);
-
                     if (listener != null) {
                         listener.onVrf(reqUrl);
                     }
@@ -56,9 +53,8 @@ public class VrfFetcher {
             webView.clearHistory();
             webView.clearCache(true);
             webView.destroy();
-            Log.d("VRF", "✅ WebView cleaned up");
         } catch (Exception e) {
-            Log.e("VRF", "Error cleaning up WebView", e);
+            // nothing
         }
     }
 

@@ -15,6 +15,7 @@ import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.models.Metadata;
 import in.atulpatare.core.network.HttpClient;
 import in.atulpatare.core.sources.Source;
+import in.atulpatare.core.util.ListUtils;
 import in.atulpatare.core.util.NumberUtils;
 
 public class MangaFireTo implements Source {
@@ -50,7 +51,7 @@ public class MangaFireTo implements Source {
     @Override
     public List<Manga> mangas(int page) throws Exception {
         List<Manga> items = new ArrayList<>();
-        String url = baseUrl.concat("/filter?keyword=&sort=trending").concat("&page=" + page);
+        String url = baseUrl.concat("/filter?keyword=&sort=recently_updated").concat("&page=" + page);
         Element doc = Jsoup.parse(HttpClient.GET(url, headers)).selectFirst("div.original");
 
         if (doc == null) {
@@ -101,15 +102,20 @@ public class MangaFireTo implements Source {
         return items;
     }
 
+    private String getTextForElement(Element element) {
+        if (element == null) return "";
+        return element.text().trim();
+    }
+
     @Override
     public Manga details(Manga m) throws Exception {
         String url = m.url.startsWith("https") ? m.url : baseUrl.concat(m.url);
         Element doc = Jsoup.parse(HttpClient.GET(url, headers));
-        m.author = doc.selectFirst("a[itemprop=\"author\"]").text().trim();
-        m.summary = doc.selectFirst("div.description").text().trim();
-        m.rating = (int) NumberUtils.toFloat(doc.selectFirst("span.live-score").text().trim());
-        m.status = doc.selectFirst("div.info > p").text().trim();
-        m.type = doc.selectFirst("div.min-info>a").text().trim();
+        m.author = getTextForElement(doc.selectFirst("a[itemprop=\"author\"]"));
+        m.summary = getTextForElement(doc.selectFirst("div.description"));
+        m.rating = (int) NumberUtils.toFloat(getTextForElement(doc.selectFirst("span.live-score")));
+        m.status = getTextForElement(doc.selectFirst("div.info > p"));
+        m.type = getTextForElement(doc.selectFirst("div.min-info>a"));
         return m;
     }
 
@@ -137,7 +143,7 @@ public class MangaFireTo implements Source {
             items.add(item);
         }
 
-        return items;
+        return ListUtils.sortByIndex(new ArrayList<>(items));
     }
 
     @Override
@@ -162,7 +168,7 @@ public class MangaFireTo implements Source {
         if (queries.get("sort") != null) {
             url = url.concat("&sort=" + queries.get("sort"));
         } else {
-            url = url.concat("&sort=trending");
+            url = url.concat("&sort=recently_updated");
         }
         if (queries.get("search") != null) {
             url = url.concat("&keyword=" + queries.get("search"));

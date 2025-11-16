@@ -3,7 +3,6 @@ package in.atulpatare.ranobem.ui.details;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -110,7 +109,6 @@ public class DetailsActivity extends AppCompatActivity {
 
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd ad) {
-                        Log.d("DEBUG", "AD LOADED,.....");
                         rewardedAd = ad;
                         rewardedAd.setFullScreenContentCallback(callback);
                     }

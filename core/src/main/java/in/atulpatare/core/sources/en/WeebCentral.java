@@ -14,6 +14,7 @@ import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.models.Metadata;
 import in.atulpatare.core.network.HttpClient;
 import in.atulpatare.core.sources.Source;
+import in.atulpatare.core.util.ListUtils;
 
 public class WeebCentral implements Source {
     private static final int sourceId = 2;
@@ -99,8 +100,8 @@ public class WeebCentral implements Source {
         return m;
     }
 
-    private String lastPart(String text, String splitBy) {
-        String[] splits = text.split(splitBy);
+    private String lastPart(String text) {
+        String[] splits = text.split("/");
         if (splits.length > 1) {
             return splits[splits.length - 1];
         }
@@ -126,7 +127,7 @@ public class WeebCentral implements Source {
             item.index = i;
             item.sourceId = sourceId;
 
-            String id = lastPart(link, "/");
+            String id = lastPart(link);
             item.url = baseUrl + "/chapters/" + id + "/images?is_prev=False&current_page=1&reading_style=long_strip";
             item.name = "";
             item.mangaId = m.id;
@@ -135,8 +136,7 @@ public class WeebCentral implements Source {
             i++;
         }
 
-
-        return items;
+        return ListUtils.sortByIndex(items);
     }
 
     @Override
@@ -156,11 +156,12 @@ public class WeebCentral implements Source {
     @Override
     public List<Manga> search(Map<String, String> queries, int page) throws Exception {
         String url = baseUrl.concat("/latest-updates/" + page);
+        String search = queries.get("search");
         // search
-        if (queries.get("search") != null) {
+        if (search != null) {
             int limit = 32;
             int offset = page > 1 ? limit * (page - 1) : 0;
-            url = baseUrl.concat("/search/data?limit=32&offset=").concat(String.valueOf(offset)).concat("&text=" + queries.get("search").concat("&sort=Best+Match&order=Descending&official=Any&anime=Any&adult=Any&display_mode=Full+Display"));
+            url = baseUrl.concat("/search/data?limit=32&offset=").concat(String.valueOf(offset)).concat("&text=" + search.concat("&sort=Best+Match&order=Descending&official=Any&anime=Any&adult=Any&display_mode=Full+Display"));
         }
         return this.parse(url);
     }

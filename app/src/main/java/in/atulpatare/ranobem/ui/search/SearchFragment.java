@@ -1,7 +1,9 @@
 package in.atulpatare.ranobem.ui.search;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,6 @@ import in.atulpatare.core.models.Metadata;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentSearchBinding;
-import in.atulpatare.ranobem.ui.browse.BrowseViewModel;
 import in.atulpatare.ranobem.ui.browse.adapter.MangaAdapter;
 import in.atulpatare.ranobem.ui.details.DetailsActivity;
 import in.atulpatare.ranobem.utils.DisplayUtils;
@@ -33,7 +34,7 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
     private static final String ARG_SOURCE_ID = "source_id";
     private final List<Manga> list = new ArrayList<>();
     private int SOURCE_ID = 2;
-    private BrowseViewModel viewModel;
+    private SearchViewModel viewModel;
     private MangaAdapter adapter;
     private boolean isLoading = false;
     private String searchQuery = null;
@@ -64,7 +65,7 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        viewModel = new ViewModelProvider(this).get(BrowseViewModel.class);
+        viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
 
         adapter = new MangaAdapter(list, this);
         DisplayUtils utils = new DisplayUtils(requireActivity(), R.layout.item_manga);
@@ -84,27 +85,38 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
             }
         });
 
-        binding.searchView.setEndIconOnClickListener(v -> {
-            if (binding.searchField.getText() != null) {
-                binding.progress.show();
-                searchQuery = binding.searchField.getText().toString().trim();
-                viewModel.clearItems();
-                isLoading = true;
-                binding.progress.show();
-                page = 1;
-                viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(getViewLifecycleOwner(), (mangas) -> {
-                    binding.progress.hide();
-                    isLoading = false;
-                    list.clear();
-                    list.addAll(mangas);
-                    adapter.notifyDataSetChanged();
-                });
+        // search events
+        binding.searchView.setEndIconOnClickListener(v -> handleSearch());
+        binding.searchField.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                handleSearch();
+                return true;
             }
+            return false;
         });
 
+        // listening to errors
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
 
         return root;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void handleSearch() {
+        if (binding.searchField.getText() != null) {
+            searchQuery = binding.searchField.getText().toString().trim();
+            isLoading = true;
+            binding.progress.show();
+            page = 1;
+            viewModel.clearItems();
+            viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(getViewLifecycleOwner(), (mangas) -> {
+                binding.progress.hide();
+                isLoading = false;
+                list.clear();
+                list.addAll(mangas);
+                adapter.notifyDataSetChanged();
+            });
+        }
     }
 
     @Override

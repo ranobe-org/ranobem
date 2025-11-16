@@ -29,4 +29,5 @@
     <string name="retry">Retry</string>
     <string name="title_history">History</string>
     <string name="delete">Delete</string>
+    <string name="search_in_library">Search in library</string>
 </resources>

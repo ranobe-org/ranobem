@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -83,6 +82,7 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
     }
 
     private void setUpError(String error) {
+        binding.progress.hide();
         Snackbar.make(binding.getRoot(), error, Snackbar.LENGTH_LONG).show();
     }
 
@@ -119,7 +119,6 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
         Chapter c = currentChapter;
         // https://mangafire.to/ajax/read/kw9j9/chapter/en?vrf=ZBYeRCjYBk0tkZnKW4kTuWBYw641e-csvu6vl7UY4zcaviixmK7VJ-tjpFEsOUq42nE5ZBdEYGJfpA
         c.url = vrf.replace("https://mangafire.to", "");
-        Log.d("VRF", "chapter url -> " + c.url);
         new Handler(Looper.getMainLooper()).post(() -> {
             viewModel.getChapter(c).observe(this, this::setUI);
         });
@@ -129,20 +128,19 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
         int index = -1;
         for (int i = 0; i < list.chapters.size(); i++) {
             Chapter c = list.chapters.get(i);
-            if (c.index == currentChapter.index) {
+            if (c.id == currentChapter.id) {
                 index = i;
+                break;
             }
         }
         if (index > -1 && list.chapters.size() > (index + 1)) {
-            Log.d("DEBUG", index + " " + index + 1);
-            Log.d("DEBUG first", currentChapter.toString());
-            Log.d("DEBUG second", list.chapters.get(index + 1).toString());
             return list.chapters.get(index + 1);
         }
         return null;
     }
 
     private void loadNextChapter() {
+        binding.progress.show();
         Chapter next = getNextChapter();
         if (next != null) {
             Toast.makeText(ReaderActivity.this, "Getting next chapter", Toast.LENGTH_LONG).show();
@@ -156,6 +154,7 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
     }
 
     private void setUI(Chapter chapter) {
+        binding.progress.hide();
         saveChapterToHistory(chapter);
         binding.chapterTitle.setText(String.format("Chapter %s %s", chapter.index, chapter.name));
         binding.list.setLayoutManager(new LinearLayoutManager(this));

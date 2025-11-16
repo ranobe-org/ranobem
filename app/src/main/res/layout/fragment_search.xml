@@ -39,8 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/filters"
-        android:layout_marginTop="10dp"
-        android:paddingHorizontal="10dp" />
+        android:layout_marginTop="10dp" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
