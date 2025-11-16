@@ -15,6 +15,9 @@ public interface MangaDao {
     @Query("SELECT * FROM manga ORDER BY name ASC")
     LiveData<List<Manga>> getAll();
 
+    @Query("SELECT * FROM manga ORDER BY name DESC")
+    LiveData<List<Manga>> getAllSortedDesc();
+
     @Query("SELECT * FROM manga WHERE id = :id")
     LiveData<Manga> getById(String id);
 

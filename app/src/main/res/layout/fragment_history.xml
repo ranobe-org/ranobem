@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="100dp"
     tools:context=".ui.history.HistoryFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -23,8 +22,7 @@
         android:id="@+id/manga_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/panel"
-        android:paddingHorizontal="10dp" />
+        android:layout_below="@id/panel" />
 
     <TextView
         android:id="@+id/empty_history"

@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import java.util.List;
+
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
@@ -23,7 +25,10 @@ import in.atulpatare.ranobem.utils.SpacingDecorator;
 
 public class LibraryFragment extends Fragment implements MangaAdapter.OnMangaItemClickListener {
 
+    private final String SORTING_ORDER_ASC = "ASC";
+    private final String SORTING_ORDER_DESC = "DESC";
     private FragmentLibraryBinding binding;
+    private String sortingOrder = SORTING_ORDER_ASC;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -34,15 +39,34 @@ public class LibraryFragment extends Fragment implements MangaAdapter.OnMangaIte
         binding.novelList.setLayoutManager(new GridLayoutManager(requireActivity(), utils.noOfCols()));
         binding.novelList.addItemDecoration(new SpacingDecorator(utils.spacing()));
         binding.progress.hide();
-        AppDatabase.getDatabase().mangaDao().getAll().observe(getViewLifecycleOwner(), mangas -> {
-            if (mangas.isEmpty()) {
-                binding.emptyLib.setVisibility(View.VISIBLE);
-            } else {
-                binding.novelList.setAdapter(new MangaAdapter(mangas, this));
+
+        binding.appbar.setTitle("Library");
+        binding.appbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.sort) {
+                sortingOrder = sortingOrder.equals(SORTING_ORDER_DESC) ? SORTING_ORDER_ASC : SORTING_ORDER_DESC;
+                loadLibrary();
             }
+            return true;
         });
 
+        loadLibrary();
         return root;
+    }
+
+    private void loadLibrary() {
+        if (sortingOrder.equals(SORTING_ORDER_ASC)) {
+            AppDatabase.getDatabase().mangaDao().getAll().observe(getViewLifecycleOwner(), this::setMangaItems);
+        } else {
+            AppDatabase.getDatabase().mangaDao().getAllSortedDesc().observe(getViewLifecycleOwner(), this::setMangaItems);
+        }
+    }
+
+    private void setMangaItems(List<Manga> mangas) {
+        if (mangas.isEmpty()) {
+            binding.emptyLib.setVisibility(View.VISIBLE);
+        } else {
+            binding.novelList.setAdapter(new MangaAdapter(mangas, this));
+        }
     }
 
     @Override
