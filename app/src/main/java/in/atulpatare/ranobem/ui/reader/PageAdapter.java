@@ -40,7 +40,6 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull PageAdapter.MyViewHolder holder, int position) {
-        holder.binding.pageNumber.setText(String.format("%s/%s", position + 1, pages.size()));
         loadImage(holder.binding, position);
     }
 
@@ -93,6 +92,24 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         binding.progress.setVisibility(View.GONE);
+
+                        // Get the intrinsic dimensions of the loaded image
+                        int pWidth = resource.getIntrinsicWidth();
+                        int pHeight = resource.getIntrinsicHeight();
+
+                        if (pWidth > 0 && pHeight > 0) {
+                            int screenWidth = binding.image.getRootView().getWidth();
+                            // Calculate the height required to maintain aspect ratio at full screen width
+                            int calculatedHeight = (int) ((float) pHeight / pWidth * screenWidth);
+
+                            // Apply to the view
+                            ViewGroup.LayoutParams params = binding.image.getLayoutParams();
+                            if (params.height != calculatedHeight) {
+                                params.height = calculatedHeight;
+                                binding.image.setLayoutParams(params);
+                            }
+                        }
+
                         return false;
                     }
                 })

@@ -7,12 +7,14 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -160,6 +162,23 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
         binding.list.setLayoutManager(new LinearLayoutManager(this));
         binding.list.setHasFixedSize(false);
         binding.list.setAdapter(new PageAdapter(chapter.pages));
+        binding.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null) {
+                    int visibleItem = layoutManager.findLastVisibleItemPosition();
+                    int totalPages = currentChapter.pages.size();
+                    int progress = (int) (((float) (visibleItem + 1) / totalPages) * 100);
+                    if(progress > 1) {
+                        binding.progress.setVisibility(RecyclerView.VISIBLE);
+                        binding.progress.setProgress(progress);
+                        binding.progress.setIndeterminate(false);
+                    }
+                }
+            }
+        });
     }
 
     private void saveChapterToHistory(Chapter item) {

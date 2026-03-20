@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-    <TextView
-        android:id="@+id/page_number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/progress"
-        android:padding="5dp"
-        android:textAlignment="center"
-        android:textSize="10sp"
-        tools:ignore="SmallSp" />
 
     <ProgressBar
         android:id="@+id/progress"
@@ -26,7 +15,6 @@
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/page_number"
         android:layout_centerHorizontal="true"
         android:text="@string/retry"
         android:visibility="gone" />
@@ -35,8 +23,8 @@
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/page_number"
         android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         android:contentDescription="@string/page" />
 
 </RelativeLayout>
