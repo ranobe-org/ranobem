@@ -34,8 +34,18 @@ public class MainActivity extends AppCompatActivity {
             binding.downloadPro.setVisibility(View.VISIBLE);
         }
 
-        binding.library.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
-        binding.browse.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        binding.library.setOnClickListener(v -> {
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("TARGET_FRAGMENT", "LIBRARY");
+            startActivity(intent);
+        });
+
+        binding.browse.setOnClickListener(v -> {
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("TARGET_FRAGMENT", "BROWSE");
+            startActivity(intent);
+        });
+
         binding.discord.setOnClickListener(v -> navigateToLink("https://discord.gg/6CQ6u64dca"));
         binding.downloadPro.setOnClickListener(v -> navigateToLink("https://play.google.com/store/apps/details?id=in.atulpatare.ranobem.pro"));
     }

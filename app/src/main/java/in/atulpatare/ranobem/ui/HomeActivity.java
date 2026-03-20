@@ -29,6 +29,13 @@ public class HomeActivity extends AppCompatActivity {
         });
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_home);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        String target = getIntent().getStringExtra("TARGET_FRAGMENT");
+        if (target != null) {
+            if (target.equals("LIBRARY")) {
+                navController.navigate(R.id.navigation_library);
+            }
+        }
     }
 
 }
