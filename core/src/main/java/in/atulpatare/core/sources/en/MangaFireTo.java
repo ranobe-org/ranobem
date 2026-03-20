@@ -37,7 +37,8 @@ public class MangaFireTo implements Source {
                 "atul",
                 true,
                 true,
-                false
+                false,
+                new HashMap<>()
         );
     }
 
@@ -55,7 +56,7 @@ public class MangaFireTo implements Source {
         Element doc = Jsoup.parse(HttpClient.GET(url, headers)).selectFirst("div.original");
 
         if (doc == null) {
-            throw new Exception("Site was unable to load.");
+            throw new Exception("MangaFire did not load.");
         }
 
         for (Element e : doc.select("div.unit > div.inner")) {
@@ -81,7 +82,7 @@ public class MangaFireTo implements Source {
         Element doc = Jsoup.parse(HttpClient.GET(url, headers)).selectFirst("div.original");
 
         if (doc == null) {
-            throw new Exception("Site was unable to load.");
+            throw new Exception("MangaFire did not load.");
         }
 
         for (Element e : doc.select("div.unit > div.inner")) {

@@ -1,6 +1,7 @@
 package in.atulpatare.ranobem.ui.browse.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -11,15 +12,23 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import in.atulpatare.core.models.Manga;
+import in.atulpatare.core.sources.Source;
+import in.atulpatare.core.sources.SourceManager;
 import in.atulpatare.ranobem.databinding.ItemMangaBinding;
 
 public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.MyViewHolder> {
     private final List<Manga> items;
     private final OnMangaItemClickListener listener;
 
+    private boolean showSourceName = false;
+
     public MangaAdapter(List<Manga> items, OnMangaItemClickListener listener) {
         this.items = items;
         this.listener = listener;
+    }
+
+    public void showSearchName(Boolean show) {
+        this.showSourceName = show;
     }
 
     public List<Manga> getItems() {
@@ -40,6 +49,16 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.MyViewHolder
         Glide.with(holder.binding.novelCover.getContext())
                 .load(item.cover)
                 .into(holder.binding.novelCover);
+
+        if (showSourceName) {
+            setSourceName(holder, item.sourceId);
+        }
+    }
+
+    private void setSourceName(@NonNull MyViewHolder holder, int sourceId) {
+        Source source = SourceManager.getSource(sourceId);
+        holder.binding.sourceName.setText(source.meta().name);
+        holder.binding.sourceName.setVisibility(View.VISIBLE);
     }
 
     @Override

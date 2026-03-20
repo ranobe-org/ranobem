@@ -3,6 +3,7 @@ package in.atulpatare.ranobem.ui.search;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,27 +18,35 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.models.Metadata;
+import in.atulpatare.core.sources.Source;
+import in.atulpatare.core.sources.SourceManager;
+import in.atulpatare.core.util.ListUtils;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentSearchBinding;
 import in.atulpatare.ranobem.ui.browse.adapter.MangaAdapter;
 import in.atulpatare.ranobem.ui.details.DetailsActivity;
+import in.atulpatare.ranobem.ui.search.modal.FilterModal;
 import in.atulpatare.ranobem.utils.DisplayUtils;
 import in.atulpatare.ranobem.utils.SpacingDecorator;
 
-public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItemClickListener {
+public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItemClickListener, FilterModal.UpdateFilterListener {
     private static final String ARG_SOURCE_ID = "source_id";
     private final List<Manga> list = new ArrayList<>();
     private int SOURCE_ID = 2;
+    private Source source;
     private SearchViewModel viewModel;
     private MangaAdapter adapter;
     private boolean isLoading = false;
     private String searchQuery = null;
+    private String filterQuery = null;
     private int page = 1;
 
     private FragmentSearchBinding binding;
@@ -66,6 +75,7 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
         View root = binding.getRoot();
 
         viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+        source = SourceManager.getSource(SOURCE_ID);
 
         adapter = new MangaAdapter(list, this);
         DisplayUtils utils = new DisplayUtils(requireActivity(), R.layout.item_manga);
@@ -94,6 +104,13 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
             }
             return false;
         });
+        binding.filter.setOnClickListener(v -> {
+            List<String> selectedList = filterQuery != null
+                ? Arrays.asList(filterQuery.split(","))
+                : new ArrayList<>();
+            FilterModal modal = new FilterModal(source.meta().genres, SearchFragment.this, selectedList);
+            modal.show(getParentFragmentManager(), FilterModal.TAG);
+        });
 
         // listening to errors
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
@@ -103,20 +120,26 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
 
     @SuppressLint("NotifyDataSetChanged")
     public void handleSearch() {
+        if (binding.searchField.getText() == null) {
+            return;
+        }
+        if (filterQuery == null) {
+            return;
+        }
         if (binding.searchField.getText() != null) {
             searchQuery = binding.searchField.getText().toString().trim();
-            isLoading = true;
-            binding.progress.show();
-            page = 1;
-            viewModel.clearItems();
-            viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(getViewLifecycleOwner(), (mangas) -> {
-                binding.progress.hide();
-                isLoading = false;
-                list.clear();
-                list.addAll(mangas);
-                adapter.notifyDataSetChanged();
-            });
         }
+        isLoading = true;
+        binding.progress.show();
+        page = 1;
+        viewModel.clearItems();
+        viewModel.getMangas(SOURCE_ID, page, getQueries()).observe(getViewLifecycleOwner(), (mangas) -> {
+            binding.progress.hide();
+            isLoading = false;
+            list.clear();
+            list.addAll(mangas);
+            adapter.notifyDataSetChanged();
+        });
     }
 
     @Override
@@ -128,6 +151,7 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
     private HashMap<String, String> getQueries() {
         return new HashMap<>() {{
             put("search", searchQuery);
+            put("filters", filterQuery);
         }};
     }
 
@@ -142,5 +166,11 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
     @Override
     public void onMangaItemClick(Manga item) {
         startActivity(new Intent(requireActivity(), DetailsActivity.class).putExtra(Config.KEY_MANGA, item));
+    }
+
+    @Override
+    public void onUpdate(List<String> selectedFilters) {
+        filterQuery = String.join(",", selectedFilters);
+        handleSearch();
     }
 }

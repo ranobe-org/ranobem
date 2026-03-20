@@ -30,4 +30,8 @@
     <string name="title_history">History</string>
     <string name="delete">Delete</string>
     <string name="search_in_library">Search in library</string>
+    <string name="filter_genres">Filter Genres</string>
+    <string name="genres">Genres</string>
+    <string name="apply">apply</string>
+    <string name="clear">clear</string>
 </resources>

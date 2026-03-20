@@ -26,12 +26,24 @@
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
-        android:id="@+id/novel_name"
+        android:id="@+id/source_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/novel_cover_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="?colorPrimary"
+        android:visibility="gone"
+        android:textSize="8sp" />
+
+    <TextView
+        android:id="@+id/novel_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/source_name"
+        android:layout_centerHorizontal="true"
         android:ellipsize="end"
         android:maxLines="2"
         android:padding="2dp"

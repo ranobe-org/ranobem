@@ -48,6 +48,7 @@ public class LibraryFragment extends Fragment implements MangaAdapter.OnMangaIte
         binding.novelList.setLayoutManager(new GridLayoutManager(requireActivity(), utils.noOfCols()));
         binding.novelList.addItemDecoration(new SpacingDecorator(utils.spacing()));
         adapter = new MangaAdapter(originalMangas, this);
+        adapter.showSearchName(true);
         binding.novelList.setAdapter(adapter);
         binding.progress.hide();
 

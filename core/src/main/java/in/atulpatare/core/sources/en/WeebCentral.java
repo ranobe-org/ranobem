@@ -24,6 +24,47 @@ public class WeebCentral implements Source {
         put("user-agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36");
     }};
 
+    private static final HashMap<String, String> genres = new HashMap<>() {{
+            put("Action", "Action");
+            put("Adult", "Adult");
+            put("Adventure", "Adventure");
+            put("Comedy", "Comedy");
+            put("Doujinshi", "Doujinshi");
+            put("Drama", "Drama");
+            put("Ecchi", "Ecchi");
+            put("Fantasy", "Fantasy");
+            put("Gender+Bender", "Gender Bender");
+            put("Harem", "Harem");
+            put("Hentai", "Hentai");
+            put("Historical", "Historical");
+            put("Horror", "Horror");
+            put("Isekai", "Isekai");
+            put("Josei", "Josei");
+            put("Lolicon", "Lolicon");
+            put("Martial+Arts", "Martial Arts");
+            put("Mature", "Mature");
+            put("Mecha", "Mecha");
+            put("Mystery", "Mystery");
+            put("Psychological", "Psychological");
+            put("Romance", "Romance");
+            put("School+Life", "School Life");
+            put("Sci-fi", "Sci-fi");
+            put("Seinen", "Seinen");
+            put("Shotacon", "Shotacon");
+            put("Shoujo", "Shoujo");
+            put("Shoujo+Ai", "Shoujo Ai");
+            put("Shounen", "Shounen");
+            put("Shounen+Ai", "Shounen Ai");
+            put("Slice+of+Life", "Slice of Life");
+            put("Smut", "Smut");
+            put("Sports", "Sports");
+            put("Supernatural", "Supernatural");
+            put("Tragedy", "Tragedy");
+            put("Yaoi", "Yaoi");
+            put("Yuri", "Yuri");
+            put("Other", "Other");
+    }};
+
     @Override
     public Metadata meta() {
         return new Metadata(
@@ -35,7 +76,8 @@ public class WeebCentral implements Source {
                 "atul",
                 true,
                 true,
-                true
+                true,
+                genres
         );
     }
 
@@ -157,11 +199,20 @@ public class WeebCentral implements Source {
     public List<Manga> search(Map<String, String> queries, int page) throws Exception {
         String url = baseUrl.concat("/latest-updates/" + page);
         String search = queries.get("search");
+        String filters = queries.get("filters");
+        int limit = 32;
+        int offset = page > 1 ? limit * (page - 1) : 0;
+        url = baseUrl.concat("/search/data?limit=32&offset=").concat(String.valueOf(offset)).concat("&sort=Best+Match&order=Descending&official=Any&anime=Any&adult=Any&display_mode=Full+Display");
+
         // search
-        if (search != null) {
-            int limit = 32;
-            int offset = page > 1 ? limit * (page - 1) : 0;
-            url = baseUrl.concat("/search/data?limit=32&offset=").concat(String.valueOf(offset)).concat("&text=" + search.concat("&sort=Best+Match&order=Descending&official=Any&anime=Any&adult=Any&display_mode=Full+Display"));
+        if (search != null && !search.isEmpty()) {
+            url = url.concat("&text=" + search);
+        }
+        if (filters != null) {
+            String[] genres = filters.split(",");
+            for (String g : genres) {
+                url = url.concat("&included_tag=").concat(g);
+            }
         }
         return this.parse(url);
     }

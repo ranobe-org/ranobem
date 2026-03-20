@@ -1,5 +1,7 @@
 package in.atulpatare.core.models;
 
+import java.util.HashMap;
+
 public class Metadata {
     public int sourceId;
     public String url;
@@ -12,7 +14,9 @@ public class Metadata {
 
     public Boolean isSearchSupported;
 
-    public Metadata(int sourceId, String url, String name, String lang, String logo, String dev, Boolean isActive, Boolean isEnabled, Boolean isSearchSupported) {
+    public HashMap<String, String> genres;
+
+    public Metadata(int sourceId, String url, String name, String lang, String logo, String dev, Boolean isActive, Boolean isEnabled, Boolean isSearchSupported, HashMap<String, String> genres) {
         this.sourceId = sourceId;
         this.url = url;
         this.name = name;
@@ -22,6 +26,7 @@ public class Metadata {
         this.isActive = isActive;
         this.isEnabled = isEnabled;
         this.isSearchSupported = isSearchSupported;
+        this.genres = genres;
     }
 
     public Metadata() {
