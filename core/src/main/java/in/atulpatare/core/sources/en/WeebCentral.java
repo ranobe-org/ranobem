@@ -197,12 +197,11 @@ public class WeebCentral implements Source {
 
     @Override
     public List<Manga> search(Map<String, String> queries, int page) throws Exception {
-        String url = baseUrl.concat("/latest-updates/" + page);
         String search = queries.get("search");
         String filters = queries.get("filters");
         int limit = 32;
         int offset = page > 1 ? limit * (page - 1) : 0;
-        url = baseUrl.concat("/search/data?limit=32&offset=").concat(String.valueOf(offset)).concat("&sort=Best+Match&order=Descending&official=Any&anime=Any&adult=Any&display_mode=Full+Display");
+        String url = baseUrl.concat("/search/data?limit=32&offset=").concat(String.valueOf(offset)).concat("&sort=Best+Match&order=Descending&official=Any&anime=Any&adult=Any&display_mode=Full+Display");
 
         // search
         if (search != null && !search.isEmpty()) {
