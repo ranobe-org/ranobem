@@ -171,7 +171,7 @@ public class ReaderActivity extends AppCompatActivity implements VrfFetcher.onCo
                     int visibleItem = layoutManager.findLastVisibleItemPosition();
                     int totalPages = currentChapter.pages.size();
                     int progress = (int) (((float) (visibleItem + 1) / totalPages) * 100);
-                    if(progress > 1) {
+                    if (progress > 1) {
                         binding.progress.setVisibility(RecyclerView.VISIBLE);
                         binding.progress.setProgress(progress);
                         binding.progress.setIndeterminate(false);

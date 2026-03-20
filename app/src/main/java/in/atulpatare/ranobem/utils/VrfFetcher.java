@@ -59,6 +59,6 @@ public class VrfFetcher {
     }
 
     public interface onCompleteListener {
-        public void onVrf(String vrf);
+        void onVrf(String vrf);
     }
 }

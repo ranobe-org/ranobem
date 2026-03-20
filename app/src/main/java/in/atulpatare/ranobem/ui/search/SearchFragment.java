@@ -3,7 +3,6 @@ package in.atulpatare.ranobem.ui.search;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +20,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.models.Metadata;
 import in.atulpatare.core.sources.Source;
 import in.atulpatare.core.sources.SourceManager;
-import in.atulpatare.core.util.ListUtils;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentSearchBinding;
@@ -106,8 +103,8 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
         });
         binding.filter.setOnClickListener(v -> {
             List<String> selectedList = filterQuery != null
-                ? Arrays.asList(filterQuery.split(","))
-                : new ArrayList<>();
+                    ? Arrays.asList(filterQuery.split(","))
+                    : new ArrayList<>();
             FilterModal modal = new FilterModal(source.meta().genres, SearchFragment.this, selectedList);
             modal.show(getParentFragmentManager(), FilterModal.TAG);
         });

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import in.atulpatare.ranobem.databinding.SheetGenresBinding;
 
@@ -36,10 +35,6 @@ public class FilterModal extends BottomSheetDialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    public interface UpdateFilterListener {
-         void onUpdate(List<String> selectedFilters);
     }
 
     @Nullable
@@ -97,5 +92,9 @@ public class FilterModal extends BottomSheetDialogFragment {
         });
 
         return binding.getRoot();
+    }
+
+    public interface UpdateFilterListener {
+        void onUpdate(List<String> selectedFilters);
     }
 }
