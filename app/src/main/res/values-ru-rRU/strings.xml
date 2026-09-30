@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">MangaD</string>
+    <string name="manga_cover">обложка манги</string>
+    <string name="read_info">читать</string>
+    <string name="search">поиск</string>
+    <string name="sort">сортировка</string>
+    <string name="start_typing">Начните вводить...</string>
+    <string name="page">страница</string>
+    <string name="manga_downloader">манга сейчас</string>
+    <string name="browse">обзор</string>
+    <string name="join_discord">присоединиться к Discord</string>
+    <string name="build_with">создано с ❤️</string>
+    <string name="search_text">Поиск</string>
+    <string name="next_chapter">следующая глава</string>
+    <string name="continue_text">продолжить</string>
+    <string name="download_pro">скачать PRO без рекламы</string>
+    <string name="add_to_library">добавить в библиотеку</string>
+    <string name="library">библиотека</string>
+    <string name="remove_from_library">удалить из библиотеки</string>
+    <string name="no_items_in_the_library">Ваша библиотека пуста — начните обзор и добавляйте в избранное!</string>
+    <string name="no_items_in_ths_history">Ваша история пуста — начните обзор, чтобы увидеть элементы здесь!</string>
+    <string name="title_activity_home">Главная</string>
+    <string name="title_browse">Обзор</string>
+    <string name="title_search">Поиск</string>
+    <string name="title_library">Книги</string>
+    <string name="open_in_browser">открыть в браузере</string>
+    <string name="retry">Повторить</string>
+    <string name="title_history">История</string>
+    <string name="delete">Удалить</string>
+    <string name="search_in_library">Поиск в библиотеке</string>
+    <string name="filter_genres">Фильтр жанров</string>
+    <string name="genres">Жанры</string>
+    <string name="apply">применить</string>
+    <string name="clear">очистить</string>
+</resources>
