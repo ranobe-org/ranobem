@@ -139,6 +139,8 @@ public class WeebCentral implements Source {
 
     @Override
     public Manga details(Manga m) throws Exception {
+        // older library entries were saved with a relative /series/... url
+        m.url = normalizeLink(m.url);
         Element doc = Jsoup.parse(HttpClient.GET(m.url, headers));
         m.summary = doc.select("p.whitespace-pre-wrap.break-words").text().trim();
         m.rating = 0; // weebcentral has no scores

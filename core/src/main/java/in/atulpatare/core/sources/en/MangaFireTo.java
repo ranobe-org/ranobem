@@ -74,7 +74,7 @@ public class MangaFireTo implements Source {
             Manga m = new Manga();
             m.sourceId = sourceId;
             m.name = name;
-            m.url = link;
+            m.url = normalizeLink(link);
             m.cover = cover;
             m.id = id;
             items.add(m);
@@ -100,13 +100,19 @@ public class MangaFireTo implements Source {
             Manga m = new Manga();
             m.sourceId = sourceId;
             m.name = name;
-            m.url = baseUrl.concat(link);
+            m.url = normalizeLink(link);
             m.cover = cover;
             m.id = id;
             items.add(m);
         }
 
         return items;
+    }
+
+    // links may be relative or absolute, depending on the page and the app version that stored them
+    private String normalizeLink(String link) {
+        if (link.startsWith("http")) return link;
+        return baseUrl.concat(link);
     }
 
     private String getTextForElement(Element element) {
@@ -116,7 +122,7 @@ public class MangaFireTo implements Source {
 
     @Override
     public Manga details(Manga m) throws Exception {
-        String url = m.url.startsWith("https") ? m.url : baseUrl.concat(m.url);
+        String url = normalizeLink(m.url);
         Element doc = Jsoup.parse(HttpClient.GET(url, headers));
         m.author = getTextForElement(doc.selectFirst("a[itemprop=\"author\"]"));
         m.authors = new ArrayList<>();
@@ -134,7 +140,7 @@ public class MangaFireTo implements Source {
     @Override
     public List<Chapter> chapters(Manga m) throws Exception {
         List<Chapter> items = new ArrayList<>();
-        String url = baseUrl.concat(m.url);
+        String url = normalizeLink(m.url);
         String response = HttpClient.GET(url, headers);
         JSONObject object = new JSONObject(response);
         String html = object.getJSONObject("result").getString("html");
@@ -179,7 +185,7 @@ public class MangaFireTo implements Source {
     @Override
     public Chapter chapter(Chapter c) throws Exception {
         List<String> items = new ArrayList<>();
-        String url = baseUrl.concat(c.url);
+        String url = normalizeLink(c.url);
         String response = HttpClient.GET(url, headers);
         JSONObject object = new JSONObject(response);
         JSONArray images = object.getJSONObject("result").getJSONArray("images");

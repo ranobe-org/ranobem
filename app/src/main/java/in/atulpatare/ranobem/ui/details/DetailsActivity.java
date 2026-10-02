@@ -417,7 +417,7 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
     }
 
     private void openInBrowser(Manga m) {
-        String url = m.sourceId == 1 && !m.url.startsWith("https") ? "https://mangafire.to".concat(m.url) : m.url;
+        String url = m.url.startsWith("http") ? m.url : SourceManager.getSource(m.sourceId).meta().url.concat(m.url);
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 

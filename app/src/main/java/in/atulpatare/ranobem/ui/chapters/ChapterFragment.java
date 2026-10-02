@@ -155,6 +155,8 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     private void sort() {
         Collections.reverse(originalItems);
         showChapters();
+        // the old position points somewhere unrelated in the reversed list, start from the top
+        binding.chapterList.scrollToPosition(0);
     }
 
 
