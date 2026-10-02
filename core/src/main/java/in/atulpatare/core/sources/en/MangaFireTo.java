@@ -4,10 +4,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import in.atulpatare.core.models.Chapter;
@@ -147,10 +152,28 @@ public class MangaFireTo implements Source {
             item.url = link;
             item.name = name;
             item.mangaId = m.id;
+            item.updatedAt = releaseDate(e);
             items.add(item);
         }
 
         return ListUtils.sortByIndex(new ArrayList<>(items));
+    }
+
+    // each row ends with its release date, e.g. "Oct 01, 2025"
+    private long releaseDate(Element row) {
+        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+        Elements spans = row.select("span");
+        for (int i = spans.size() - 1; i >= 0; i--) {
+            String text = spans.get(i).text().trim();
+            if (text.isEmpty()) continue;
+            try {
+                Date date = format.parse(text);
+                if (date != null) return date.getTime();
+            } catch (ParseException ignored) {
+                // not the date, keep looking
+            }
+        }
+        return 0;
     }
 
     @Override

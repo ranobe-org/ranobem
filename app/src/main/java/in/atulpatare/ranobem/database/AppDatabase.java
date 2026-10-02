@@ -13,8 +13,10 @@ import in.atulpatare.ranobem.App;
 import in.atulpatare.ranobem.model.History;
 
 
-@Database(entities = {Manga.class, History.class}, version = 2, exportSchema = true, autoMigrations = {
-        @AutoMigration(from = 1, to = 2)
+@Database(entities = {Manga.class, History.class}, version = 3, exportSchema = true, autoMigrations = {
+        @AutoMigration(from = 1, to = 2),
+        // Manga.knownChapters and Manga.checkedAt, for the new chapter check
+        @AutoMigration(from = 2, to = 3)
 })
 public abstract class AppDatabase extends RoomDatabase {
     public static final ExecutorService databaseExecutor = Executors.newSingleThreadExecutor();

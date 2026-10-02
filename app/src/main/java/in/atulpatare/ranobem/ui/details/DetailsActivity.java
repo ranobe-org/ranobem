@@ -14,6 +14,7 @@ import android.text.TextPaint;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.transition.Fade;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.TextView;
@@ -159,7 +160,7 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
     private void setUpUi(Manga m) {
         manga = m;
         // sections fade in as their data arrives instead of popping in
-        TransitionManager.beginDelayedTransition(binding.content);
+        fadeIn();
         binding.progress.hide();
         showBasics(m);
         showBadges(m);
@@ -306,6 +307,13 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         binding.summaryToggle.setText(summaryExpanded ? R.string.show_less : R.string.show_more);
     }
 
+    // fade only: the default transition also animates bounds, which holds off layout while it
+    // runs, and the details and the author's works arriving close together left the hero
+    // stuck at its old size, hiding the badges and authors
+    private void fadeIn() {
+        TransitionManager.beginDelayedTransition(binding.content, new Fade());
+    }
+
     private void showGenres(Manga m) {
         binding.genres.removeAllViews();
         boolean searchable = supportsSearch(m);
@@ -323,7 +331,7 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
     }
 
     private void showAuthorWorks(List<Manga> items) {
-        TransitionManager.beginDelayedTransition(binding.content);
+        fadeIn();
         showCarousel(binding.authorSection, binding.authorWorks, authorWorks, items);
     }
 

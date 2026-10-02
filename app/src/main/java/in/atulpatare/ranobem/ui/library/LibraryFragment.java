@@ -75,6 +75,11 @@ public class LibraryFragment extends Fragment implements MangaAdapter.OnMangaIte
             if (item.getItemId() == R.id.search) {
                 toggleSearch();
             }
+            if (item.getItemId() == R.id.chapter_updates) {
+                // the setting lives in the settings tab
+                BottomNavigationView nav = requireActivity().findViewById(R.id.nav_view);
+                if (nav != null) nav.setSelectedItemId(R.id.navigation_settings);
+            }
             return true;
         });
 

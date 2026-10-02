@@ -71,6 +71,8 @@ dependencies {
     annotationProcessor libs.compiler
     implementation libs.touchimageview
     implementation libs.okhttp
+    // periodic new chapter checks for the library
+    implementation libs.androidx.work.runtime
 
     def room_version = "2.7.2"
     implementation "androidx.room:room-runtime:$room_version"

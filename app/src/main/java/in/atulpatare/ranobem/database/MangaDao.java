@@ -21,6 +21,21 @@ public interface MangaDao {
     @Query("SELECT * FROM manga WHERE id = :id")
     LiveData<Manga> getById(String id);
 
+    /**
+     * The whole library, the ones checked longest ago first, for the new chapter check.
+     */
+    @Query("SELECT * FROM manga ORDER BY checkedAt ASC")
+    List<Manga> getAllForUpdateCheck();
+
+    @Query("UPDATE manga SET knownChapters = :count, checkedAt = :checkedAt WHERE id = :id AND sourceId = :sourceId")
+    void setKnownChapters(String id, int sourceId, int count, long checkedAt);
+
+    /**
+     * Chapters the reader has seen in the chapter list don't need a notification later.
+     */
+    @Query("UPDATE manga SET knownChapters = :count WHERE id = :id AND sourceId = :sourceId AND knownChapters < :count")
+    void raiseKnownChapters(String id, int sourceId, int count);
+
     @Insert
     void insert(Manga manga);
 

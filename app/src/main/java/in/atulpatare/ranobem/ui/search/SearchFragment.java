@@ -89,7 +89,7 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
                 searchOnOpen = authorQuery != null || filterQuery != null;
             }
         } else {
-            SOURCE_ID = 1;
+            SOURCE_ID = 2;
         }
     }
 

@@ -302,6 +302,8 @@ public class WeebCentral implements Source {
             item.url = baseUrl + "/chapters/" + id + "/images?is_prev=False&current_page=1&reading_style=long_strip";
             item.name = "";
             item.mangaId = m.id;
+            Element time = e.selectFirst("time");
+            if (time != null) item.updatedAt = parseTime(time.attr("datetime"));
 
             items.add(item);
             i++;

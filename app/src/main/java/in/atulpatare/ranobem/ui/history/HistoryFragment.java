@@ -46,10 +46,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
         binding.mangaList.setAdapter(adapter);
 
         binding.appbar.setTitle(R.string.reading_history);
-        binding.appbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.delete) confirmClearAll();
-            return true;
-        });
+        binding.clearAll.setOnClickListener(v -> confirmClearAll());
 
         firstLoad = true;
         AppDatabase.getDatabase().historyDao().getAll().observe(getViewLifecycleOwner(), this::setHistories);
@@ -65,7 +62,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
         }
 
         // nothing to clear when there's no history
-        binding.appbar.getMenu().findItem(R.id.delete).setVisible(!histories.isEmpty());
+        binding.clearAll.setVisibility(histories.isEmpty() ? View.GONE : View.VISIBLE);
         if (histories.isEmpty()) {
             EmptyState.show(binding.emptyState, R.drawable.ic_history, R.string.history_empty_title,
                     R.string.history_empty_message, R.string.start_browsing, v -> openBrowse());

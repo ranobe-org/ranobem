@@ -12,7 +12,10 @@ public class ListUtils {
     public static List<Chapter> searchByName(String keyword, List<Chapter> items) {
         List<Chapter> result = new ArrayList<>();
         for (Chapter item : items) {
-            if (item.name.toLowerCase().contains(keyword)) {
+            // most chapters are known by number alone, "12" should find chapter 12
+            String number = item.index == (int) item.index ? String.valueOf((int) item.index) : String.valueOf(item.index);
+            boolean named = item.name != null && item.name.toLowerCase().contains(keyword);
+            if (named || number.contains(keyword.trim())) {
                 result.add(item);
             }
         }

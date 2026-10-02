@@ -18,8 +18,10 @@ navigationFragment = "2.6.0"
 navigationUi = "2.6.0"
 navigationFragmentVersion = "2.9.5"
 navigationUiVersion = "2.9.5"
+workRuntime = "2.12.0"
 
 [libraries]
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }

@@ -24,6 +24,7 @@ import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.DialogEpubDownloadBinding;
 import in.atulpatare.ranobem.download.DownloadQueue;
+import in.atulpatare.ranobem.utils.NotificationAccess;
 
 /**
  * Starts an EPUB download: free users are pointed to Pro, Pro users pick the chapters and grant
@@ -110,6 +111,13 @@ public class EpubDownloadPrompt {
         if (pendingManga == null) return;
         DownloadQueue.get(activity).enqueue(pendingManga, pendingFrom, pendingTo);
         pendingManga = null;
+        if (!NotificationAccess.enabled(activity)) {
+            // it still runs, but its progress and result only show in the app
+            Snackbar.make(anchor, R.string.download_started_no_notifications, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.open_settings, v -> NotificationAccess.openSettings(activity))
+                    .show();
+            return;
+        }
         Snackbar.make(anchor, R.string.download_started, Snackbar.LENGTH_LONG)
                 .setAction(R.string.download_view, v -> activity.startActivity(new Intent(activity, DownloadsActivity.class)))
                 .show();

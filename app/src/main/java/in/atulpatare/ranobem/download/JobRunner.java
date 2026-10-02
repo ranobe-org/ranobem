@@ -73,7 +73,7 @@ class JobRunner {
         this.listener = listener;
         this.network = new NetworkMonitor(context);
         this.fetcher = new ImageFetcher(network);
-        this.resolver = new ChapterResolver(context, job.manga);
+        this.resolver = new ChapterResolver(job.manga);
     }
 
     void run() throws Exception {

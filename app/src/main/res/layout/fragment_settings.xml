@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.settings.SettingsFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/colorBackground">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/title_settings" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="8dp">
+
+            <!-- App header -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="?colorPrimaryContainer"
+                app:cardCornerRadius="28dp"
+                app:contentPadding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.card.MaterialCardView
+                            style="@style/Widget.Material3.CardView.Filled"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            app:cardBackgroundColor="?colorSurface"
+                            app:cardCornerRadius="20dp">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:importantForAccessibility="no"
+                                android:src="@mipmap/ic_launcher_round" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/app_name"
+                                    android:textAppearance="?attr/textAppearanceTitleLarge"
+                                    android:textColor="?colorOnPrimaryContainer"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/edition_badge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:background="@drawable/bg_pill"
+                                    android:backgroundTint="?colorPrimary"
+                                    android:paddingHorizontal="8dp"
+                                    android:paddingVertical="2dp"
+                                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                                    android:textColor="?colorOnPrimary"
+                                    android:textStyle="bold"
+                                    tools:text="@string/edition_free" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/app_version"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:textColor="?colorOnPrimaryContainer"
+                                tools:text="Version 14" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/pro_app"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/download_pro"
+                        android:visibility="gone"
+                        app:icon="@drawable/ic_open_in_new"
+                        app:iconGravity="textEnd"
+                        app:iconSize="18dp"
+                        tools:visibility="visible" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Appearance -->
+            <TextView
+                style="@style/Widget.RanobeM.Settings.SectionTitle"
+                android:text="@string/settings_appearance" />
+
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.RanobeM.Settings.Card">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/theme_mode_option"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingIcon="@drawable/ic_theme_mode_auto"
+                        app:settingSubtitle="@string/settings_theme_sub"
+                        app:settingTitle="@string/settings_theme" />
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/theme_mode_toggle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginBottom="16dp"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/theme_auto"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_theme_auto"
+                            app:icon="@drawable/ic_theme_mode_auto"
+                            app:iconSize="18dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/theme_light"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_theme_light"
+                            app:icon="@drawable/ic_theme_mode_light"
+                            app:iconSize="18dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/theme_dark"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_theme_dark"
+                            app:icon="@drawable/ic_theme_mode_night"
+                            app:iconSize="18dp" />
+
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Library -->
+            <TextView
+                style="@style/Widget.RanobeM.Settings.SectionTitle"
+                android:text="@string/settings_library" />
+
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.RanobeM.Settings.Card">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/chapter_updates_option"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingIcon="@drawable/ic_notifications"
+                        app:settingSubtitle="@string/settings_chapter_updates_sub"
+                        app:settingTitle="@string/settings_chapter_updates" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/check_now_divider"
+                        style="@style/Widget.RanobeM.Settings.Divider" />
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/check_now_option"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingIcon="@drawable/ic_refresh"
+                        app:settingSubtitle="@string/settings_check_now_sub"
+                        app:settingTitle="@string/settings_check_now" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Downloads, Pro only -->
+            <TextView
+                android:id="@+id/downloads_title"
+                style="@style/Widget.RanobeM.Settings.SectionTitle"
+                android:text="@string/title_downloads" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/downloads_card"
+                style="@style/Widget.RanobeM.Settings.Card">
+
+                <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                    android:id="@+id/downloads_option"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:settingIcon="@drawable/ic_download"
+                    app:settingSubtitle="@string/settings_downloads_sub"
+                    app:settingTitle="@string/title_downloads" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- About -->
+            <TextView
+                style="@style/Widget.RanobeM.Settings.SectionTitle"
+                android:text="@string/settings_about" />
+
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.RanobeM.Settings.Card">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/roadmap_option"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingIcon="@drawable/ic_new_releases"
+                        app:settingSubtitle="@string/roadmap_option_sub"
+                        app:settingTitle="@string/settings_roadmap" />
+
+                    <com.google.android.material.divider.MaterialDivider style="@style/Widget.RanobeM.Settings.Divider" />
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/discord_link"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingExternal="true"
+                        app:settingIcon="@drawable/ic_discord"
+                        app:settingSubtitle="discord.gg/6CQ6u64dca"
+                        app:settingTitle="Discord" />
+
+                    <com.google.android.material.divider.MaterialDivider style="@style/Widget.RanobeM.Settings.Divider" />
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/updates_link"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingExternal="true"
+                        app:settingIcon="@drawable/ic_public"
+                        app:settingSubtitle="@string/settings_app_updates_sub"
+                        app:settingTitle="@string/updates_form" />
+
+                    <com.google.android.material.divider.MaterialDivider style="@style/Widget.RanobeM.Settings.Divider" />
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/keep_android_open_link"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingExternal="true"
+                        app:settingIcon="@drawable/ic_warning"
+                        app:settingSubtitle="@string/keep_android_open_url_label"
+                        app:settingTitle="@string/why_title" />
+
+                    <com.google.android.material.divider.MaterialDivider style="@style/Widget.RanobeM.Settings.Divider" />
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/ranobe_link"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingExternal="true"
+                        app:settingIcon="@drawable/ic_ranobe"
+                        app:settingIconTinted="false"
+                        app:settingSubtitle="@string/ranobe_subtitle"
+                        app:settingTitle="Ranobe" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:letterSpacing="0.1"
+                android:textColor="?colorOnSurfaceVariant"
+                android:textSize="12sp"
+                tools:text="built with ❤️ · v14" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

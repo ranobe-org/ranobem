@@ -15,8 +15,19 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:menu="@menu/menu_history" />
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/clear_all"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:text="@string/history_clear_all"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView

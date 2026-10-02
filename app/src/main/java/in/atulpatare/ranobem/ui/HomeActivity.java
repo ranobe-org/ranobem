@@ -18,6 +18,7 @@ import in.atulpatare.ranobem.databinding.ActivityHomeBinding;
 public class HomeActivity extends AppCompatActivity {
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
     public static final String TARGET_SEARCH = "SEARCH";
+    public static final String TARGET_SETTINGS = "SETTINGS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,9 @@ public class HomeActivity extends AppCompatActivity {
                     break;
                 case "HISTORY":
                     navController.navigate(R.id.navigation_history);
+                    break;
+                case TARGET_SETTINGS:
+                    navController.navigate(R.id.navigation_settings);
                     break;
             }
         }

@@ -25,6 +25,7 @@ public class Chapter implements Parcelable {
     public int id;
     public int sourceId;
     public float index;
+    public long updatedAt; // epoch millis the chapter was released or updated, 0 when unknown
 
     public Chapter() {
         this.url = "";
@@ -38,6 +39,7 @@ public class Chapter implements Parcelable {
         id = in.readInt();
         sourceId = in.readInt();
         index = in.readFloat();
+        updatedAt = in.readLong();
     }
 
     @Override
@@ -49,6 +51,7 @@ public class Chapter implements Parcelable {
         dest.writeInt(id);
         dest.writeInt(sourceId);
         dest.writeFloat(index);
+        dest.writeLong(updatedAt);
     }
 
     @Override

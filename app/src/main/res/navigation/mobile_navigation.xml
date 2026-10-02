@@ -28,4 +28,10 @@
         android:name="in.atulpatare.ranobem.ui.history.HistoryFragment"
         android:label="@string/title_history"
         tools:layout="@layout/fragment_history" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="in.atulpatare.ranobem.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

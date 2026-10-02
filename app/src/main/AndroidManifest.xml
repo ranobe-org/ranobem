@@ -37,15 +37,28 @@
         <activity
             android:name=".ui.details.DetailsActivity"
             android:exported="false" />
+        <!-- the parent puts the home screen under it when opened from a notification -->
         <activity
             android:name=".ui.downloads.DownloadsActivity"
             android:exported="false"
-            android:label="@string/title_downloads" />
+            android:label="@string/title_downloads"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".ui.settings.RoadmapActivity"
+            android:exported="false"
+            android:label="@string/settings_roadmap" />
 
         <service
             android:name=".download.DownloadService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
+
+        <!-- WorkManager's foreground service: declared without a type, which Android 14+
+             requires, and unused since no worker calls setForeground -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            tools:node="remove" />
 
         <receiver
             android:name=".download.DownloadActionReceiver"
