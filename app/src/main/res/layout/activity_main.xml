@@ -15,11 +15,21 @@
         android:paddingHorizontal="20dp"
         android:paddingVertical="16dp">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settings"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="-12dp"
+            android:contentDescription="@string/title_settings"
+            app:icon="@drawable/ic_settings"
+            app:iconTint="?colorOnSurfaceVariant" />
+
         <!-- Hero -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
             android:fontFamily="monospace"
             android:letterSpacing="0.3"
             android:text="@string/home_eyebrow"

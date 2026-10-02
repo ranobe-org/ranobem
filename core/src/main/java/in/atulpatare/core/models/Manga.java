@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -30,6 +31,12 @@ public class Manga implements Parcelable {
     public String id;
     public String name, url, cover, status, type, summary, author;
     public int rating, sourceId; // out of 10
+
+    // library bookkeeping for the new chapter check, stored but never parceled
+    @ColumnInfo(defaultValue = "0")
+    public int knownChapters;
+    @ColumnInfo(defaultValue = "0")
+    public long checkedAt; // epoch millis of the last successful check
 
     // extra details, filled by Source.details() and never stored in the library
     @Ignore

@@ -39,7 +39,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import in.atulpatare.core.models.Chapter;
 import in.atulpatare.core.models.Manga;
@@ -52,7 +51,6 @@ import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.ui.chapters.ChaptersViewModel;
 import in.atulpatare.ranobem.ui.details.DetailsActivity;
 import in.atulpatare.ranobem.utils.NumberUtils;
-import in.atulpatare.ranobem.utils.VrfFetcher;
 
 public class ReaderActivity extends AppCompatActivity implements ReaderSettingsSheet.Callback {
     private static final long MENU_ANIMATION_MS = 200;
@@ -632,21 +630,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
 
     private void loadAllChapters() {
         chaptersFailed = false;
-        if (manga.sourceId == 1) {
-            String url = "https://mangafire.to" + manga.url.replace("/manga", "/read");
-            AtomicBoolean handled = new AtomicBoolean(false);
-            VrfFetcher.fetchVrf(this, url, "/ajax/read/" + manga.id, vrf -> {
-                if (!handled.compareAndSet(false, true)) return;
-                Manga request = copy(manga, Manga.CREATOR);
-                request.url = vrf.replace("https://mangafire.to", "");
-                mainHandler.post(() -> {
-                    if (isFinishing()) return;
-                    viewModel.getChapters(request).observe(this, this::setAllChapters);
-                });
-            });
-        } else {
-            viewModel.getChapters(manga).observe(this, this::setAllChapters);
-        }
+        viewModel.getChapters(manga).observe(this, this::setAllChapters);
     }
 
     private void setAllChapters(List<Chapter> chapters) {
@@ -678,19 +662,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
 
         // work on a copy, the source may rewrite the url while fetching
         Chapter request = copy(chapter, Chapter.CREATOR);
-        if (request.sourceId == 1) {
-            AtomicBoolean handled = new AtomicBoolean(false);
-            VrfFetcher.fetchVrf(getApplicationContext(), "https://mangafire.to" + request.url, "/ajax/read/chapter", vrf -> {
-                if (!handled.compareAndSet(false, true)) return;
-                // https://mangafire.to/ajax/read/kw9j9/chapter/en?vrf=ZBYeRCjYBk0tkZnKW4kTuWBYw641e-csvu6vl7UY4zcaviixmK7VJ-tjpFEsOUq42nE5ZBdEYGJfpA
-                request.url = vrf.replace("https://mangafire.to", "");
-                mainHandler.post(() -> {
-                    if (token == loadToken && !isFinishing()) observeChapter(request, token);
-                });
-            });
-        } else {
-            observeChapter(request, token);
-        }
+        observeChapter(request, token);
     }
 
     private void observeChapter(Chapter request, int token) {

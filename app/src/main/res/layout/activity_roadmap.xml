@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.settings.RoadmapActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:navigationContentDescription="@string/back"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/settings_roadmap" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/roadmap_intro"
+                android:textAppearance="?textAppearanceBodyMedium"
+                android:textColor="?colorOnSurfaceVariant" />
+
+            <!-- planned features, the rows are labels only -->
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.RanobeM.Settings.Card">
+
+                <LinearLayout
+                    android:id="@+id/features"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/roadmap_backup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingIcon="@drawable/ic_backup"
+                        app:settingSubtitle="@string/roadmap_backup_sub"
+                        app:settingTitle="@string/roadmap_backup" />
+
+                    <com.google.android.material.divider.MaterialDivider style="@style/Widget.RanobeM.Settings.Divider" />
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/roadmap_tracking"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingIcon="@drawable/ic_sync"
+                        app:settingSubtitle="@string/roadmap_tracking_sub"
+                        app:settingTitle="@string/roadmap_tracking" />
+
+                    <com.google.android.material.divider.MaterialDivider style="@style/Widget.RanobeM.Settings.Divider" />
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/roadmap_categories"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingIcon="@drawable/ic_folder"
+                        app:settingSubtitle="@string/roadmap_categories_sub"
+                        app:settingTitle="@string/roadmap_categories" />
+
+                    <com.google.android.material.divider.MaterialDivider style="@style/Widget.RanobeM.Settings.Divider" />
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/roadmap_offline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingIcon="@drawable/ic_download"
+                        app:settingSubtitle="@string/roadmap_offline_sub"
+                        app:settingTitle="@string/roadmap_offline" />
+
+                    <com.google.android.material.divider.MaterialDivider style="@style/Widget.RanobeM.Settings.Divider" />
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/roadmap_sources"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingIcon="@drawable/ic_extension"
+                        app:settingSubtitle="@string/roadmap_sources_sub"
+                        app:settingTitle="@string/roadmap_sources" />
+
+                    <com.google.android.material.divider.MaterialDivider style="@style/Widget.RanobeM.Settings.Divider" />
+
+                    <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                        android:id="@+id/roadmap_stats"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:settingIcon="@drawable/ic_insights"
+                        app:settingSubtitle="@string/roadmap_stats_sub"
+                        app:settingTitle="@string/roadmap_stats" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.RanobeM.Settings.Card"
+                android:layout_marginTop="16dp">
+
+                <in.atulpatare.ranobem.ui.settings.SettingOptionView
+                    android:id="@+id/suggest_feature_link"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:settingExternal="true"
+                    app:settingIcon="@drawable/ic_discord"
+                    app:settingSubtitle="@string/roadmap_suggest_sub"
+                    app:settingTitle="@string/roadmap_suggest" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

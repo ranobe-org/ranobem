@@ -25,6 +25,7 @@ import in.atulpatare.ranobem.databinding.FragmentHistoryBinding;
 import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.ui.history.adapter.HistoryAdapter;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
+import in.atulpatare.ranobem.utils.SourceAccess;
 import in.atulpatare.ranobem.utils.EmptyState;
 
 public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistoryItemClickListener {
@@ -46,10 +47,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
         binding.mangaList.setAdapter(adapter);
 
         binding.appbar.setTitle(R.string.reading_history);
-        binding.appbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.delete) confirmClearAll();
-            return true;
-        });
+        binding.clearAll.setOnClickListener(v -> confirmClearAll());
 
         firstLoad = true;
         AppDatabase.getDatabase().historyDao().getAll().observe(getViewLifecycleOwner(), this::setHistories);
@@ -65,7 +63,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
         }
 
         // nothing to clear when there's no history
-        binding.appbar.getMenu().findItem(R.id.delete).setVisible(!histories.isEmpty());
+        binding.clearAll.setVisibility(histories.isEmpty() ? View.GONE : View.VISIBLE);
         if (histories.isEmpty()) {
             EmptyState.show(binding.emptyState, R.drawable.ic_history, R.string.history_empty_title,
                     R.string.history_empty_message, R.string.start_browsing, v -> openBrowse());
@@ -97,6 +95,10 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
 
     @Override
     public void onHistoryItemClick(History history) {
+        if (!SourceAccess.available(history.sourceId)) {
+            SourceAccess.showUnavailable(requireContext(), history.sourceId, null);
+            return;
+        }
         Manga manga = history.getManga();
         Chapter chapter = history.getChapter();
         Bundle bundle = new Bundle();

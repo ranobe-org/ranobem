@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SettingOptionView">
+        <attr name="settingIcon" format="reference" />
+        <attr name="settingTitle" format="string" />
+        <attr name="settingSubtitle" format="string" />
+        <!-- shows an "opens outside the app" marker at the end of the row -->
+        <attr name="settingExternal" format="boolean" />
+        <!-- false keeps the icon's own colors, e.g. another app's logo -->
+        <attr name="settingIconTinted" format="boolean" />
+    </declare-styleable>
+</resources>

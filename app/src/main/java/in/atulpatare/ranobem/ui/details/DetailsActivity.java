@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.RenderEffect;
 import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,9 @@ import android.text.TextPaint;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ImageSpan;
+import android.text.style.UnderlineSpan;
+import android.transition.Fade;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.TextView;
@@ -56,6 +60,7 @@ import in.atulpatare.ranobem.ui.browse.adapter.MangaAdapter;
 import in.atulpatare.ranobem.ui.chapters.ChapterFragment;
 import in.atulpatare.ranobem.ui.downloads.DownloadsActivity;
 import in.atulpatare.ranobem.ui.downloads.EpubDownloadPrompt;
+import in.atulpatare.ranobem.utils.SourceAccess;
 
 public class DetailsActivity extends AppCompatActivity implements MangaAdapter.OnMangaItemClickListener {
     private static final int SUMMARY_LINES = 4;
@@ -92,9 +97,15 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         showBasics(manga);
 
         viewModel = new ViewModelProvider(this).get(DetailsViewModel.class);
-        viewModel.getDetails(manga).observe(this, this::setUpUi);
-        viewModel.getError().observe(this, this::showError);
-        viewModel.getAuthorWorks().observe(this, this::showAuthorWorks);
+        if (SourceAccess.available(manga.sourceId)) {
+            viewModel.getDetails(manga).observe(this, this::setUpUi);
+            viewModel.getError().observe(this, this::showError);
+            viewModel.getAuthorWorks().observe(this, this::showAuthorWorks);
+        } else {
+            // a series saved from a source that has since been switched off, only what's stored can be shown
+            binding.progress.hide();
+            if (savedInstanceState == null) SourceAccess.showUnavailable(this, manga.sourceId, null);
+        }
 
         binding.back.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         binding.read.setOnClickListener(v -> navigateToChapterList());
@@ -159,7 +170,7 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
     private void setUpUi(Manga m) {
         manga = m;
         // sections fade in as their data arrives instead of popping in
-        TransitionManager.beginDelayedTransition(binding.content);
+        fadeIn();
         binding.progress.hide();
         showBasics(m);
         showBadges(m);
@@ -188,7 +199,8 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         binding.badgeAdult.setVisibility(m.adult ? View.VISIBLE : View.GONE);
     }
 
-    // "by A, B" where every author the source can search by is a link to their other works
+    // "by A, B" where every author the source can search by is a link to their other works,
+    // underlined and followed by a search icon so it reads as tappable
     private void showAuthors(Manga m) {
         List<Tag> authors = m.authors;
         if ((authors == null || authors.isEmpty()) && !isBlank(m.author)) {
@@ -209,6 +221,11 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
             int start = text.length();
             text.append(author.name);
             if (searchable && author.isSearchable()) {
+                int nameEnd = text.length();
+                text.append('\u00A0');
+                int icon = text.length();
+                text.append('\uFFFC');
+                text.setSpan(searchIcon(linkColor), icon, text.length(), SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
                 text.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(@NonNull View widget) {
@@ -222,12 +239,25 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
                         ds.setUnderlineText(false);
                     }
                 }, start, text.length(), SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+                // only the name is underlined, the name and the icon are both tappable. Set after the
+                // link, whose own style turns underlines off
+                text.setSpan(new UnderlineSpan(), start, nameEnd, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
         binding.authors.setText(text);
         binding.authors.setMovementMethod(LinkMovementMethod.getInstance());
         binding.authors.setHighlightColor(Color.TRANSPARENT);
         binding.authors.setVisibility(View.VISIBLE);
+    }
+
+    private ImageSpan searchIcon(int color) {
+        Drawable icon = ContextCompat.getDrawable(this, R.drawable.ic_search).mutate();
+        icon.setTint(color);
+        int size = Math.round(binding.authors.getTextSize() * 1.15f);
+        icon.setBounds(0, 0, size, size);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                ? new ImageSpan(icon, ImageSpan.ALIGN_CENTER)
+                : new ImageSpan(icon, ImageSpan.ALIGN_BASELINE);
     }
 
     private void showStats(Manga m) {
@@ -306,6 +336,13 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         binding.summaryToggle.setText(summaryExpanded ? R.string.show_less : R.string.show_more);
     }
 
+    // fade only: the default transition also animates bounds, which holds off layout while it
+    // runs, and the details and the author's works arriving close together left the hero
+    // stuck at its old size, hiding the badges and authors
+    private void fadeIn() {
+        TransitionManager.beginDelayedTransition(binding.content, new Fade());
+    }
+
     private void showGenres(Manga m) {
         binding.genres.removeAllViews();
         boolean searchable = supportsSearch(m);
@@ -323,7 +360,7 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
     }
 
     private void showAuthorWorks(List<Manga> items) {
-        TransitionManager.beginDelayedTransition(binding.content);
+        fadeIn();
         showCarousel(binding.authorSection, binding.authorWorks, authorWorks, items);
     }
 
@@ -409,12 +446,16 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
     }
 
     private void openInBrowser(Manga m) {
-        String url = m.sourceId == 1 && !m.url.startsWith("https") ? "https://mangafire.to".concat(m.url) : m.url;
+        String url = m.url.startsWith("http") ? m.url : SourceManager.getSource(m.sourceId).meta().url.concat(m.url);
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
     // an existing download is managed on the downloads screen, otherwise start one
     private void onDownloadClick() {
+        if (!SourceAccess.available(manga.sourceId)) {
+            SourceAccess.showUnavailable(this, manga.sourceId, null);
+            return;
+        }
         if (downloadJob != null) {
             startActivity(new Intent(this, DownloadsActivity.class));
         } else {
@@ -443,6 +484,10 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
 
     private void navigateToChapterList() {
         if (manga == null) return;
+        if (!SourceAccess.available(manga.sourceId)) {
+            SourceAccess.showUnavailable(this, manga.sourceId, null);
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putParcelable(Config.KEY_MANGA, manga);
         ChapterFragment chapters = new ChapterFragment();

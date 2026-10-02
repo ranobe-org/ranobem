@@ -257,4 +257,87 @@
     </plurals>
     <string name="download_done_title">EPUB готов</string>
     <string name="download_failed_title">Не удалось завершить «%1$s»</string>
+
+    <!-- chapter list -->
+    <string name="chapter_new">Новая</string>
+    <string name="chapter_last_read">Последняя</string>
+    <string name="chapter_read">Прочитано</string>
+    <string name="chapters_updated">Обновлено %1$s</string>
+
+    <string name="history_clear_all">Очистить всё</string>
+
+    <!-- settings -->
+    <string name="title_settings">Настройки</string>
+    <string name="settings_version">Версия %1$s</string>
+    <string name="settings_appearance">Оформление</string>
+    <string name="settings_theme">Тема</string>
+    <string name="settings_theme_sub">Светлая, тёмная или как в системе</string>
+    <string name="settings_theme_auto">Авто</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Тёмная</string>
+    <string name="settings_library">Библиотека</string>
+    <string name="settings_chapter_updates">Уведомления о новых главах</string>
+    <string name="settings_chapter_updates_sub">Проверяет библиотеку каждые 12 часов и сообщает о выходе новых глав</string>
+    <string name="ranobe_subtitle">Читалка ранобэ от того же разработчика</string>
+    <string name="settings_chapter_updates_pro_sub">Pro: сама проверяет библиотеку каждые 12 часов. Кнопка «Проверить сейчас» ниже доступна всегда.</string>
+    <string name="chapter_updates_pro_message">Узнавайте о новых главах без лишних действий: Pro проверяет библиотеку каждые 12 часов. В этой версии вы по-прежнему можете нажимать «Проверить сейчас» когда угодно.</string>
+    <string name="settings_chapter_updates_blocked">Уведомления для приложения заблокированы. Нажмите, чтобы исправить.</string>
+    <string name="settings_chapter_updates_blocked_message">Новые главы нельзя показать, пока уведомления заблокированы. Разрешите их в настройках системы или отключите проверку.</string>
+    <string name="settings_chapter_updates_turn_off">Отключить</string>
+    <string name="settings_chapter_updates_on">Вы будете получать уведомления о новых главах</string>
+    <string name="settings_chapter_updates_off">Уведомления о новых главах отключены</string>
+    <string name="settings_check_now">Проверить сейчас</string>
+    <string name="settings_check_now_sub">Сразу поискать новые главы в библиотеке</string>
+    <string name="settings_check_now_started">Ищем новые главы в библиотеке…</string>
+    <string name="settings_downloads_sub">EPUB сохраняются в Downloads/MangaD</string>
+    <string name="settings_roadmap">Скоро</string>
+    <string name="roadmap_option_sub">Над чем мы работаем дальше</string>
+    <string name="roadmap_intro">Вот что мы готовим для следующих версий. Есть идея? Расскажите нам ниже.</string>
+    <string name="roadmap_backup">Резервная копия</string>
+    <string name="roadmap_backup_sub">Сохраняйте библиотеку и историю чтения в файл и переносите их на новый телефон</string>
+    <string name="roadmap_tracking">Синхронизация с AniList и MyAnimeList</string>
+    <string name="roadmap_tracking_sub">Прогресс чтения обновляется в вашем трекере по мере чтения</string>
+    <string name="roadmap_categories">Категории библиотеки</string>
+    <string name="roadmap_categories_sub">Раскладывайте тайтлы по своим полкам: «Читаю», «Отложено», «В планах»</string>
+    <string name="roadmap_offline">Главы офлайн</string>
+    <string name="roadmap_offline_sub">Сохраняйте главы в приложении и читайте их без интернета</string>
+    <string name="roadmap_sources">Больше источников</string>
+    <string name="roadmap_sources_sub">Больше мест, где искать мангу, манхву и маньхуа</string>
+    <string name="roadmap_stats">Статистика чтения</string>
+    <string name="roadmap_stats_sub">Прочитанные главы, время за чтением и серии дней подряд</string>
+    <string name="roadmap_suggest">Предложить функцию</string>
+    <string name="roadmap_suggest_sub">Расскажите в Discord, что хотите увидеть дальше</string>
+    <string name="source_unavailable_title">%1$s недоступен</string>
+    <string name="source_unavailable_message">%1$s изменил свой сайт, и MangaD больше не может загружать оттуда тайтлы. Сохранённые тайтлы и история чтения никуда не денутся. Найдите этот тайтл через поиск, чтобы продолжить чтение из другого источника.</string>
+    <string name="settings_about">О приложении</string>
+    <string name="settings_app_updates_sub">Узнавайте о новых версиях приложения</string>
+    <string name="notifications_blocked">Уведомления заблокированы</string>
+    <string name="notifications_blocked_title">Уведомления заблокированы</string>
+    <string name="open_settings">Настройки</string>
+    <string name="on">Вкл.</string>
+    <string name="off">Выкл.</string>
+    <string name="no_browser">Не найдено приложение для открытия ссылки</string>
+    <string name="download_started_no_notifications">Загрузка началась. Разрешите уведомления, чтобы видеть прогресс.</string>
+
+    <!-- new chapter notifications -->
+    <string name="chapter_updates_channel">Новые главы</string>
+    <string name="chapter_updates_channel_desc">Новые главы серий из вашей библиотеки</string>
+    <plurals name="chapter_updates_title">
+        <item quantity="one">%d новая глава</item>
+        <item quantity="few">%d новые главы</item>
+        <item quantity="many">%d новых глав</item>
+        <item quantity="other">%d новой главы</item>
+    </plurals>
+    <plurals name="chapter_updates_summary">
+        <item quantity="one">Обновлена %d серия</item>
+        <item quantity="few">Обновлены %d серии</item>
+        <item quantity="many">Обновлено %d серий</item>
+        <item quantity="other">Обновлено %d серии</item>
+    </plurals>
+    <plurals name="chapter_updates_new">
+        <item quantity="one">%d новая глава</item>
+        <item quantity="few">%d новые главы</item>
+        <item quantity="many">%d новых глав</item>
+        <item quantity="other">%d новой главы</item>
+    </plurals>
 </resources>

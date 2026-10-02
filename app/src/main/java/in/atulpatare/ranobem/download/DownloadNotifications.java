@@ -13,6 +13,7 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.ContextCompat;
 
 import java.util.List;
@@ -148,9 +149,12 @@ final class DownloadNotifications {
         return 7100 + (job.id.hashCode() & 0xffff);
     }
 
+    // opened with the home screen under it, so back lands in the app rather than closing it
+    // when the app wasn't running
     private PendingIntent openDownloads() {
-        Intent intent = new Intent(context, DownloadsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        return TaskStackBuilder.create(context)
+                .addNextIntentWithParentStack(new Intent(context, DownloadsActivity.class))
+                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     private PendingIntent activity(DownloadJob job, String what, Intent intent) {

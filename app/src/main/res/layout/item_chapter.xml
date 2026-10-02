@@ -1,24 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chapter_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
-    android:minHeight="52dp"
     android:gravity="center_vertical"
-    android:orientation="vertical"
+    android:minHeight="64dp"
+    android:orientation="horizontal"
     android:paddingHorizontal="20dp"
-    android:paddingVertical="12dp">
+    android:paddingVertical="10dp">
 
-    <TextView
-        android:id="@+id/chapter_name"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/text"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/chapter_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?textAppearanceTitleSmall"
+            android:textColor="?colorOnSurface"
+            tools:text="Chapter 12" />
+
+        <TextView
+            android:id="@+id/chapter_meta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?textAppearanceBodySmall"
+            android:textColor="?colorOnSurfaceVariant"
+            android:visibility="gone"
+            tools:text="The Beginning · 3 days ago"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <!-- "New" for recent unread chapters, "Last read" for where the reader left off -->
+    <TextView
+        android:id="@+id/chapter_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/bg_pill"
+        android:backgroundTint="?colorPrimaryContainer"
         android:maxLines="1"
-        android:textAppearance="?textAppearanceBodyLarge"
-        android:textColor="?colorOnSurface"
-        tools:text="Chapter 12" />
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="3dp"
+        android:textAppearance="?textAppearanceLabelSmall"
+        android:textColor="?colorOnPrimaryContainer"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="@string/chapter_new"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/chapter_read"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="12dp"
+        android:contentDescription="@string/chapter_read"
+        android:src="@drawable/ic_check_circle"
+        android:visibility="gone"
+        app:tint="?colorOnSurfaceVariant"
+        tools:visibility="visible" />
 
 </LinearLayout>

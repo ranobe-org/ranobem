@@ -1,0 +1,48 @@
+Manga Reader Pro is a clean, fast reader for manga, manhwa, manhua and webtoons. Follow the series you love, see the moment a new chapter drops, and read it the way you like, with no ads.
+
+Whether you binge long-running shonen, scroll through Korean webtoons or catch up on the latest manhua, everything lives in one simple library.
+
+
+🔔 NEVER MISS A CHAPTER
+• New chapter notifications: your library is checked every 12 hours and you're told which series updated and which chapter is out
+• "Check now" looks for new chapters in your library whenever you want
+• New chapters are tagged "New" in the chapter list, so you can spot them right away
+
+📖 NEVER LOSE YOUR PLACE
+• Chapters you've read are checked off
+• Your last read chapter is always marked
+• Search the chapter list or flip its order with one tap
+• Your reading history lets you jump back in where you left off
+
+📚 YOUR LIBRARY
+• Save series to your library and keep everything you follow together
+• Series pages show the status, release year, followers, genres, authors, related series and recommendations
+• Search by title, filter by genre, or find more from the same author
+
+🎨 READ IT YOUR WAY
+• Four reading modes: webtoon scroll, left to right, right to left (classic manga) and vertical pages
+• Fit screen, fit width or smart fit for long strips
+• Adjust side padding and the gap between pages
+• Black, gray or white background
+• Tap the screen edges or use the volume keys to turn pages
+• Fullscreen mode, keep screen on, custom brightness and orientation lock
+• The next chapter loads automatically when you reach the end
+
+📥 TAKE IT OFFLINE
+• Save a whole series or just a few chapters as EPUB books
+• Open or share them from the downloads screen and read in any e-book reader, even without internet
+
+🌙 LIGHT OR DARK
+• Light and dark themes, or follow your phone's setting
+• Made for late-night reading sessions
+
+⚡ LIGHT AND FAST
+• Small app that opens quickly
+• No ads, no sign-up, no account needed
+• Available in English and Russian
+
+Genres include action, adventure, romance, fantasy, isekai, comedy, drama, horror, mystery, sci-fi, slice of life, sports, school life, martial arts and more.
+
+Every feature is unlocked: new chapter notifications, EPUB downloads and the full reader, with no ads. Thank you for supporting development of the app.
+
+Have an idea or found a bug? Join our Discord or reach out from the Settings screen. New features are added regularly.

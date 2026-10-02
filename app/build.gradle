@@ -2,9 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
-Properties values = new Properties()
-values.load(new FileInputStream(project.rootProject.file('local.properties')))
-
 android {
     namespace 'in.atulpatare.ranobem'
     compileSdk 36
@@ -13,8 +10,8 @@ android {
         applicationId "in.atulpatare.ranobem"
         minSdk 24
         targetSdk 36
-        versionCode 14
-        versionName "14"
+        versionCode 15
+        versionName "15"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -37,6 +34,19 @@ android {
             versionNameSuffix "-pro"
 
             buildConfigField "boolean", "IS_PRO", "true"
+        }
+    }
+
+    // the app is only translated to these, so drop the other ~90 languages libraries bring along
+    androidResources {
+        localeFilters += ["en", "ru"]
+    }
+
+    packaging {
+        resources {
+            // license texts and Kotlin metadata, nothing reads them at runtime
+            excludes += ["META-INF/**/LICENSE.txt", "META-INF/*.version", "META-INF/*.kotlin_module",
+                         "kotlin/**", "DebugProbesKt.bin"]
         }
     }
 
@@ -64,13 +74,12 @@ dependencies {
     implementation libs.glide
     implementation libs.lifecycle.livedata.ktx
     implementation libs.lifecycle.viewmodel.ktx
-    implementation libs.navigation.fragment
-    implementation libs.navigation.ui
     implementation libs.androidx.navigation.fragment
     implementation libs.androidx.navigation.ui
-    annotationProcessor libs.compiler
     implementation libs.touchimageview
     implementation libs.okhttp
+    // periodic new chapter checks for the library
+    implementation libs.androidx.work.runtime
 
     def room_version = "2.7.2"
     implementation "androidx.room:room-runtime:$room_version"

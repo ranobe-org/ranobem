@@ -3,11 +3,12 @@
     <style name="Base.Theme.RanobeM" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/primary</item>
-        <!-- warm tones that match the red brand, instead of Material's default purple -->
-        <item name="colorPrimaryContainer">#FFFFDAD5</item>
-        <item name="colorOnPrimaryContainer">#FF410002</item>
-        <item name="colorSecondaryContainer">#FFFFDAD5</item>
-        <item name="colorOnSecondaryContainer">#FF3B0906</item>
+        <item name="colorOnPrimary">#FFFFFFFF</item>
+        <!-- indigo tones that match the brand, instead of Material's default purple -->
+        <item name="colorPrimaryContainer">#FFDEE0FF</item>
+        <item name="colorOnPrimaryContainer">#FF00105C</item>
+        <item name="colorSecondaryContainer">#FFE0E1F9</item>
+        <item name="colorOnSecondaryContainer">#FF181A2C</item>
     </style>
 
     <style name="Theme.RanobeM" parent="Base.Theme.RanobeM" />
@@ -56,8 +57,10 @@
     <style name="Widget.RanobeM.Details.Badge" parent="">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginEnd">6dp</item>
         <item name="android:background">@drawable/bg_badge</item>
+        <!-- singleLine, not just maxLines: a badge that doesn't fit the row must move to the
+             next one instead of being squeezed into the leftover sliver -->
+        <item name="android:singleLine">true</item>
         <item name="android:paddingStart">10dp</item>
         <item name="android:paddingEnd">10dp</item>
         <item name="android:paddingTop">3dp</item>
@@ -137,6 +140,32 @@
         <item name="android:paddingStart">20dp</item>
         <item name="android:paddingEnd">8dp</item>
         <item name="android:nestedScrollingEnabled">false</item>
+    </style>
+
+    <!-- settings -->
+    <style name="Widget.RanobeM.Settings.SectionTitle" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginTop">28dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:textAppearance">?attr/textAppearanceTitleSmall</item>
+        <item name="android:textColor">?colorPrimary</item>
+    </style>
+
+    <style name="Widget.RanobeM.Settings.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cardCornerRadius">24dp</item>
+        <item name="cardBackgroundColor">?colorSurfaceContainer</item>
+    </style>
+
+    <style name="Widget.RanobeM.Settings.Divider" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">72dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="dividerColor">?colorOutlineVariant</item>
     </style>
 
     <style name="Theme.RanobeM.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

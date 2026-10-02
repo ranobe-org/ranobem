@@ -4,11 +4,11 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
         <item name="colorPrimary">@color/primaryDark</item>
-        <!-- warm tones that match the red brand, instead of Material's default purple -->
-        <item name="colorOnPrimary">#FF2D0B07</item>
-        <item name="colorPrimaryContainer">#FF73332B</item>
-        <item name="colorOnPrimaryContainer">#FFFFDAD5</item>
-        <item name="colorSecondaryContainer">#FF5C3F3B</item>
-        <item name="colorOnSecondaryContainer">#FFFFDAD5</item>
+        <!-- indigo tones that match the brand, instead of Material's default purple -->
+        <item name="colorOnPrimary">#FF08218A</item>
+        <item name="colorPrimaryContainer">#FF293CA0</item>
+        <item name="colorOnPrimaryContainer">#FFDEE0FF</item>
+        <item name="colorSecondaryContainer">#FF444559</item>
+        <item name="colorOnSecondaryContainer">#FFE0E1F9</item>
     </style>
 </resources>

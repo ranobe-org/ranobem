@@ -48,10 +48,11 @@ public class MainActivity extends AppCompatActivity {
                 binding.main.smoothScrollTo(0, binding.whySection.getTop() - scrollGap));
         binding.whyLink.setOnClickListener(v -> navigateToLink(Config.KEEP_ANDROID_OPEN_LINK));
         binding.updatesForm.setOnClickListener(v -> navigateToLink(Config.GOOGLE_FORM_LINK));
-        binding.discord.setOnClickListener(v -> navigateToLink("https://discord.gg/6CQ6u64dca"));
+        binding.discord.setOnClickListener(v -> navigateToLink(Config.DISCORD_LINK));
         binding.downloadPro.setOnClickListener(v -> navigateToLink(Config.PRO_LINK));
         binding.downloads.setVisibility(Config.isFree() ? View.GONE : View.VISIBLE);
         binding.downloads.setOnClickListener(v -> startActivity(new Intent(this, DownloadsActivity.class)));
+        binding.settings.setOnClickListener(v -> openHome(HomeActivity.TARGET_SETTINGS));
     }
 
     private void openHome(String target) {

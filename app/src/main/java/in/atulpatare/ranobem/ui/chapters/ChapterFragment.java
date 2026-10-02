@@ -1,12 +1,10 @@
 package in.atulpatare.ranobem.ui.chapters;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,14 +31,16 @@ import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.FragmentChapterBinding;
 import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
-import in.atulpatare.ranobem.utils.VrfFetcher;
 
-public class ChapterFragment extends BottomSheetDialogFragment implements ChapterAdapter.OnChapterItemClickListener, VrfFetcher.onCompleteListener {
+public class ChapterFragment extends BottomSheetDialogFragment implements ChapterAdapter.OnChapterItemClickListener {
     private final List<Chapter> originalItems = new ArrayList<>();
     private FragmentChapterBinding binding;
     private ChaptersViewModel viewModel;
     private Manga manga;
     private ChapterAdapter adapter;
+    private String keyword = "";
+    private int lastReadId = Integer.MIN_VALUE;
+    private boolean scrolledToLastRead;
 
 
     @Override
@@ -68,43 +68,36 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
 
     private void setUpObservers() {
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
-        if (manga.sourceId == 1) {
-            String url = "https://mangafire.to" + manga.url.replace("/manga", "/read");
-            VrfFetcher.fetchVrf(requireContext(), url, "/ajax/read/" + manga.id, this);
-        } else {
-            viewModel.getChapters(manga).observe(this, this::setChapter);
-        }
+        viewModel.getChapters(manga).observe(getViewLifecycleOwner(), this::setChapter);
 
         // get history
-        AppDatabase.getDatabase().historyDao().getByMangaId(manga.id).observe(requireActivity(), h -> {
-            if (!h.isEmpty()) {
-                setUpHistory(h);
-            }
-        });
-    }
-
-
-    @Override
-    public void onVrf(String vrf) {
-        Manga m = manga;
-        m.url = vrf.replace("https://mangafire.to", "");
-        new Handler(Looper.getMainLooper()).post(() -> {
-            viewModel.getChapters(m).observe(this, this::setChapter);
-        });
+        AppDatabase.getDatabase().historyDao().getByMangaId(manga.id).observe(getViewLifecycleOwner(), this::setUpHistory);
     }
 
     private void setUpUi() {
         binding.toolbar.setOnMenuItemClickListener(this::onMenuItemClick);
         binding.searchField.addTextChangedListener(new SearchBarTextWatcher());
 
-        adapter = new ChapterAdapter(originalItems, this);
+        adapter = new ChapterAdapter(this);
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.chapterList.setAdapter(adapter);
     }
 
     private void setUpHistory(List<History> h) {
-        if (adapter != null) {
-            adapter.setHistory(h);
+        adapter.setHistory(h);
+        lastReadId = h.isEmpty() ? Integer.MIN_VALUE : h.get(0).chapterId;
+        scrollToLastRead();
+    }
+
+    // once, when both the chapters and the history are in
+    private void scrollToLastRead() {
+        if (scrolledToLastRead || originalItems.isEmpty() || lastReadId == Integer.MIN_VALUE) return;
+        scrolledToLastRead = true;
+        for (int i = 0; i < originalItems.size(); i++) {
+            if (originalItems.get(i).id == lastReadId) {
+                ((LinearLayoutManager) binding.chapterList.getLayoutManager()).scrollToPositionWithOffset(i, 0);
+                return;
+            }
         }
     }
 
@@ -116,13 +109,13 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     }
 
     private void searchResults(String keyword) {
-        if (!keyword.isEmpty()) {
-            List<Chapter> filtered = ListUtils.searchByName(keyword.toLowerCase(), originalItems);
-            ChapterAdapter searchAdapter = new ChapterAdapter(filtered, this);
-            binding.chapterList.setAdapter(searchAdapter);
-        } else {
-            binding.chapterList.setAdapter(adapter);
-        }
+        this.keyword = keyword.trim();
+        showChapters();
+    }
+
+    // one adapter for both, so read state and tags stay while searching
+    private void showChapters() {
+        adapter.submit(keyword.isEmpty() ? originalItems : ListUtils.searchByName(keyword.toLowerCase(), originalItems));
     }
 
     private void setSearchView() {
@@ -130,19 +123,42 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
         binding.searchView.setVisibility(mode);
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void setChapter(List<Chapter> chapters) {
         originalItems.clear();
         originalItems.addAll(chapters);
-        adapter.notifyDataSetChanged();
+        showChapters();
         binding.toolbar.setTitle(getResources().getQuantityString(R.plurals.chapter_count, chapters.size(), chapters.size()));
+        binding.toolbar.setSubtitle(lastUpdated(chapters));
         binding.progress.hide();
+        scrollToLastRead();
+        markSeen(chapters.size());
+    }
+
+    // "Updated 3 days ago", from the newest chapter's date when the source gives one
+    @Nullable
+    private String lastUpdated(List<Chapter> chapters) {
+        long newest = 0;
+        for (Chapter c : chapters) newest = Math.max(newest, c.updatedAt);
+        if (newest <= 0) return null;
+        CharSequence ago = DateUtils.getRelativeTimeSpanString(newest, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS);
+        return getString(R.string.chapters_updated, ago);
+    }
+
+    // chapters seen here don't need a new chapter notification later
+    private void markSeen(int count) {
+        if (count <= 0) return;
+        String id = manga.id;
+        int sourceId = manga.sourceId;
+        AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().mangaDao().raiseKnownChapters(id, sourceId, count));
     }
 
     private void sort() {
         Collections.reverse(originalItems);
-        adapter.notifyItemRangeChanged(0, originalItems.size());
+        showChapters();
+        // the old position points somewhere unrelated in the reversed list, start from the top
+        binding.chapterList.scrollToPosition(0);
     }
+
 
     @Override
     public void onChapterItemClick(Chapter item) {

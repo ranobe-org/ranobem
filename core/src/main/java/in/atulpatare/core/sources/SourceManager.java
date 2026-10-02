@@ -19,7 +19,8 @@ public class SourceManager {
             }
             return (Source) klass.newInstance();
         } catch (Exception e) {
-            return new MangaFireTo();
+            // MangaFire is disabled, fall back to a source that works
+            return new WeebCentral();
         }
     }
 
