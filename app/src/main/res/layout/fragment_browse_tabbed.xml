@@ -9,12 +9,23 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.RanobeM.AppBarOverlay">
+        android:background="?android:attr/colorBackground"
+        app:liftOnScroll="false">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:subtitleTextAppearance="?textAppearanceBodySmall"
+            app:subtitleTextColor="?colorOnSurfaceVariant"
+            app:title="@string/latest_updates" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:visibility="gone"
             app:tabMode="scrollable" />
     </com.google.android.material.appbar.AppBarLayout>
 

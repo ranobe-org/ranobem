@@ -24,15 +24,16 @@ public class SearchViewModel extends ViewModel {
             items = new MutableLiveData<>();
             currentSourceId = sourceId;
         }
+        // results belong to the search that requested them, a newer search must not receive them
+        MutableLiveData<List<Manga>> target = items;
         new Repository(sourceId).mangas(page, queries, new Repository.Callback<>() {
             @Override
             public void onComplete(List<Manga> result) {
-                List<Manga> old = items.getValue();
-                if (old == null) {
-                    old = new ArrayList<>();
-                }
-                old.addAll(result);
-                items.postValue(old);
+                if (target != items) return;
+                List<Manga> old = target.getValue();
+                List<Manga> merged = old == null ? new ArrayList<>() : new ArrayList<>(old);
+                merged.addAll(result);
+                target.postValue(merged);
             }
 
             @Override

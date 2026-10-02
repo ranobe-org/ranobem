@@ -4,14 +4,22 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import in.atulpatare.core.models.Chapter;
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.models.Metadata;
+import in.atulpatare.core.models.Tag;
 import in.atulpatare.core.network.HttpClient;
 import in.atulpatare.core.sources.Source;
 import in.atulpatare.core.util.ListUtils;
@@ -19,6 +27,8 @@ import in.atulpatare.core.util.ListUtils;
 public class WeebCentral implements Source {
     private static final int sourceId = 2;
     private static final String baseUrl = "https://weebcentral.com";
+    private static final String coverBaseUrl = "https://temp.compsci88.com/cover/fallback/";
+    private static final Pattern SUBSCRIPTIONS = Pattern.compile("subscriptions:\\s*(\\d+)");
     private static final HashMap<String, String> headers = new HashMap<>() {{
         put("referer", "https://weebcentral.com");
         put("user-agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36");
@@ -113,7 +123,7 @@ public class WeebCentral implements Source {
             Manga m = new Manga();
             m.sourceId = sourceId;
             m.name = name.replace("cover", "");
-            m.url = link;
+            m.url = normalizeLink(link);
             m.cover = cover;
             m.id = id;
             items.add(m);
@@ -122,24 +132,143 @@ public class WeebCentral implements Source {
         return items;
     }
 
+    private String normalizeLink(String link) {
+        if (link.startsWith("http")) return link;
+        return baseUrl.concat(link);
+    }
+
     @Override
     public Manga details(Manga m) throws Exception {
         Element doc = Jsoup.parse(HttpClient.GET(m.url, headers));
         m.summary = doc.select("p.whitespace-pre-wrap.break-words").text().trim();
-        m.rating = 7;
-        m.type = "Unknown";
+        m.rating = 0; // weebcentral has no scores
+        m.type = "";
+        m.authors = new ArrayList<>();
+        m.genres = new ArrayList<>();
+        m.related = new ArrayList<>();
+        m.recommendations = new ArrayList<>();
+
+        Element title = doc.selectFirst("h1");
+        if ((m.name == null || m.name.trim().isEmpty()) && title != null) {
+            m.name = title.text().trim();
+        }
+
+        Element series = doc.selectFirst("section[x-data*=subscriptions]");
+        if (series != null) {
+            Matcher subs = SUBSCRIPTIONS.matcher(series.attr("x-data"));
+            if (subs.find()) m.subscribers = Long.parseLong(subs.group(1));
+        }
 
         for (Element e : doc.select("section > ul > li")) {
             String heading = e.select("strong").text().trim();
-            if (heading.contains("Author")) {
-                m.author = e.select("span").text().trim();
-            }
-            if (heading.contains("Status")) {
-                m.status = e.select("span").text().trim();
+            if (heading.startsWith("Author")) {
+                for (Element a : e.select("a")) {
+                    m.authors.add(new Tag(a.text().trim(), queryParam(a.attr("href"), "author")));
+                }
+                m.author = joinNames(m.authors);
+            } else if (heading.startsWith("Tag")) {
+                for (Element a : e.select("a")) {
+                    m.genres.add(new Tag(a.text().trim(), queryParam(a.attr("href"), "included_tag")));
+                }
+            } else if (heading.startsWith("Type")) {
+                m.type = e.select("a").text().trim();
+            } else if (heading.startsWith("Status")) {
+                m.status = e.select("a").text().trim();
+            } else if (heading.startsWith("Released")) {
+                m.released = e.select("span").text().trim();
+            } else if (heading.startsWith("Official Translation")) {
+                m.official = isYes(e);
+            } else if (heading.startsWith("Anime Adaptation")) {
+                m.anime = isYes(e);
+            } else if (heading.startsWith("Adult Content")) {
+                m.adult = isYes(e);
+            } else if (heading.startsWith("Related Series")) {
+                for (Element item : e.select("ul > li")) {
+                    Element a = item.selectFirst("a");
+                    if (a == null) continue;
+                    Manga related = seriesFromLink(a.attr("href"), a.text().trim(), null);
+                    related.cover = coverFor(m, related.id);
+                    related.relation = item.select("span").text().replaceAll("[()]", "").trim();
+                    m.related.add(related);
+                }
             }
         }
 
+        // the series page lists the newest chapter first
+        Element latest = doc.selectFirst("#chapter-list > div a");
+        if (latest != null) {
+            Element name = latest.selectFirst("span.grow > span");
+            if (name != null) m.latestChapter = name.text().trim();
+            Element time = latest.selectFirst("time");
+            if (time != null) m.latestChapterAt = parseTime(time.attr("datetime"));
+        }
+
+        for (Element a : doc.select("ul.glide__slides > li > a")) {
+            Element img = a.selectFirst("img");
+            if (img == null) continue;
+            String name = img.attr("alt").replaceAll("\\s*cover$", "").trim();
+            m.recommendations.add(seriesFromLink(a.attr("href"), name, img.attr("src").trim()));
+        }
+
         return m;
+    }
+
+    private Manga seriesFromLink(String link, String name, String cover) {
+        Manga m = new Manga();
+        m.sourceId = sourceId;
+        m.url = normalizeLink(link);
+        m.id = seriesId(m.url);
+        m.name = name;
+        m.cover = cover;
+        return m;
+    }
+
+    // series links look like /series/{id} or /series/{id}/{slug}
+    private String seriesId(String link) {
+        String[] parts = link.split("/");
+        for (int i = 0; i < parts.length - 1; i++) {
+            if (parts[i].equals("series")) return parts[i + 1];
+        }
+        return extractIdFromLink(link);
+    }
+
+    // covers are served by id, so a related series' cover can be built from this one's
+    private String coverFor(Manga m, String id) {
+        if (m.cover != null && !m.id.isEmpty() && m.cover.contains(m.id)) {
+            return m.cover.replace(m.id, id);
+        }
+        return coverBaseUrl + id + ".jpg";
+    }
+
+    // keeps the value url-encoded, so it can go straight back into a search url
+    private String queryParam(String link, String name) {
+        int start = link.indexOf(name + "=");
+        if (start < 0) return null;
+        start += name.length() + 1;
+        int end = link.indexOf('&', start);
+        return end < 0 ? link.substring(start) : link.substring(start, end);
+    }
+
+    private boolean isYes(Element e) {
+        return e.select("a").text().trim().equalsIgnoreCase("yes");
+    }
+
+    private String joinNames(List<Tag> tags) {
+        List<String> names = new ArrayList<>();
+        for (Tag t : tags) names.add(t.name);
+        return String.join(", ", names);
+    }
+
+    private long parseTime(String iso) {
+        if (iso == null || iso.length() < 19) return 0;
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = format.parse(iso.substring(0, 19));
+            return date == null ? 0 : date.getTime();
+        } catch (ParseException e) {
+            return 0;
+        }
     }
 
     private String lastPart(String text) {
@@ -206,6 +335,10 @@ public class WeebCentral implements Source {
         // search
         if (search != null && !search.isEmpty()) {
             url = url.concat("&text=" + search);
+        }
+        String author = queries.get("author");
+        if (author != null && !author.isEmpty()) {
+            url = url.concat("&author=").concat(author);
         }
         if (filters != null) {
             String[] genres = filters.split(",");

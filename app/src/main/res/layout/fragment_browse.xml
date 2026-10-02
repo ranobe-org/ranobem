@@ -8,11 +8,20 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/novel_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/layout_fade_in" />
+
+    <include
+        android:id="@+id/empty_state"
+        layout="@layout/view_empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:indeterminate="true"

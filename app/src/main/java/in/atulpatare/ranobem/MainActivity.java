@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.ActivityMainBinding;
 import in.atulpatare.ranobem.ui.HomeActivity;
+import in.atulpatare.ranobem.ui.downloads.DownloadsActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,23 +32,32 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (Config.isFree()) {
-            binding.downloadPro.setVisibility(View.VISIBLE);
+            binding.proCard.setVisibility(View.VISIBLE);
         }
 
-        binding.library.setOnClickListener(v -> {
-            Intent intent = new Intent(this, HomeActivity.class);
-            intent.putExtra("TARGET_FRAGMENT", "LIBRARY");
-            startActivity(intent);
-        });
+        binding.footer.setText(getString(R.string.footer_version, getString(R.string.build_with), BuildConfig.VERSION_NAME));
 
-        binding.browse.setOnClickListener(v -> {
-            Intent intent = new Intent(this, HomeActivity.class);
-            intent.putExtra("TARGET_FRAGMENT", "BROWSE");
-            startActivity(intent);
-        });
+        binding.library.setOnClickListener(v -> openHome("LIBRARY"));
+        binding.browse.setOnClickListener(v -> openHome("BROWSE"));
+        binding.quickSearch.setOnClickListener(v -> openHome("SEARCH"));
+        binding.quickHistory.setOnClickListener(v -> openHome("HISTORY"));
 
+        // the banner jumps down to the card explaining it
+        int scrollGap = getResources().getDimensionPixelSize(R.dimen.why_scroll_gap);
+        binding.warningBanner.setOnClickListener(v ->
+                binding.main.smoothScrollTo(0, binding.whySection.getTop() - scrollGap));
+        binding.whyLink.setOnClickListener(v -> navigateToLink(Config.KEEP_ANDROID_OPEN_LINK));
+        binding.updatesForm.setOnClickListener(v -> navigateToLink(Config.GOOGLE_FORM_LINK));
         binding.discord.setOnClickListener(v -> navigateToLink("https://discord.gg/6CQ6u64dca"));
-        binding.downloadPro.setOnClickListener(v -> navigateToLink("https://play.google.com/store/apps/details?id=in.atulpatare.ranobem.pro"));
+        binding.downloadPro.setOnClickListener(v -> navigateToLink(Config.PRO_LINK));
+        binding.downloads.setVisibility(Config.isFree() ? View.GONE : View.VISIBLE);
+        binding.downloads.setOnClickListener(v -> startActivity(new Intent(this, DownloadsActivity.class)));
+    }
+
+    private void openHome(String target) {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("TARGET_FRAGMENT", target);
+        startActivity(intent);
     }
 
     private void navigateToLink(String url) {

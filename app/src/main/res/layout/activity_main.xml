@@ -5,91 +5,475 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="15dp">
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="16dp">
+
+        <!-- Hero -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.3"
+            android:text="@string/home_eyebrow"
+            android:textAllCaps="true"
+            android:textColor="?colorPrimary"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="monospace"
-            android:letterSpacing="0.2"
+            android:letterSpacing="0.1"
+            android:lineSpacingMultiplier="0.9"
             android:text="@string/manga_downloader"
             android:textColor="?colorPrimary"
-            android:textSize="70sp"
+            android:textSize="64sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:letterSpacing="0.2"
-            android:text="@string/build_with"
-            android:textSize="15sp"
+            android:layout_marginTop="12dp"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/home_tagline"
+            android:textAppearance="?textAppearanceBodyLarge"
+            android:textColor="?colorOnSurfaceVariant" />
+
+        <!-- Warning: the app may stop being installable, tapping scrolls to the explanation -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/warning_banner"
+            style="@style/Widget.Material3.CardView.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="?colorErrorContainer"
+            app:cardCornerRadius="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_warning"
+                    app:tint="?colorOnErrorContainer" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/warning_title"
+                        android:textAppearance="?textAppearanceTitleSmall"
+                        android:textColor="?colorOnErrorContainer"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/warning_desc"
+                        android:textAppearance="?textAppearanceBodySmall"
+                        android:textColor="?colorOnErrorContainer" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="8dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?colorOnErrorContainer" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Primary actions -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/browse"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/start_browsing"
+            android:textSize="16sp"
+            app:icon="@drawable/ic_browse"
+            app:iconGravity="textStart"
+            app:iconTint="?colorOnPrimary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/library"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/library"
+            android:textSize="16sp"
+            app:icon="@drawable/ic_library"
+            app:iconGravity="textStart"
+            app:iconTint="?colorPrimary" />
+
+        <!-- Quick access -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:layout_marginBottom="12dp"
+            android:text="@string/quick_access"
+            android:textAppearance="?textAppearanceTitleMedium"
             android:textStyle="bold" />
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:gravity="end"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/library"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/library" />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/quick_search"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/browse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@string/browse" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_search"
+                        app:tint="?colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/title_search"
+                        android:textAppearance="?textAppearanceTitleSmall"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/quick_search_desc"
+                        android:textAppearance="?textAppearanceBodySmall"
+                        android:textColor="?colorOnSurfaceVariant" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/quick_history"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_history"
+                        app:tint="?colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/title_history"
+                        android:textAppearance="?textAppearanceTitleSmall"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/quick_history_desc"
+                        android:textAppearance="?textAppearanceBodySmall"
+                        android:textColor="?colorOnSurfaceVariant" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
-        <LinearLayout
+        <!-- EPUB downloads, Pro only -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/downloads"
+            style="@style/Widget.Material3.CardView.Filled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:orientation="horizontal">
+            android:layout_marginTop="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/discord"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/join_discord"
-                android:textColor="@color/white"
-                app:backgroundTint="@color/discord" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
 
-        </LinearLayout>
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_download"
+                    app:tint="?colorPrimary" />
 
-        <LinearLayout
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_downloads"
+                        android:textAppearance="?textAppearanceTitleSmall"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/downloads_desc"
+                        android:textAppearance="?textAppearanceBodySmall"
+                        android:textColor="?colorOnSurfaceVariant" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?colorOnSurfaceVariant" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Why the app may go away, and how to keep getting updates -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/why_section"
+            style="@style/Widget.Material3.CardView.Outlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:orientation="horizontal">
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="16dp"
+            app:strokeColor="?colorError">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/download_pro"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/download_pro"
-                android:visibility="gone"
-                app:backgroundTint="@color/white" />
+                android:orientation="vertical"
+                android:padding="16dp">
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_warning"
+                        app:tint="?colorError" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:text="@string/why_title"
+                        android:textAppearance="?textAppearanceTitleMedium"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:text="@string/why_desc"
+                    android:textAppearance="?textAppearanceBodyMedium"
+                    android:textColor="?colorOnSurfaceVariant" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/why_link"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-12dp"
+                    android:text="@string/keep_android_open_url_label"
+                    app:icon="@drawable/ic_open_in_new"
+                    app:iconGravity="end"
+                    app:iconSize="18dp" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/updates_title"
+                    android:textAppearance="?textAppearanceTitleMedium"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:text="@string/updates_desc"
+                    android:textAppearance="?textAppearanceBodyMedium"
+                    android:textColor="?colorOnSurfaceVariant" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical">
+
+                    <!-- stacked full width: side by side they get squeezed on narrow screens and with large text -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/discord"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/join_discord"
+                        android:textColor="@color/white"
+                        app:backgroundTint="@color/discord" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/updates_form"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/updates_form"
+                        app:icon="@drawable/ic_arrow_forward"
+                        app:iconGravity="textEnd"
+                        app:iconSize="18dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Pro upsell (free build only) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/pro_card"
+            style="@style/Widget.Material3.CardView.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="?colorPrimaryContainer"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pro_title"
+                    android:textAppearance="?textAppearanceTitleMedium"
+                    android:textColor="?colorOnPrimaryContainer"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/pro_desc"
+                    android:textAppearance="?textAppearanceBodyMedium"
+                    android:textColor="?colorOnPrimaryContainer" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/download_pro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/download_pro" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Footer -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:minHeight="32dp" />
+
+        <TextView
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:letterSpacing="0.1"
+            android:text="@string/build_with"
+            android:textColor="?colorOnSurfaceVariant"
+            android:textSize="12sp"
+            tools:text="built with ❤️ · v14" />
 
     </LinearLayout>
-
 
 </androidx.core.widget.NestedScrollView>

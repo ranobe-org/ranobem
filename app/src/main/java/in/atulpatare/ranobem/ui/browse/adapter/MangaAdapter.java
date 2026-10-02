@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.util.List;
 
@@ -46,12 +47,15 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Manga item = items.get(position);
         holder.binding.novelName.setText(item.name);
-        Glide.with(holder.binding.novelCover.getContext())
+        Glide.with(holder.binding.novelCover)
                 .load(item.cover)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.novelCover);
 
         if (showSourceName) {
             setSourceName(holder, item.sourceId);
+        } else {
+            holder.binding.sourceName.setVisibility(View.GONE);
         }
     }
 

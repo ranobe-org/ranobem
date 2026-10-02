@@ -1,26 +1,59 @@
 package in.atulpatare.ranobem.ui.history.adapter;
 
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
+import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.databinding.ItemHistoryBinding;
 import in.atulpatare.ranobem.model.History;
+import in.atulpatare.ranobem.utils.NumberUtils;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
-    private final List<History> items;
+    private final List<History> items = new ArrayList<>();
     private final OnHistoryItemClickListener listener;
 
-    public HistoryAdapter(List<History> items, OnHistoryItemClickListener listener) {
-        this.items = items;
+    public HistoryAdapter(OnHistoryItemClickListener listener) {
         this.listener = listener;
+    }
+
+    // updates only the rows that changed, so the list keeps its scroll position and removals animate
+    public void submit(List<History> next) {
+        List<History> old = new ArrayList<>(items);
+        DiffUtil.DiffResult diff = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return old.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return next.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldPosition, int newPosition) {
+                return old.get(oldPosition).id.equals(next.get(newPosition).id);
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldPosition, int newPosition) {
+                return old.get(oldPosition).createdAt == next.get(newPosition).createdAt;
+            }
+        });
+        items.clear();
+        items.addAll(next);
+        diff.dispatchUpdatesTo(this);
     }
 
     @NonNull
@@ -34,62 +67,23 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         History item = items.get(position);
         holder.binding.mangaName.setText(item.mangaName);
-        holder.binding.chapterName.setText(String.format(Locale.getDefault(), "Chapter %s %s", formatIndex(item.chapterIndex), item.chapterName));
-        holder.binding.createdAt.setText(formatCreatedAt(item.createdAt));
-        Glide.with(holder.binding.mangaCover.getContext())
+        String chapter = holder.itemView.getContext().getString(R.string.chapter_number, NumberUtils.normalize(item.chapterIndex));
+        if (item.chapterName != null && !item.chapterName.trim().isEmpty()) {
+            chapter = chapter + " · " + item.chapterName.trim();
+        }
+        holder.binding.chapterName.setText(chapter);
+        holder.binding.createdAt.setText(DateUtils.getRelativeTimeSpanString(
+                toMillis(item.createdAt), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
+        Glide.with(holder.binding.mangaCover)
                 .load(item.cover)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.mangaCover);
     }
 
-    private String formatIndex(float value) {
-        if (value == (int) value) {
-            // If no decimal part, return as integer string
-            return String.valueOf((int) value);
-        } else {
-            // Else, return as normal float string
-            return String.valueOf(value);
-        }
+    // older entries were stored in seconds
+    private long toMillis(long createdAt) {
+        return createdAt < 1000000000000L ? createdAt * 1000 : createdAt;
     }
-
-    private String formatCreatedAt(long createdAt) {
-        // Convert to milliseconds if in seconds
-        if (createdAt < 1000000000000L) {
-            createdAt *= 1000;
-        }
-
-        long now = System.currentTimeMillis();
-        long diff = now - createdAt;
-
-        if (diff < 0) return "In the future";
-
-        final long SECOND = 1000;
-        final long MINUTE = 60 * SECOND;
-        final long HOUR = 60 * MINUTE;
-        final long DAY = 24 * HOUR;
-
-        if (diff < MINUTE) {
-            return "just now";
-        } else if (diff < 2 * MINUTE) {
-            return "a minute ago";
-        } else if (diff < 60 * MINUTE) {
-            return (diff / MINUTE) + " minutes ago";
-        } else if (diff < 2 * HOUR) {
-            return "an hour ago";
-        } else if (diff < 24 * HOUR) {
-            return (diff / HOUR) + " hours ago";
-        } else if (diff < 2 * DAY) {
-            return "yesterday";
-        } else if (diff < 7 * DAY) {
-            return (diff / DAY) + " days ago";
-        } else if (diff < 30 * DAY) {
-            return (diff / 7 / DAY) + " weeks ago";
-        } else if (diff < 365 * DAY) {
-            return (diff / 30 / DAY) + " months ago";
-        } else {
-            return (diff / 365 / DAY) + " years ago";
-        }
-    }
-
 
     @Override
     public int getItemCount() {
@@ -109,12 +103,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             super(binding.getRoot());
             this.binding = binding;
 
-            binding.historyLayout.setOnClickListener(v ->
-                    listener.onHistoryItemClick(items.get(getAdapterPosition())));
+            binding.historyLayout.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) listener.onHistoryItemClick(items.get(position));
+            });
 
-            binding.deleteHistory.setOnClickListener(v ->
-                    listener.onHistoryItemDeleteClick(items.get(getAdapterPosition()))
-            );
+            binding.deleteHistory.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) listener.onHistoryItemDeleteClick(items.get(position));
+            });
         }
     }
 }

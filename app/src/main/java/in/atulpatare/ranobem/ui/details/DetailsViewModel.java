@@ -1,33 +1,49 @@
 package in.atulpatare.ranobem.ui.details;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.network.repository.Repository;
 
 public class DetailsViewModel extends ViewModel {
-    private MutableLiveData<String> error = new MutableLiveData<>();
-    private MutableLiveData<Manga> item;
-    private int currentSourceId = -1;
-    private int page = 1;
+    private final MutableLiveData<String> error = new MutableLiveData<>();
+    private final MutableLiveData<Manga> details = new MutableLiveData<>();
+    private final MutableLiveData<List<Manga>> authorWorks = new MutableLiveData<>();
+    private boolean requested = false;
+    private String authorKey = null;
 
-    public MutableLiveData<String> getError() {
-        return error = new MutableLiveData<>();
+    public LiveData<String> getError() {
+        return error;
     }
 
-    public MutableLiveData<Manga> getDetails(int sourceId, Manga m) {
-        if (currentSourceId != sourceId) {
-            item = new MutableLiveData<>();
-            page = 1;
-            currentSourceId = sourceId;
-        } else {
-            page += 1;
+    public LiveData<List<Manga>> getAuthorWorks() {
+        return authorWorks;
+    }
+
+    // fetches once, later calls (e.g. after a rotation) get the same result
+    public LiveData<Manga> getDetails(Manga m) {
+        if (!requested) {
+            requested = true;
+            fetchDetails(m);
         }
-        new Repository(sourceId).details(m, new Repository.Callback<Manga>() {
+        return details;
+    }
+
+    public void retry(Manga m) {
+        fetchDetails(m);
+    }
+
+    private void fetchDetails(Manga m) {
+        new Repository(m.sourceId).details(m, new Repository.Callback<>() {
             @Override
             public void onComplete(Manga result) {
-                item.postValue(result);
+                details.postValue(result);
             }
 
             @Override
@@ -36,6 +52,29 @@ public class DetailsViewModel extends ViewModel {
                 error.postValue(e.getLocalizedMessage());
             }
         });
-        return item;
+    }
+
+    // other series by the author, without the one being viewed
+    public void loadAuthorWorks(Manga m, String key) {
+        if (key.equals(authorKey)) return;
+        authorKey = key;
+        HashMap<String, String> queries = new HashMap<>();
+        queries.put("author", key);
+        new Repository(m.sourceId).search(queries, 1, new Repository.Callback<>() {
+            @Override
+            public void onComplete(List<Manga> result) {
+                List<Manga> others = new ArrayList<>();
+                for (Manga item : result) {
+                    if (!item.id.equals(m.id)) others.add(item);
+                }
+                authorWorks.postValue(others);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // the section just stays hidden
+                e.printStackTrace();
+            }
+        });
     }
 }

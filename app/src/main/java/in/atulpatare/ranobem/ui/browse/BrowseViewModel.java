@@ -1,38 +1,45 @@
 package in.atulpatare.ranobem.ui.browse;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.network.repository.Repository;
 
 public class BrowseViewModel extends ViewModel {
-    private MutableLiveData<String> error = new MutableLiveData<>();
-    private MutableLiveData<List<Manga>> items;
-    private int currentSourceId = -1;
+    private final MutableLiveData<String> error = new MutableLiveData<>();
+    private final MutableLiveData<List<Manga>> items = new MutableLiveData<>();
 
-    public MutableLiveData<String> getError() {
-        return error = new MutableLiveData<>();
+    public LiveData<String> getError() {
+        return error;
     }
 
-    public MutableLiveData<List<Manga>> getMangas(int sourceId, int page, HashMap<String, String> queries) {
-        if (currentSourceId != sourceId) {
-            items = new MutableLiveData<>();
-            currentSourceId = sourceId;
-        }
-        new Repository(sourceId).mangas(page, queries, new Repository.Callback<>() {
+    public LiveData<List<Manga>> getItems() {
+        return items;
+    }
+
+    // errors are shown once, a recreated view must not see an old one again
+    public void consumeError() {
+        error.setValue(null);
+    }
+
+    public boolean hasItems() {
+        return items.getValue() != null;
+    }
+
+    // appends the page to what is already loaded
+    public void load(int sourceId, int page) {
+        new Repository(sourceId).mangas(page, null, new Repository.Callback<>() {
             @Override
             public void onComplete(List<Manga> result) {
                 List<Manga> old = items.getValue();
-                if (old == null) {
-                    old = new ArrayList<>();
-                }
-                old.addAll(result);
-                items.postValue(old);
+                List<Manga> merged = old == null ? new ArrayList<>() : new ArrayList<>(old);
+                merged.addAll(result);
+                items.postValue(merged);
             }
 
             @Override
@@ -40,6 +47,5 @@ public class BrowseViewModel extends ViewModel {
                 error.postValue(e.getLocalizedMessage());
             }
         });
-        return items;
     }
 }

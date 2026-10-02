@@ -70,6 +70,7 @@ dependencies {
     implementation libs.androidx.navigation.ui
     annotationProcessor libs.compiler
     implementation libs.touchimageview
+    implementation libs.okhttp
 
     def room_version = "2.7.2"
     implementation "androidx.room:room-runtime:$room_version"

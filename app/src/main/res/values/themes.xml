@@ -1,11 +1,143 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.RanobeM" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/primary</item>
+        <!-- warm tones that match the red brand, instead of Material's default purple -->
+        <item name="colorPrimaryContainer">#FFFFDAD5</item>
+        <item name="colorOnPrimaryContainer">#FF410002</item>
+        <item name="colorSecondaryContainer">#FFFFDAD5</item>
+        <item name="colorOnSecondaryContainer">#FF3B0906</item>
     </style>
 
     <style name="Theme.RanobeM" parent="Base.Theme.RanobeM" />
+
+    <!-- Immersive reader: always dark so the chrome never competes with the artwork. -->
+    <style name="Theme.RanobeM.Reader" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/primaryDark</item>
+        <item name="android:windowBackground">@color/reader_bg_black</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="p">shortEdges</item>
+    </style>
+
+    <style name="Widget.RanobeM.Reader.Action" parent="Widget.Material3.Button.TextButton">
+        <item name="iconGravity">top</item>
+        <item name="iconPadding">4dp</item>
+        <item name="iconTint">@color/reader_icon_tint</item>
+        <item name="android:textColor">@color/reader_icon_tint</item>
+        <item name="android:textAppearance">?textAppearanceLabelSmall</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <style name="Widget.RanobeM.Reader.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="android:checkable">true</item>
+    </style>
+
+    <style name="TextAppearance.RanobeM.SheetHeader" parent="">
+        <item name="android:textAppearance">?textAppearanceTitleSmall</item>
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">6dp</item>
+    </style>
+
+    <style name="TextAppearance.RanobeM.SheetHint" parent="">
+        <item name="android:textAppearance">?textAppearanceBodySmall</item>
+        <item name="android:textColor">?colorOnSurfaceVariant</item>
+        <item name="android:layout_marginTop">4dp</item>
+    </style>
+
+    <!-- details -->
+    <style name="Widget.RanobeM.Details.Badge" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">6dp</item>
+        <item name="android:background">@drawable/bg_badge</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.08</item>
+        <item name="android:textAppearance">?textAppearanceLabelSmall</item>
+        <item name="android:textColor">?colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- small square-ish button with the icon above a short label, next to "Start reading" -->
+    <style name="Widget.RanobeM.Details.Action" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textAppearance">?textAppearanceLabelMedium</item>
+        <item name="cornerRadius">18dp</item>
+        <item name="iconGravity">top</item>
+        <item name="iconPadding">4dp</item>
+        <item name="iconSize">22dp</item>
+    </style>
+
+    <style name="Widget.RanobeM.Details.SectionTitle" parent="">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">?textAppearanceTitleMedium</item>
+        <item name="android:textColor">?colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.RanobeM.Details.StatValue" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">?textAppearanceTitleMedium</item>
+        <item name="android:textColor">?colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.RanobeM.Details.StatLabel" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">?textAppearanceLabelSmall</item>
+        <item name="android:textColor">?colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="Widget.RanobeM.Details.Stat" parent="">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+    </style>
+
+    <style name="Widget.RanobeM.Details.Carousel" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:nestedScrollingEnabled">false</item>
+    </style>
 
     <style name="Theme.RanobeM.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

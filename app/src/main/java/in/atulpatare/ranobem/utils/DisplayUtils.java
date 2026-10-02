@@ -2,33 +2,27 @@ package in.atulpatare.ranobem.utils;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.view.View;
+
+import in.atulpatare.ranobem.R;
 
 public class DisplayUtils {
-    private final int width;
-    private final DisplayMetrics metrics;
-    private int empty;
+    private final int widthPx;
+    private final int minCellPx;
+    private final int spacingPx;
 
-    public DisplayUtils(Context context, int viewId) {
-        View view = View.inflate(context, viewId, null);
-        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        width = view.getMeasuredWidth();
-        metrics = context.getResources().getDisplayMetrics();
+    public DisplayUtils(Context context) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        widthPx = metrics.widthPixels;
+        minCellPx = context.getResources().getDimensionPixelSize(R.dimen.grid_min_cell);
+        spacingPx = context.getResources().getDimensionPixelSize(R.dimen.grid_spacing);
     }
 
+    // as many columns as fit at the minimum cover width, never fewer than 2
     public int noOfCols() {
-        int noOfCols = metrics.widthPixels / width;
-        empty = metrics.widthPixels - (noOfCols * width);
-
-        if (empty / (2 * noOfCols) < 5) {
-            noOfCols--;
-            empty = metrics.widthPixels - (noOfCols * width);
-        }
-        return noOfCols;
+        return Math.max(2, (widthPx - spacingPx) / (minCellPx + spacingPx));
     }
 
     public int spacing() {
-        int noOfCols = noOfCols();
-        return empty / (2 * noOfCols);
+        return spacingPx;
     }
 }

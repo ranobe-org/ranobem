@@ -49,16 +49,44 @@
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.MediumComponent" />
     </LinearLayout>
 
+    <!-- filters in effect (an author, genres), each removable -->
+    <HorizontalScrollView
+        android:id="@+id/active_filters_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/filters"
+        android:layout_marginTop="6dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="10dp"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/active_filters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleLine="true" />
+    </HorizontalScrollView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/novel_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/filters"
-        android:layout_marginTop="10dp" />
+        android:layout_below="@id/active_filters_scroll"
+        android:layout_marginTop="4dp"
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/layout_fade_in" />
+
+    <include
+        android:id="@+id/empty_state"
+        layout="@layout/view_empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:indeterminate="true"

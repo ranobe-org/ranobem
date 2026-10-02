@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -24,7 +23,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import in.atulpatare.core.models.Chapter;
 import in.atulpatare.core.models.Manga;
@@ -101,7 +99,6 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
 
         adapter = new ChapterAdapter(originalItems, this);
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        binding.chapterList.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
         binding.chapterList.setAdapter(adapter);
     }
 
@@ -138,7 +135,7 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
         originalItems.clear();
         originalItems.addAll(chapters);
         adapter.notifyDataSetChanged();
-        binding.toolbar.setTitle(String.format(Locale.getDefault(), "%d Chapters", chapters.size()));
+        binding.toolbar.setTitle(getResources().getQuantityString(R.plurals.chapter_count, chapters.size(), chapters.size()));
         binding.progress.hide();
     }
 

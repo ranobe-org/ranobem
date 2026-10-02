@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import in.atulpatare.core.models.Chapter;
+import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.databinding.ItemChapterBinding;
 import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.utils.NumberUtils;
@@ -41,12 +42,12 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Chapter item = items.get(position);
-        holder.binding.chapterName.setText(String.format("Chapter %s  %s", NumberUtils.normalize(item.index), item.name));
+        String name = holder.itemView.getContext().getString(R.string.chapter_number, NumberUtils.normalize(item.index));
+        if (item.name != null && !item.name.trim().isEmpty()) name = name + " · " + item.name.trim();
+        holder.binding.chapterName.setText(name);
 
-        History history = getHistoryByChapterId(item.id);
-        if (history != null) {
-            holder.binding.chapterName.setAlpha(0.5F);
-        }
+        // read chapters are dimmed; rows are recycled, so unread ones must be reset
+        holder.binding.chapterName.setAlpha(getHistoryByChapterId(item.id) != null ? 0.45f : 1f);
     }
 
     private History getHistoryByChapterId(int id) {

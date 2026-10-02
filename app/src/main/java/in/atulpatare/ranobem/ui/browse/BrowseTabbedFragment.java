@@ -49,6 +49,9 @@ public class BrowseTabbedFragment extends Fragment {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
+        // with a single source the tab bar says nothing, so name the source under the title instead
+        tabs.setVisibility(sources.size() > 1 ? View.VISIBLE : View.GONE);
+        binding.toolbar.setSubtitle(sources.size() == 1 ? sources.get(0).name : null);
 
         return binding.getRoot();
     }
