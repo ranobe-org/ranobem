@@ -307,6 +307,8 @@
     <string name="roadmap_stats_sub">Прочитанные главы, время за чтением и серии дней подряд</string>
     <string name="roadmap_suggest">Предложить функцию</string>
     <string name="roadmap_suggest_sub">Расскажите в Discord, что хотите увидеть дальше</string>
+    <string name="source_unavailable_title">%1$s недоступен</string>
+    <string name="source_unavailable_message">%1$s изменил свой сайт, и MangaD больше не может загружать оттуда тайтлы. Сохранённые тайтлы и история чтения никуда не денутся. Найдите этот тайтл через поиск, чтобы продолжить чтение из другого источника.</string>
     <string name="settings_about">О приложении</string>
     <string name="settings_app_updates_sub">Узнавайте о новых версиях приложения</string>
     <string name="notifications_blocked">Уведомления заблокированы</string>

@@ -60,6 +60,7 @@ import in.atulpatare.ranobem.ui.browse.adapter.MangaAdapter;
 import in.atulpatare.ranobem.ui.chapters.ChapterFragment;
 import in.atulpatare.ranobem.ui.downloads.DownloadsActivity;
 import in.atulpatare.ranobem.ui.downloads.EpubDownloadPrompt;
+import in.atulpatare.ranobem.utils.SourceAccess;
 
 public class DetailsActivity extends AppCompatActivity implements MangaAdapter.OnMangaItemClickListener {
     private static final int SUMMARY_LINES = 4;
@@ -96,9 +97,15 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         showBasics(manga);
 
         viewModel = new ViewModelProvider(this).get(DetailsViewModel.class);
-        viewModel.getDetails(manga).observe(this, this::setUpUi);
-        viewModel.getError().observe(this, this::showError);
-        viewModel.getAuthorWorks().observe(this, this::showAuthorWorks);
+        if (SourceAccess.available(manga.sourceId)) {
+            viewModel.getDetails(manga).observe(this, this::setUpUi);
+            viewModel.getError().observe(this, this::showError);
+            viewModel.getAuthorWorks().observe(this, this::showAuthorWorks);
+        } else {
+            // a series saved from a source that has since been switched off, only what's stored can be shown
+            binding.progress.hide();
+            if (savedInstanceState == null) SourceAccess.showUnavailable(this, manga.sourceId, null);
+        }
 
         binding.back.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         binding.read.setOnClickListener(v -> navigateToChapterList());
@@ -445,6 +452,10 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
 
     // an existing download is managed on the downloads screen, otherwise start one
     private void onDownloadClick() {
+        if (!SourceAccess.available(manga.sourceId)) {
+            SourceAccess.showUnavailable(this, manga.sourceId, null);
+            return;
+        }
         if (downloadJob != null) {
             startActivity(new Intent(this, DownloadsActivity.class));
         } else {
@@ -473,6 +484,10 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
 
     private void navigateToChapterList() {
         if (manga == null) return;
+        if (!SourceAccess.available(manga.sourceId)) {
+            SourceAccess.showUnavailable(this, manga.sourceId, null);
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putParcelable(Config.KEY_MANGA, manga);
         ChapterFragment chapters = new ChapterFragment();

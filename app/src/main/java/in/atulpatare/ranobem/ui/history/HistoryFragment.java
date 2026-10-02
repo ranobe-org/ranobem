@@ -25,6 +25,7 @@ import in.atulpatare.ranobem.databinding.FragmentHistoryBinding;
 import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.ui.history.adapter.HistoryAdapter;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
+import in.atulpatare.ranobem.utils.SourceAccess;
 import in.atulpatare.ranobem.utils.EmptyState;
 
 public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistoryItemClickListener {
@@ -94,6 +95,10 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
 
     @Override
     public void onHistoryItemClick(History history) {
+        if (!SourceAccess.available(history.sourceId)) {
+            SourceAccess.showUnavailable(requireContext(), history.sourceId, null);
+            return;
+        }
         Manga manga = history.getManga();
         Chapter chapter = history.getChapter();
         Bundle bundle = new Bundle();

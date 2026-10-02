@@ -18,6 +18,7 @@ import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.database.MangaDao;
 import in.atulpatare.ranobem.download.ChapterResolver;
 import in.atulpatare.ranobem.utils.NotificationAccess;
+import in.atulpatare.ranobem.utils.SourceAccess;
 
 /**
  * Fetches the chapter list of everything in the library and notifies about series that grew since
@@ -54,6 +55,8 @@ public class ChapterUpdateWorker extends Worker {
 
         for (Manga manga : library) {
             if (isStopped() || System.currentTimeMillis() > deadline) break;
+            // series from a switched off source can't be checked, and aren't a failed check either
+            if (!SourceAccess.available(manga.sourceId)) continue;
             try {
                 List<Chapter> chapters = new ChapterResolver(manga).chapters();
                 int count = chapters.size();

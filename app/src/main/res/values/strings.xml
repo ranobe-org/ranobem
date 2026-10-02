@@ -304,6 +304,8 @@
     <string name="roadmap_stats_sub">Chapters read, time spent and your reading streaks</string>
     <string name="roadmap_suggest">Suggest a feature</string>
     <string name="roadmap_suggest_sub">Tell us what you\'d like to see next on Discord</string>
+    <string name="source_unavailable_title">%1$s isn\'t available</string>
+    <string name="source_unavailable_message">%1$s changed its website and MangaD can\'t load series from it anymore. Your saved series and reading history are kept. Search for this series to keep reading from another source.</string>
     <string name="settings_about">About</string>
     <string name="settings_app_updates_sub">Hear about new versions of the app</string>
     <string name="notifications_blocked">Notifications are blocked</string>
