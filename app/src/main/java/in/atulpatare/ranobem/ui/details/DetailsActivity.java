@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.RenderEffect;
 import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.text.TextPaint;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ImageSpan;
+import android.text.style.UnderlineSpan;
 import android.transition.Fade;
 import android.transition.TransitionManager;
 import android.view.View;
@@ -189,7 +192,8 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         binding.badgeAdult.setVisibility(m.adult ? View.VISIBLE : View.GONE);
     }
 
-    // "by A, B" where every author the source can search by is a link to their other works
+    // "by A, B" where every author the source can search by is a link to their other works,
+    // underlined and followed by a search icon so it reads as tappable
     private void showAuthors(Manga m) {
         List<Tag> authors = m.authors;
         if ((authors == null || authors.isEmpty()) && !isBlank(m.author)) {
@@ -210,6 +214,11 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
             int start = text.length();
             text.append(author.name);
             if (searchable && author.isSearchable()) {
+                int nameEnd = text.length();
+                text.append('\u00A0');
+                int icon = text.length();
+                text.append('\uFFFC');
+                text.setSpan(searchIcon(linkColor), icon, text.length(), SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
                 text.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(@NonNull View widget) {
@@ -223,12 +232,25 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
                         ds.setUnderlineText(false);
                     }
                 }, start, text.length(), SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+                // only the name is underlined, the name and the icon are both tappable. Set after the
+                // link, whose own style turns underlines off
+                text.setSpan(new UnderlineSpan(), start, nameEnd, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
         binding.authors.setText(text);
         binding.authors.setMovementMethod(LinkMovementMethod.getInstance());
         binding.authors.setHighlightColor(Color.TRANSPARENT);
         binding.authors.setVisibility(View.VISIBLE);
+    }
+
+    private ImageSpan searchIcon(int color) {
+        Drawable icon = ContextCompat.getDrawable(this, R.drawable.ic_search).mutate();
+        icon.setTint(color);
+        int size = Math.round(binding.authors.getTextSize() * 1.15f);
+        icon.setBounds(0, 0, size, size);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                ? new ImageSpan(icon, ImageSpan.ALIGN_CENTER)
+                : new ImageSpan(icon, ImageSpan.ALIGN_BASELINE);
     }
 
     private void showStats(Manga m) {
