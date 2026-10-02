@@ -1,6 +1,5 @@
 package in.atulpatare.ranobem.ui.history;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,9 +8,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -25,53 +25,74 @@ import in.atulpatare.ranobem.databinding.FragmentHistoryBinding;
 import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.ui.history.adapter.HistoryAdapter;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
+import in.atulpatare.ranobem.utils.EmptyState;
 
 public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistoryItemClickListener {
 
     private FragmentHistoryBinding binding;
+    private HistoryAdapter adapter;
+    private boolean firstLoad = true;
 
     public HistoryFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentHistoryBinding.inflate(inflater, container, false);
+        adapter = new HistoryAdapter(this);
         binding.mangaList.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-        binding.mangaList.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-        binding.mangaList.setHasFixedSize(true);
+        binding.mangaList.setAdapter(adapter);
 
+        binding.appbar.setTitle(R.string.reading_history);
+        binding.appbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.delete) confirmClearAll();
+            return true;
+        });
+
+        firstLoad = true;
         AppDatabase.getDatabase().historyDao().getAll().observe(getViewLifecycleOwner(), this::setHistories);
         return binding.getRoot();
     }
 
     private void setHistories(List<History> histories) {
         binding.progress.hide();
-        binding.mangaList.setAdapter(new HistoryAdapter(histories, this));
-        if (histories.isEmpty()) {
-            binding.emptyHistory.setVisibility(View.VISIBLE);
+        adapter.submit(histories);
+        if (firstLoad && !histories.isEmpty()) {
+            firstLoad = false;
+            binding.mangaList.scheduleLayoutAnimation();
         }
 
-        binding.appbar.setTitle("Reading history");
-        binding.appbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.delete) {
-                new AlertDialog.Builder(requireContext())
-                        .setCancelable(true)
-                        .setTitle("Are you sure you want to delete all the reading history?")
-                        .setPositiveButton("Yes", (dialog, which) -> AppDatabase.databaseExecutor.execute(() -> {
-                            AppDatabase.getDatabase().historyDao().deleteAll();
-                        }))
-                        .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
-                        .show();
-            }
-            return true;
-        });
+        // nothing to clear when there's no history
+        binding.appbar.getMenu().findItem(R.id.delete).setVisible(!histories.isEmpty());
+        if (histories.isEmpty()) {
+            EmptyState.show(binding.emptyState, R.drawable.ic_history, R.string.history_empty_title,
+                    R.string.history_empty_message, R.string.start_browsing, v -> openBrowse());
+        } else {
+            EmptyState.hide(binding.emptyState);
+        }
+    }
+
+    private void confirmClearAll() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.clear_history_title)
+                .setMessage(R.string.clear_history_message)
+                .setPositiveButton(R.string.clear_history_confirm, (dialog, which) ->
+                        AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().historyDao().deleteAll()))
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void openBrowse() {
+        BottomNavigationView nav = requireActivity().findViewById(R.id.nav_view);
+        if (nav != null) nav.setSelectedItemId(R.id.navigation_browse);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     @Override
@@ -87,13 +108,11 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
 
     @Override
     public void onHistoryItemDeleteClick(History history) {
-        if (history != null) {
-            try {
-                AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().historyDao().deleteById(history.id));
-                Snackbar.make(binding.getRoot(), "Deleted history entry successfully", Snackbar.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                Snackbar.make(binding.getRoot(), "Failed to delete history entry", Snackbar.LENGTH_SHORT).show();
-            }
-        }
+        if (history == null) return;
+        AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().historyDao().deleteById(history.id));
+        Snackbar.make(binding.getRoot(), R.string.history_entry_removed, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, v -> AppDatabase.databaseExecutor.execute(() ->
+                        AppDatabase.getDatabase().historyDao().insert(history)))
+                .show();
     }
 }

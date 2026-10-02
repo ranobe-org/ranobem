@@ -1,154 +1,606 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     tools:context=".ui.details.DetailsActivity">
 
-    <RelativeLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="32dp">
+
+            <!-- Hero: blurred cover backdrop with the cover and title on top -->
+            <FrameLayout
+                android:id="@+id/hero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/backdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.6"
+                    android:importantForAccessibility="no"
+                    android:scaleType="centerCrop" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_details_scrim" />
+
+                <LinearLayout
+                    android:id="@+id/hero_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp"
+                    android:paddingTop="72dp"
+                    android:paddingBottom="4dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cover_card"
+                        android:layout_width="128dp"
+                        android:layout_height="192dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="12dp"
+                        app:strokeWidth="0dp">
+
+                        <ImageView
+                            android:id="@+id/cover"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@string/manga_cover"
+                            android:scaleType="centerCrop" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/badges"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/badge_type"
+                                style="@style/Widget.RanobeM.Details.Badge"
+                                android:textColor="?colorPrimary"
+                                android:visibility="gone"
+                                tools:text="Manhwa"
+                                tools:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/badge_official"
+                                style="@style/Widget.RanobeM.Details.Badge"
+                                android:text="@string/badge_official"
+                                android:visibility="gone"
+                                tools:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/badge_anime"
+                                style="@style/Widget.RanobeM.Details.Badge"
+                                android:text="@string/badge_anime"
+                                android:visibility="gone" />
+
+                            <TextView
+                                android:id="@+id/badge_adult"
+                                style="@style/Widget.RanobeM.Details.Badge"
+                                android:text="@string/badge_adult"
+                                android:textColor="@color/status_cancelled"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="4"
+                            android:textAppearance="?textAppearanceHeadlineSmall"
+                            android:textColor="?colorOnSurface"
+                            android:textStyle="bold"
+                            tools:text="Warrior Executioner" />
+
+                        <TextView
+                            android:id="@+id/authors"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:textAppearance="?textAppearanceBodyMedium"
+                            android:textColor="?colorOnSurfaceVariant"
+                            android:visibility="gone"
+                            tools:text="by KIM Sarae"
+                            tools:visibility="visible" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!-- Stats -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/stats"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                app:cardCornerRadius="16dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/stat_status"
+                        style="@style/Widget.RanobeM.Details.Stat">
+
+                        <TextView
+                            android:id="@+id/stat_status_value"
+                            style="@style/Widget.RanobeM.Details.StatValue"
+                            tools:text="Ongoing" />
+
+                        <TextView
+                            style="@style/Widget.RanobeM.Details.StatLabel"
+                            android:text="@string/stat_status" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/stat_released"
+                        style="@style/Widget.RanobeM.Details.Stat">
+
+                        <TextView
+                            android:id="@+id/stat_released_value"
+                            style="@style/Widget.RanobeM.Details.StatValue"
+                            tools:text="2021" />
+
+                        <TextView
+                            style="@style/Widget.RanobeM.Details.StatLabel"
+                            android:text="@string/stat_released" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/stat_followers"
+                        style="@style/Widget.RanobeM.Details.Stat">
+
+                        <TextView
+                            android:id="@+id/stat_followers_value"
+                            style="@style/Widget.RanobeM.Details.StatValue"
+                            tools:text="1.2K" />
+
+                        <TextView
+                            style="@style/Widget.RanobeM.Details.StatLabel"
+                            android:text="@string/stat_followers" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/stat_rating"
+                        style="@style/Widget.RanobeM.Details.Stat">
+
+                        <TextView
+                            android:id="@+id/stat_rating_value"
+                            style="@style/Widget.RanobeM.Details.StatValue"
+                            tools:text="8.4" />
+
+                        <TextView
+                            style="@style/Widget.RanobeM.Details.StatLabel"
+                            android:text="@string/stat_rating" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Actions -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/read"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="@string/start_reading"
+                    android:textSize="16sp"
+                    app:cornerRadius="18dp"
+                    app:icon="@drawable/ic_play"
+                    app:iconGravity="textStart" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/library_toggle"
+                    style="@style/Widget.RanobeM.Details.Action"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/library_save"
+                    app:icon="@drawable/ic_bookmark_border" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/open_in_browser"
+                    style="@style/Widget.RanobeM.Details.Action"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@string/open_in_browser"
+                    android:text="@string/web"
+                    app:icon="@drawable/ic_public" />
+
+            </LinearLayout>
+
+            <!-- Chapters -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/chapters_card"
+                style="@style/Widget.Material3.CardView.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_chapters"
+                        app:tint="?colorPrimary" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/all_chapters"
+                            android:textAppearance="?textAppearanceTitleSmall"
+                            android:textColor="?colorOnSurface"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/latest_chapter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textAppearance="?textAppearanceBodySmall"
+                            android:textColor="?colorOnSurfaceVariant"
+                            android:visibility="gone"
+                            tools:text="Latest: Episode 208 · 2 hours ago"
+                            tools:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="?colorOnSurfaceVariant" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Download as EPUB, Pro only -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/download_card"
+                style="@style/Widget.Material3.CardView.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_download"
+                            app:tint="?colorPrimary" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/download_epub"
+                                    android:textAppearance="?textAppearanceTitleSmall"
+                                    android:textColor="?colorOnSurface"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/download_pro_badge"
+                                    style="@style/Widget.RanobeM.Details.Badge"
+                                    android:layout_marginStart="8dp"
+                                    android:text="@string/pro_badge"
+                                    android:visibility="gone"
+                                    tools:visibility="visible" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/download_status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:ellipsize="end"
+                                android:maxLines="2"
+                                android:text="@string/download_epub_desc"
+                                android:textAppearance="?textAppearanceBodySmall"
+                                android:textColor="?colorOnSurfaceVariant" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="?colorOnSurfaceVariant" />
+
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/download_progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:max="100"
+                        android:visibility="gone"
+                        app:trackCornerRadius="4dp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Synopsis -->
+            <TextView
+                android:id="@+id/synopsis_title"
+                style="@style/Widget.RanobeM.Details.SectionTitle"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="28dp"
+                android:text="@string/synopsis"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.25"
+                android:maxLines="4"
+                android:textAppearance="?textAppearanceBodyMedium"
+                android:textColor="?colorOnSurfaceVariant"
+                android:visibility="gone"
+                tools:text="After whopping 20 years as the headsman of the kingdom, Denil finally gets to hang up his ax – not."
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/summary_toggle"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/show_more"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/genres"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:chipSpacingVertical="0dp"
+                tools:visibility="visible" />
+
+            <!-- More from the author -->
+            <LinearLayout
+                android:id="@+id/author_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="8dp">
+
+                    <TextView
+                        android:id="@+id/author_section_title"
+                        style="@style/Widget.RanobeM.Details.SectionTitle"
+                        tools:text="More from KIM Sarae" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/author_see_all"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/see_all"
+                        app:icon="@drawable/ic_chevron_right"
+                        app:iconGravity="end" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/author_works"
+                    style="@style/Widget.RanobeM.Details.Carousel" />
+
+            </LinearLayout>
+
+            <!-- Related series -->
+            <LinearLayout
+                android:id="@+id/related_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    style="@style/Widget.RanobeM.Details.SectionTitle"
+                    android:layout_width="match_parent"
+                    android:layout_marginHorizontal="20dp"
+                    android:text="@string/related_series" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/related"
+                    style="@style/Widget.RanobeM.Details.Carousel" />
+
+            </LinearLayout>
+
+            <!-- Recommendations -->
+            <LinearLayout
+                android:id="@+id/recommendations_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    style="@style/Widget.RanobeM.Details.SectionTitle"
+                    android:layout_width="match_parent"
+                    android:layout_marginHorizontal="20dp"
+                    android:text="@string/you_might_also_like" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recommendations"
+                    style="@style/Widget.RanobeM.Details.Carousel" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Top bar: transparent over the hero, turns solid once the hero scrolls away -->
+    <LinearLayout
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="100dp">
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/back"
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/back"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:icon="@drawable/ic_back"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconTint="?colorOnSecondaryContainer" />
+
+            <TextView
+                android:id="@+id/top_bar_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:alpha="0"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="?textAppearanceTitleMedium"
+                android:textColor="?colorOnSurface"
+                android:textStyle="bold"
+                tools:alpha="1"
+                tools:text="Warrior Executioner" />
+
+        </LinearLayout>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:indeterminate="true" />
 
-        <LinearLayout
-            android:id="@+id/header_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="20dp">
+    </LinearLayout>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/novel_cover_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="25dp">
-
-                <ImageView
-                    android:id="@+id/novel_cover"
-                    android:layout_width="120dp"
-                    android:layout_height="180dp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/manga_cover"
-                    android:scaleType="centerCrop" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingHorizontal="10dp">
-
-                <TextView
-                    android:id="@+id/novel_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:textColor="?colorOnSurface"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-                <RatingBar
-                    android:id="@+id/rating"
-                    style="@style/Widget.AppCompat.RatingBar.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/authors"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="?colorPrimary"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="?colorOnSurface" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/summary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/header_layout"
-            android:layout_marginBottom="10dp"
-            android:breakStrategy="simple"
-            android:ellipsize="none"
-            android:paddingHorizontal="20dp"
-            android:scrollHorizontally="false"
-            android:singleLine="false"
-            android:textAlignment="textStart"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textIsSelectable="true" />
-
-        <LinearLayout
-            android:id="@+id/buttons_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/summary"
-            android:gravity="end"
-            android:orientation="horizontal"
-            android:paddingHorizontal="10dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/remove_from_library"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="@string/remove_from_library"
-                android:visibility="gone" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/add_to_library"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="@string/add_to_library" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/read_chapter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/read_info" />
-
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/open_in_browser"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/buttons_panel"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:text="@string/open_in_browser" />
-
-    </RelativeLayout>
-
-</androidx.core.widget.NestedScrollView>
+</FrameLayout>

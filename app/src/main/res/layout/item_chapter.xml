@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chapter_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
+    android:minHeight="52dp"
+    android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="15dp">
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="12dp">
 
     <TextView
         android:id="@+id/chapter_name"
@@ -13,6 +17,8 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textSize="15sp" />
+        android:textAppearance="?textAppearanceBodyLarge"
+        android:textColor="?colorOnSurface"
+        tools:text="Chapter 12" />
 
 </LinearLayout>

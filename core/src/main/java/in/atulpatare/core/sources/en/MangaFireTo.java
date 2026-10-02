@@ -13,6 +13,7 @@ import java.util.Map;
 import in.atulpatare.core.models.Chapter;
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.core.models.Metadata;
+import in.atulpatare.core.models.Tag;
 import in.atulpatare.core.network.HttpClient;
 import in.atulpatare.core.sources.Source;
 import in.atulpatare.core.util.ListUtils;
@@ -113,6 +114,11 @@ public class MangaFireTo implements Source {
         String url = m.url.startsWith("https") ? m.url : baseUrl.concat(m.url);
         Element doc = Jsoup.parse(HttpClient.GET(url, headers));
         m.author = getTextForElement(doc.selectFirst("a[itemprop=\"author\"]"));
+        m.authors = new ArrayList<>();
+        if (m.author != null && !m.author.isEmpty()) {
+            // mangafire search can't filter by author
+            m.authors.add(new Tag(m.author, null));
+        }
         m.summary = getTextForElement(doc.selectFirst("div.description"));
         m.rating = (int) NumberUtils.toFloat(getTextForElement(doc.selectFirst("span.live-score")));
         m.status = getTextForElement(doc.selectFirst("div.info > p"));

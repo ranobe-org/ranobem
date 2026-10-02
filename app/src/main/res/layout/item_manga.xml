@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="100dp"
-    android:layout_height="wrap_content"
-    android:paddingBottom="20dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
+    <!-- the cover fills the cell width and keeps the 2:3 shape of a manga cover -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/novel_cover_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:clickable="true"
         android:focusable="true"
         app:cardCornerRadius="10dp"
-        app:cardElevation="5dp">
+        app:cardElevation="0dp"
+        app:layout_constraintDimensionRatio="2:3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeWidth="0dp">
 
         <ImageView
             android:id="@+id/novel_cover"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?colorSurfaceContainerHighest"
             android:contentDescription="@string/manga_cover"
             android:scaleType="centerCrop" />
 
@@ -27,26 +32,33 @@
 
     <TextView
         android:id="@+id/source_name"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/novel_cover_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="6dp"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textAllCaps="true"
+        android:textAppearance="?textAppearanceLabelSmall"
         android:textColor="?colorPrimary"
         android:visibility="gone"
-        android:textSize="8sp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/novel_cover_layout"
+        tools:text="WeebCentral"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/novel_name"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/source_name"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:padding="2dp"
+        android:textAppearance="?textAppearanceBodySmall"
         android:textColor="?colorOnSurface"
-        android:textSize="15sp" />
-</RelativeLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/source_name"
+        tools:text="The Seventh Prince Wants to Bail" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

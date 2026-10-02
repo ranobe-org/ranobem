@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="320dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginVertical="48dp"
+        android:background="@drawable/bg_reader_card"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_finished"
+            android:textAllCaps="true"
+            android:textAppearance="?textAppearanceLabelMedium"
+            android:textColor="@color/reader_on_overlay_variant" />
+
+        <TextView
+            android:id="@+id/current_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?textAppearanceTitleMedium"
+            android:textColor="@color/reader_on_overlay" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/reader_divider" />
+
+        <TextView
+            android:id="@+id/next_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_up_next"
+            android:textAllCaps="true"
+            android:textAppearance="?textAppearanceLabelMedium"
+            android:textColor="@color/reader_on_overlay_variant" />
+
+        <TextView
+            android:id="@+id/next_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?textAppearanceTitleMedium"
+            android:textColor="@color/reader_on_overlay" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/next_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/reader_read_next"
+            app:icon="@drawable/ic_chapter_next"
+            app:iconGravity="textEnd" />
+    </LinearLayout>
+
+</FrameLayout>

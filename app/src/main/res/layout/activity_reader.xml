@@ -1,66 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     tools:context=".ui.reader.ReaderActivity">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/toolbar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/appbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:navigationIcon="@drawable/ic_back"
-            app:navigationIconTint="?colorOnBackground" />
-    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/toolbar"
-        android:layout_below="@id/toolbar_layout" />
+        android:overScrollMode="never" />
 
+    <!-- chapter loading state -->
     <LinearLayout
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="2dp">
-
-        <TextView
-            android:id="@+id/chapter_title"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="marquee"
-            android:maxLines="1"
-            android:textAlignment="viewStart" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/next_chapter"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:text="@string/next_chapter" />
-    </LinearLayout>
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/progress"
+        android:id="@+id/loading_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:indeterminate="true"
-        android:visibility="visible" />
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:indicatorSize="44dp"
+            app:trackThickness="4dp" />
+
+        <TextView
+            android:id="@+id/loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/reader_loading_chapter"
+            android:textAppearance="?textAppearanceBodyMedium"
+            android:textColor="@color/reader_on_overlay_variant" />
+    </LinearLayout>
+
+    <!-- chapter error state -->
+    <LinearLayout
+        android:id="@+id/error_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/error_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_chapter_failed"
+            android:textAppearance="?textAppearanceTitleMedium"
+            android:textColor="@color/reader_on_overlay" />
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:textAppearance="?textAppearanceBodyMedium"
+            android:textColor="@color/reader_on_overlay_variant" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/error_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/retry" />
+    </LinearLayout>
+
+    <!-- compact page indicator shown while the menu is hidden -->
+    <TextView
+        android:id="@+id/page_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_reader_pill"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        android:textAppearance="?textAppearanceLabelMedium"
+        android:textColor="@color/reader_on_overlay"
+        android:visibility="gone" />
+
+    <!-- top menu -->
+    <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@color/reader_overlay"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationIconTint="@color/reader_on_overlay"
+            app:subtitleTextAppearance="?textAppearanceBodySmall"
+            app:subtitleTextColor="@color/reader_on_overlay_variant"
+            app:titleTextAppearance="?textAppearanceTitleMedium"
+            app:titleTextColor="@color/reader_on_overlay" />
+    </LinearLayout>
+
+    <!-- bottom menu -->
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/reader_overlay"
+        android:orientation="vertical"
+        android:paddingHorizontal="8dp"
+        android:paddingTop="8dp">
+
+        <LinearLayout
+            android:id="@+id/seek_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/prev_chapter"
+                style="?materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/reader_previous_chapter"
+                android:enabled="false"
+                app:icon="@drawable/ic_chapter_previous"
+                app:iconTint="@color/reader_icon_tint" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_reader_pill"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
+
+                <TextView
+                    android:id="@+id/page_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="24dp"
+                    android:gravity="center"
+                    android:textAppearance="?textAppearanceLabelLarge"
+                    android:textColor="@color/reader_on_overlay" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/page_slider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/page"
+                    android:stepSize="1"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    app:labelBehavior="gone"
+                    app:tickVisible="false" />
+
+                <TextView
+                    android:id="@+id/page_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="24dp"
+                    android:gravity="center"
+                    android:textAppearance="?textAppearanceLabelLarge"
+                    android:textColor="@color/reader_on_overlay_variant" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/next_chapter"
+                style="?materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/next_chapter"
+                android:enabled="false"
+                app:icon="@drawable/ic_chapter_next"
+                app:iconTint="@color/reader_icon_tint" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/action_mode"
+                style="@style/Widget.RanobeM.Reader.Action"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/reader_mode_webtoon"
+                app:icon="@drawable/ic_reading_mode" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/action_scale"
+                style="@style/Widget.RanobeM.Reader.Action"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/reader_scale_smart"
+                app:icon="@drawable/ic_fit_screen" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/action_orientation"
+                style="@style/Widget.RanobeM.Reader.Action"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/reader_orientation_free"
+                app:icon="@drawable/ic_screen_rotation" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/action_settings"
+                style="@style/Widget.RanobeM.Reader.Action"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/reader_settings"
+                app:icon="@drawable/ic_settings" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

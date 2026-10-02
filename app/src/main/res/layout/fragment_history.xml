@@ -9,7 +9,8 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/panel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?android:attr/colorBackground">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/appbar"
@@ -22,22 +23,21 @@
         android:id="@+id/manga_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/panel" />
+        android:layout_below="@id/panel"
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/layout_fade_in"
+        android:paddingVertical="4dp" />
 
-    <TextView
-        android:id="@+id/empty_history"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/empty_state"
+        layout="@layout/view_empty_state"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:paddingHorizontal="10dp"
-        android:text="@string/no_items_in_ths_history"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:visibility="gone" />
+        android:layout_centerInParent="true" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:indeterminate="true"

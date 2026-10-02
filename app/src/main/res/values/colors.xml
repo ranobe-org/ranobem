@@ -4,4 +4,24 @@
     <color name="primary">#F44336</color>
     <color name="primaryDark">#EF796E</color>
     <color name="discord">#7289da</color>
+
+    <!-- reader -->
+    <color name="reader_overlay">#F0141416</color>
+    <color name="reader_card">#FF1E1E22</color>
+    <color name="reader_pill">#CC000000</color>
+    <color name="reader_pill_strong">#FF26262B</color>
+    <color name="reader_on_overlay">#FFFFFFFF</color>
+    <color name="reader_on_overlay_variant">#B3FFFFFF</color>
+    <color name="reader_on_overlay_disabled">#5CFFFFFF</color>
+    <color name="reader_divider">#26FFFFFF</color>
+    <color name="reader_bg_black">#FF000000</color>
+    <color name="reader_bg_gray">#FF202124</color>
+    <color name="reader_bg_white">#FFFFFFFF</color>
+    <color name="reader_on_light">#99000000</color>
+
+    <!-- details: publication status -->
+    <color name="status_ongoing">#FF43A047</color>
+    <color name="status_completed">#FF1E88E5</color>
+    <color name="status_hiatus">#FFFB8C00</color>
+    <color name="status_cancelled">#FFE53935</color>
 </resources>

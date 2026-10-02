@@ -10,7 +10,8 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/panel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?android:attr/colorBackground">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/appbar"
@@ -20,40 +21,43 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_view"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="8dp"
             android:hint="@string/search_in_library"
-            android:visibility="gone">
+            android:visibility="gone"
+            app:endIconMode="clear_text"
+            app:startIconDrawable="@drawable/ic_search">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/search_field"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSearch"
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:id="@+id/empty_lib"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/empty_state"
+        layout="@layout/view_empty_state"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/no_items_in_the_library"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:visibility="gone" />
+        android:layout_centerInParent="true" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/novel_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/panel"
-        android:paddingHorizontal="10dp" />
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/layout_fade_in" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:indeterminate="true"

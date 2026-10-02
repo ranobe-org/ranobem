@@ -11,6 +11,12 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
 public class VrfFetcher {
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -45,6 +51,62 @@ public class VrfFetcher {
         });
 
         webView.loadUrl(pageUrl);
+    }
+
+    /**
+     * Same as {@link #fetchVrf} but waits for the url, for background work. Must not be called on the
+     * main thread, the WebView lives there.
+     */
+    public static String fetchVrfBlocking(Context context, String pageUrl, String containing, long timeoutMs) throws IOException {
+        Handler main = new Handler(Looper.getMainLooper());
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicReference<String> result = new AtomicReference<>();
+        AtomicReference<WebView> view = new AtomicReference<>();
+        main.post(() -> {
+            try {
+                view.set(createWebView(context.getApplicationContext(), containing, url -> {
+                    if (result.compareAndSet(null, url)) latch.countDown();
+                }));
+                view.get().loadUrl(pageUrl);
+            } catch (Exception e) {
+                // e.g. the WebView package is being updated
+                latch.countDown();
+            }
+        });
+        try {
+            latch.await(timeoutMs, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new InterruptedIOException("Interrupted while loading " + pageUrl);
+        } finally {
+            main.post(() -> {
+                WebView webView = view.get();
+                if (webView != null) cleanupWebView(webView);
+            });
+        }
+        String url = result.get();
+        if (url == null) throw new IOException("Timed out waiting for the reader page to load");
+        return url;
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private static WebView createWebView(Context context, String containing, onCompleteListener listener) {
+        WebView webView = new WebView(context);
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setUserAgentString(
+                "Mozilla/5.0 (Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99 Mobile Safari/537.36"
+        );
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                String reqUrl = request.getUrl().toString();
+                if (reqUrl.contains(containing)) listener.onVrf(reqUrl);
+                return super.shouldInterceptRequest(view, request);
+            }
+        });
+        return webView;
     }
 
     private static void cleanupWebView(WebView webView) {

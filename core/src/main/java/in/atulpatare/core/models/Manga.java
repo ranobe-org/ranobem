@@ -5,8 +5,11 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -27,6 +30,25 @@ public class Manga implements Parcelable {
     public String id;
     public String name, url, cover, status, type, summary, author;
     public int rating, sourceId; // out of 10
+
+    // extra details, filled by Source.details() and never stored in the library
+    @Ignore
+    public List<Tag> authors = new ArrayList<>();
+    @Ignore
+    public List<Tag> genres = new ArrayList<>();
+    @Ignore
+    public String released, latestChapter;
+    @Ignore
+    public long subscribers, latestChapterAt; // latestChapterAt is epoch millis, 0 when unknown
+    @Ignore
+    public boolean official, anime, adult;
+    @Ignore
+    public List<Manga> related = new ArrayList<>();
+    @Ignore
+    public List<Manga> recommendations = new ArrayList<>();
+    // how this manga relates to the one it is listed under, e.g. "Prequel"
+    @Ignore
+    public String relation;
 
 
     public Manga() {

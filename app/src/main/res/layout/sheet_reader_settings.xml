@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingBottom="24dp">
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- reading mode -->
+        <TextView
+            style="@style/TextAppearance.RanobeM.SheetHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_section_mode" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/mode_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/mode_webtoon"
+                style="@style/Widget.RanobeM.Reader.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_mode_webtoon" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/mode_ltr"
+                style="@style/Widget.RanobeM.Reader.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_mode_ltr" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/mode_rtl"
+                style="@style/Widget.RanobeM.Reader.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_mode_rtl" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/mode_vertical"
+                style="@style/Widget.RanobeM.Reader.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_mode_vertical" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <TextView
+            android:id="@+id/mode_desc"
+            style="@style/TextAppearance.RanobeM.SheetHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/split_tall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/reader_split_tall"
+            android:textAppearance="?textAppearanceBodyLarge" />
+
+        <TextView
+            style="@style/TextAppearance.RanobeM.SheetHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="@string/reader_split_tall_desc" />
+
+        <!-- paged scale -->
+        <LinearLayout
+            android:id="@+id/paged_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.RanobeM.SheetHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_section_scale" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/page_scale_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/page_fit_screen"
+                    style="@style/Widget.RanobeM.Reader.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reader_scale_fit_screen" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/page_fit_width"
+                    style="@style/Widget.RanobeM.Reader.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reader_scale_fit_width" />
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+
+        <!-- webtoon layout -->
+        <LinearLayout
+            android:id="@+id/webtoon_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.RanobeM.SheetHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_section_webtoon_scale" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/webtoon_scale_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/webtoon_smart"
+                    style="@style/Widget.RanobeM.Reader.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reader_scale_smart" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/webtoon_fit_width"
+                    style="@style/Widget.RanobeM.Reader.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reader_scale_fit_width" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/webtoon_fit_screen"
+                    style="@style/Widget.RanobeM.Reader.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reader_scale_fit_screen" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                style="@style/TextAppearance.RanobeM.SheetHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_scale_smart_desc" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/reader_side_padding"
+                    android:textAppearance="?textAppearanceBodyLarge" />
+
+                <TextView
+                    android:id="@+id/padding_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?textAppearanceLabelLarge"
+                    android:textColor="?colorPrimary" />
+            </LinearLayout>
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/padding_slider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/reader_side_padding"
+                android:stepSize="5"
+                android:valueFrom="0"
+                android:valueTo="25"
+                app:labelBehavior="gone" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/page_gap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_page_gap"
+                android:textAppearance="?textAppearanceBodyLarge" />
+        </LinearLayout>
+
+        <!-- background -->
+        <TextView
+            style="@style/TextAppearance.RanobeM.SheetHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_section_background" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/background_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/bg_black"
+                style="@style/Widget.RanobeM.Reader.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_bg_black" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/bg_gray"
+                style="@style/Widget.RanobeM.Reader.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_bg_gray" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/bg_white"
+                style="@style/Widget.RanobeM.Reader.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_bg_white" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- orientation -->
+        <TextView
+            style="@style/TextAppearance.RanobeM.SheetHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_section_orientation" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/orientation_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/orientation_free"
+                style="@style/Widget.RanobeM.Reader.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_orientation_free" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/orientation_portrait"
+                style="@style/Widget.RanobeM.Reader.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_orientation_portrait" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/orientation_landscape"
+                style="@style/Widget.RanobeM.Reader.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_orientation_landscape" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- display -->
+        <TextView
+            style="@style/TextAppearance.RanobeM.SheetHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_section_display" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/fullscreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_fullscreen"
+            android:textAppearance="?textAppearanceBodyLarge" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/keep_screen_on"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_keep_screen_on"
+            android:textAppearance="?textAppearanceBodyLarge" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/show_page_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_show_page_number"
+            android:textAppearance="?textAppearanceBodyLarge" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/custom_brightness"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_custom_brightness"
+            android:textAppearance="?textAppearanceBodyLarge" />
+
+        <LinearLayout
+            android:id="@+id/brightness_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/reader_brightness"
+                android:src="@drawable/ic_brightness"
+                app:tint="?colorOnSurfaceVariant" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/brightness_slider"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/reader_brightness"
+                android:valueFrom="0.01"
+                android:valueTo="1"
+                app:labelBehavior="gone" />
+        </LinearLayout>
+
+        <!-- controls -->
+        <TextView
+            style="@style/TextAppearance.RanobeM.SheetHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_section_controls" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/tap_zones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_tap_zones"
+            android:textAppearance="?textAppearanceBodyLarge" />
+
+        <TextView
+            style="@style/TextAppearance.RanobeM.SheetHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="@string/reader_tap_zones_desc" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/volume_keys"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_volume_keys"
+            android:textAppearance="?textAppearanceBodyLarge" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/mode_suggestions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reader_mode_suggestions"
+            android:textAppearance="?textAppearanceBodyLarge" />
+
+        <TextView
+            style="@style/TextAppearance.RanobeM.SheetHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="@string/reader_mode_suggestions_desc" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
