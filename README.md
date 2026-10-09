@@ -35,21 +35,6 @@ where you are. No account, no sign-up.
   chapter you read in every series.
 - **Light and dark themes**: or let it follow your phone.
 
-### Free and Pro
-
-The free version has everything above. Pro adds a few extras and helps keep
-the app going.
-
-| | Free | Pro |
-|---|:---:|:---:|
-| Browse, search and read | ✓ | ✓ |
-| Library and reading history | ✓ | ✓ |
-| Check for new chapters | By hand | Automatically, every 12 hours |
-| Save series as EPUB books for offline reading | | ✓ |
-
-Pro is on [Google Play](https://play.google.com/store/apps/details?id=in.atulpatare.ranobem.pro).
-The free version can be downloaded from [GitHub releases](https://github.com/ranobe-org/ranobem/releases/latest).
-
 ### Coming soon
 
 - Backup and restore for your library and history
@@ -60,19 +45,6 @@ The free version can be downloaded from [GitHub releases](https://github.com/ran
 - Reading stats
 
 Have an idea? Tell us on [Discord](https://discord.gg/6CQ6u64dca).
-
-### Why it might go away
-
-Starting in 2027, Google plans to block Android apps from developers who
-haven't registered with Google, even apps installed outside the Play Store.
-Small independent apps like this one could stop installing on your phone.
-[keepandroidopen.org](https://keepandroidopen.org/) explains more. To hear
-about new versions, [sign up for updates](https://forms.gle/oGKihEBEzx9WTk6K6).
-
-### Also from us
-
-[Ranobe](https://play.google.com/store/apps/details?id=org.ranobe.downloader.pro),
-a light novel reader.
 
 ### Disclaimer
 
