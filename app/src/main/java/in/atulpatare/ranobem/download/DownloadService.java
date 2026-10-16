@@ -26,11 +26,11 @@ public class DownloadService extends Service {
     private static final long WAKE_LOCK_TIMEOUT_MS = 6 * 60 * 60 * 1000L;
 
     private final Map<String, DownloadJob.Status> seen = new HashMap<>();
-    private final Runnable onChanged = this::update;
     private DownloadQueue queue;
     private DownloadNotifications notifications;
     private PowerManager.WakeLock wakeLock;
     private boolean stopping;
+    private final Runnable onChanged = this::update;
 
     static void start(Context context) {
         try {

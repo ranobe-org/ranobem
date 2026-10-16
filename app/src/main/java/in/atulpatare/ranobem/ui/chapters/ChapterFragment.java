@@ -106,7 +106,8 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     // once, when the chapters, the history and the tracking are all in: to the last chapter read
     // here, or to the next one after what a tracker says was read, whichever is further along
     private void scrollToLastRead() {
-        if (scrolledToLastRead || originalItems.isEmpty() || !historyLoaded || !trackingLoaded) return;
+        if (scrolledToLastRead || originalItems.isEmpty() || !historyLoaded || !trackingLoaded)
+            return;
         scrolledToLastRead = true;
         int target = -1;
         float lastReadIndex = -1;

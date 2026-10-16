@@ -52,6 +52,18 @@ public class SettingsFragment extends Fragment {
     // what the notification permission was asked for: a check by hand, or turning on automatic checks
     private boolean permissionForCheckNow;
 
+    private static int themeButton(int mode) {
+        if (mode == AppCompatDelegate.MODE_NIGHT_NO) return R.id.theme_light;
+        if (mode == AppCompatDelegate.MODE_NIGHT_YES) return R.id.theme_dark;
+        return R.id.theme_auto;
+    }
+
+    private static int themeIcon(int mode) {
+        if (mode == AppCompatDelegate.MODE_NIGHT_NO) return R.drawable.ic_theme_mode_light;
+        if (mode == AppCompatDelegate.MODE_NIGHT_YES) return R.drawable.ic_theme_mode_night;
+        return R.drawable.ic_theme_mode_auto;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +132,8 @@ public class SettingsFragment extends Fragment {
         binding.updateDismiss.setOnClickListener(v -> {
             AppUpdateChecker.dismiss(requireContext(), release);
             binding.updateCard.setVisibility(View.GONE);
-            if (requireActivity() instanceof HomeActivity) ((HomeActivity) requireActivity()).showUpdateBadge(false);
+            if (requireActivity() instanceof HomeActivity)
+                ((HomeActivity) requireActivity()).showUpdateBadge(false);
         });
         binding.updateCard.setVisibility(View.VISIBLE);
     }
@@ -140,23 +153,11 @@ public class SettingsFragment extends Fragment {
             if (!isChecked) return;
             int selected = checkedId == R.id.theme_light ? AppCompatDelegate.MODE_NIGHT_NO
                     : checkedId == R.id.theme_dark ? AppCompatDelegate.MODE_NIGHT_YES
-                    : AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+                      : AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
             // stored first: changing the mode recreates the activity, which reads it back
             AppSettings.setThemeMode(requireContext(), selected);
             AppCompatDelegate.setDefaultNightMode(selected);
         });
-    }
-
-    private static int themeButton(int mode) {
-        if (mode == AppCompatDelegate.MODE_NIGHT_NO) return R.id.theme_light;
-        if (mode == AppCompatDelegate.MODE_NIGHT_YES) return R.id.theme_dark;
-        return R.id.theme_auto;
-    }
-
-    private static int themeIcon(int mode) {
-        if (mode == AppCompatDelegate.MODE_NIGHT_NO) return R.drawable.ic_theme_mode_light;
-        if (mode == AppCompatDelegate.MODE_NIGHT_YES) return R.drawable.ic_theme_mode_night;
-        return R.drawable.ic_theme_mode_auto;
     }
 
     private void setUpTracking() {
@@ -302,7 +303,8 @@ public class SettingsFragment extends Fragment {
         boolean canAskAgain = NotificationAccess.needsPermission(requireContext())
                 && shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS);
         Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.notifications_blocked, Snackbar.LENGTH_LONG);
-        if (!canAskAgain) snackbar.setAction(R.string.open_settings, v -> NotificationAccess.openSettings(requireContext()));
+        if (!canAskAgain)
+            snackbar.setAction(R.string.open_settings, v -> NotificationAccess.openSettings(requireContext()));
         snackbar.show();
     }
 

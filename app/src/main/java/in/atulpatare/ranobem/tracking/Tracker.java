@@ -84,7 +84,8 @@ public abstract class Tracker {
      */
     public void loadAccountIfStale() throws IOException, JSONException {
         if (!isLoggedIn()) return;
-        if (System.currentTimeMillis() - AppSettings.trackerAccountLoadedAt(context(), key) < ACCOUNT_STALE_MS) return;
+        if (System.currentTimeMillis() - AppSettings.trackerAccountLoadedAt(context(), key) < ACCOUNT_STALE_MS)
+            return;
         loadAccount();
     }
 

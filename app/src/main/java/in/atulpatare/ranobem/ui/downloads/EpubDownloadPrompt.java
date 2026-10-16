@@ -44,6 +44,15 @@ public class EpubDownloadPrompt {
                 result -> startPending());
     }
 
+    private static float parse(CharSequence text) {
+        if (text == null || text.toString().trim().isEmpty()) return Float.NaN;
+        try {
+            return Float.parseFloat(text.toString().trim().replace(',', '.'));
+        } catch (NumberFormatException e) {
+            return Float.NaN;
+        }
+    }
+
     public void show(Manga manga) {
         DialogEpubDownloadBinding binding = DialogEpubDownloadBinding.inflate(activity.getLayoutInflater());
         binding.scope.setOnCheckedChangeListener((group, checked) ->
@@ -78,10 +87,13 @@ public class EpubDownloadPrompt {
         pendingFrom = from;
         pendingTo = to;
         List<String> missing = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) missing.add(Manifest.permission.POST_NOTIFICATIONS);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) missing.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            missing.add(Manifest.permission.POST_NOTIFICATIONS);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+            missing.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         for (int i = missing.size() - 1; i >= 0; i--) {
-            if (ContextCompat.checkSelfPermission(activity, missing.get(i)) == PackageManager.PERMISSION_GRANTED) missing.remove(i);
+            if (ContextCompat.checkSelfPermission(activity, missing.get(i)) == PackageManager.PERMISSION_GRANTED)
+                missing.remove(i);
         }
         if (missing.isEmpty()) {
             startPending();
@@ -104,14 +116,5 @@ public class EpubDownloadPrompt {
         Snackbar.make(anchor, R.string.download_started, Snackbar.LENGTH_LONG)
                 .setAction(R.string.download_view, v -> activity.startActivity(new Intent(activity, DownloadsActivity.class)))
                 .show();
-    }
-
-    private static float parse(CharSequence text) {
-        if (text == null || text.toString().trim().isEmpty()) return Float.NaN;
-        try {
-            return Float.parseFloat(text.toString().trim().replace(',', '.'));
-        } catch (NumberFormatException e) {
-            return Float.NaN;
-        }
     }
 }

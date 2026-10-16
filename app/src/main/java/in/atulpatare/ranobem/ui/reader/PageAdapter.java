@@ -74,6 +74,10 @@ public class PageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // region items
 
+    private static int dp(Context context, int value) {
+        return Math.round(value * context.getResources().getDisplayMetrics().density);
+    }
+
     private void buildItems() {
         items.clear();
         firstItem = new int[loader.getPageCount()];
@@ -87,7 +91,8 @@ public class PageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         PageLoader.Page p = loader.getPage(page);
         List<Item> result = new ArrayList<>();
         if (isSplit(p)) {
-            for (int slice = 0; slice < p.sliceCount(); slice++) result.add(new Item(page, slice, p.sliceCount()));
+            for (int slice = 0; slice < p.sliceCount(); slice++)
+                result.add(new Item(page, slice, p.sliceCount()));
         } else {
             result.add(new Item(page, -1, 1));
         }
@@ -148,11 +153,11 @@ public class PageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return items.get(Math.max(0, Math.min(items.size() - 1, position))).page;
     }
 
+    // endregion
+
     public boolean isTransition(int position) {
         return position >= items.size();
     }
-
-    // endregion
 
     /**
      * @return true if the viewport changed and items were re-laid out
@@ -206,7 +211,8 @@ public class PageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
         if (holder instanceof PageHolder && !payloads.isEmpty() && payloads.get(0) == PAYLOAD_PROGRESS) {
             PageLoader.Page page = loader.getPage(items.get(position).page);
-            if (page.state == PageLoader.STATE_LOADING) ((PageHolder) holder).showLoading(page.progress);
+            if (page.state == PageLoader.STATE_LOADING)
+                ((PageHolder) holder).showLoading(page.progress);
             return;
         }
         super.onBindViewHolder(holder, position, payloads);
@@ -399,10 +405,6 @@ public class PageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    private static int dp(Context context, int value) {
-        return Math.round(value * context.getResources().getDisplayMetrics().density);
-    }
-
     public interface Listener {
         void onNextChapterClick();
     }
@@ -507,7 +509,7 @@ public class PageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
          * once the page edge is reached, so swiping continues to the next page.
          */
         private void handleNestedScroll(MotionEvent event) {
-            ViewGroup parent = (ViewGroup) binding.getRoot();
+            ViewGroup parent = binding.getRoot();
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     downX = event.getX();

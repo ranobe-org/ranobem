@@ -58,7 +58,8 @@ public class SearchTabbedFragment extends Fragment {
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), sources, targetSource, args);
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
-        if (targetIndex >= 0 && savedInstanceState == null) viewPager.setCurrentItem(targetIndex, false);
+        if (targetIndex >= 0 && savedInstanceState == null)
+            viewPager.setCurrentItem(targetIndex, false);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
         tabs.setVisibility(sources.size() > 1 ? View.VISIBLE : View.GONE);

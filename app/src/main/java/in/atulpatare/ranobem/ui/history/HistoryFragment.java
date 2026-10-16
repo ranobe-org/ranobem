@@ -26,8 +26,8 @@ import in.atulpatare.ranobem.library.Library;
 import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.ui.history.adapter.HistoryAdapter;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
-import in.atulpatare.ranobem.utils.SourceAccess;
 import in.atulpatare.ranobem.utils.EmptyState;
+import in.atulpatare.ranobem.utils.SourceAccess;
 
 public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistoryItemClickListener {
 
@@ -94,6 +94,8 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // the adapter outlives the view while the tab is in the back stack, and would keep the old list alive
+        binding.mangaList.setAdapter(null);
         binding = null;
     }
 

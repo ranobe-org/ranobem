@@ -63,12 +63,10 @@ public class PageLoader {
     // pending downloads, picked by distance to the page being read when a worker frees up
     private final Map<Integer, Job> pending = new LinkedHashMap<>();
     private final Object lock = new Object();
-    private int focus;
-
     private final LruCache<String, Bitmap> slices;
     private final Map<String, List<SliceCallback>> decoding = new HashMap<>();
     private final LinkedHashMap<Integer, BitmapRegionDecoder> decoders = new LinkedHashMap<>(4, 0.75f, true);
-
+    private int focus;
     private volatile boolean released;
 
     public PageLoader(Context context, List<String> urls, Listener listener) {
@@ -85,6 +83,88 @@ public class PageLoader {
         };
     }
 
+    private static int describe(IOException e) {
+        if (e instanceof UnknownHostException || e instanceof ConnectException) {
+            return R.string.reader_error_offline;
+        } else if (e instanceof SocketTimeoutException) {
+            return R.string.reader_error_timeout;
+        } else if (e instanceof PageCache.HttpException) {
+            int code = ((PageCache.HttpException) e).code;
+            if (code == 404 || code == 410) return R.string.reader_error_not_found;
+            if (code >= 500) return R.string.reader_error_server;
+            return R.string.reader_error_refused;
+        }
+        return R.string.reader_error_network;
+    }
+
+    /**
+     * Finds the row between {@code low} and {@code high} that is closest to a flat color,
+     * so slices are cut through gutters instead of through artwork and speech bubbles.
+     */
+    private static int quietRow(BitmapRegionDecoder decoder, int width, int low, int high, int target) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = Math.max(1, Integer.highestOneBit(Math.max(1, width / 240)));
+        Bitmap band;
+        try {
+            band = decoder.decodeRegion(new Rect(0, low, width, high), options);
+        } catch (Exception | OutOfMemoryError e) {
+            return target;
+        }
+        if (band == null) return target;
+
+        int sample = options.inSampleSize;
+        int w = band.getWidth();
+        int[] row = new int[w];
+        int best = target;
+        double bestScore = Double.MAX_VALUE;
+        for (int y = 0; y < band.getHeight(); y++) {
+            band.getPixels(row, 0, w, 0, y, w, 1);
+            double sum = 0, sumSq = 0;
+            for (int color : row) {
+                int luma = ((color >> 16 & 0xff) * 3 + (color >> 8 & 0xff) * 6 + (color & 0xff)) / 10;
+                sum += luma;
+                sumSq += luma * luma;
+            }
+            double variance = sumSq / w - (sum / w) * (sum / w);
+            int source = low + y * sample;
+            // prefer flat rows, then rows close to the even split point
+            double score = variance + Math.abs(source - target) * 0.05;
+            if (score < bestScore) {
+                bestScore = score;
+                best = source;
+            }
+        }
+        band.recycle();
+        return best;
+    }
+
+    // region downloads
+
+    /**
+     * Some formats (e.g. GIF) can't be region decoded: decode the whole image downsampled and crop.
+     */
+    @Nullable
+    private static Bitmap decodeFallback(File file, Rect region, int sample) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = sample;
+        while (region.height() / options.inSampleSize > MAX_SLICE_HEIGHT * 2)
+            options.inSampleSize *= 2;
+        Bitmap full = BitmapFactory.decodeFile(file.getPath(), options);
+        if (full == null) return null;
+        int s = options.inSampleSize;
+        int top = Math.min(full.getHeight() - 1, region.top / s);
+        int height = Math.max(1, Math.min(full.getHeight() - top, region.height() / s));
+        Bitmap cropped = Bitmap.createBitmap(full, 0, top, full.getWidth(), height);
+        if (cropped != full) full.recycle();
+        return cropped;
+    }
+
+    private static int sampleSize(int sourceWidth, int targetWidth) {
+        int sample = 1;
+        while (targetWidth > 0 && sourceWidth / (sample * 2) >= targetWidth) sample *= 2;
+        return sample;
+    }
+
     public int getPageCount() {
         return pages.size();
     }
@@ -92,8 +172,6 @@ public class PageLoader {
     public Page getPage(int index) {
         return pages.get(index);
     }
-
-    // region downloads
 
     /**
      * Starts loading a page if it is not loaded or loading already.
@@ -244,20 +322,6 @@ public class PageLoader {
         }
     }
 
-    private static int describe(IOException e) {
-        if (e instanceof UnknownHostException || e instanceof ConnectException) {
-            return R.string.reader_error_offline;
-        } else if (e instanceof SocketTimeoutException) {
-            return R.string.reader_error_timeout;
-        } else if (e instanceof PageCache.HttpException) {
-            int code = ((PageCache.HttpException) e).code;
-            if (code == 404 || code == 410) return R.string.reader_error_not_found;
-            if (code >= 500) return R.string.reader_error_server;
-            return R.string.reader_error_refused;
-        }
-        return R.string.reader_error_network;
-    }
-
     /**
      * Reads the image size and plans the slices, or returns null if the file is not a usable image.
      */
@@ -299,55 +363,19 @@ public class PageLoader {
         return cuts;
     }
 
-    /**
-     * Finds the row between {@code low} and {@code high} that is closest to a flat color,
-     * so slices are cut through gutters instead of through artwork and speech bubbles.
-     */
-    private static int quietRow(BitmapRegionDecoder decoder, int width, int low, int high, int target) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = Math.max(1, Integer.highestOneBit(Math.max(1, width / 240)));
-        Bitmap band;
-        try {
-            band = decoder.decodeRegion(new Rect(0, low, width, high), options);
-        } catch (Exception | OutOfMemoryError e) {
-            return target;
-        }
-        if (band == null) return target;
-
-        int sample = options.inSampleSize;
-        int w = band.getWidth();
-        int[] row = new int[w];
-        int best = target;
-        double bestScore = Double.MAX_VALUE;
-        for (int y = 0; y < band.getHeight(); y++) {
-            band.getPixels(row, 0, w, 0, y, w, 1);
-            double sum = 0, sumSq = 0;
-            for (int color : row) {
-                int luma = ((color >> 16 & 0xff) * 3 + (color >> 8 & 0xff) * 6 + (color & 0xff)) / 10;
-                sum += luma;
-                sumSq += luma * luma;
-            }
-            double variance = sumSq / w - (sum / w) * (sum / w);
-            int source = low + y * sample;
-            // prefer flat rows, then rows close to the even split point
-            double score = variance + Math.abs(source - target) * 0.05;
-            if (score < bestScore) {
-                bestScore = score;
-                best = source;
-            }
-        }
-        band.recycle();
-        return best;
-    }
-
     private void postProgress(Job job, int percent) {
         main.post(() -> {
             Page page = pages.get(job.index);
-            if (released || page.generation != job.generation || page.state != STATE_LOADING) return;
+            if (released || page.generation != job.generation || page.state != STATE_LOADING)
+                return;
             page.progress = percent;
             listener.onPageProgress(job.index, percent);
         });
     }
+
+    // endregion
+
+    // region slices
 
     private void postReady(Job job, Result result) {
         main.post(() -> {
@@ -373,10 +401,6 @@ public class PageLoader {
             listener.onPageStateChanged(job.index);
         });
     }
-
-    // endregion
-
-    // region slices
 
     /**
      * Returns the slice bitmap if it is cached, otherwise decodes it in the background and
@@ -417,7 +441,8 @@ public class PageLoader {
             main.post(() -> {
                 List<SliceCallback> waiting = decoding.remove(key);
                 if (released || waiting == null) return;
-                if (result != null && pages.get(index).generation == generation) slices.put(key, result);
+                if (result != null && pages.get(index).generation == generation)
+                    slices.put(key, result);
                 int error = result != null ? 0 : oom ? R.string.reader_error_memory : R.string.reader_error_decode;
                 for (SliceCallback c : waiting) c.onSlice(result, error);
             });
@@ -444,24 +469,6 @@ public class PageLoader {
             }
         }
         return null;
-    }
-
-    /**
-     * Some formats (e.g. GIF) can't be region decoded: decode the whole image downsampled and crop.
-     */
-    @Nullable
-    private static Bitmap decodeFallback(File file, Rect region, int sample) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = sample;
-        while (region.height() / options.inSampleSize > MAX_SLICE_HEIGHT * 2) options.inSampleSize *= 2;
-        Bitmap full = BitmapFactory.decodeFile(file.getPath(), options);
-        if (full == null) return null;
-        int s = options.inSampleSize;
-        int top = Math.min(full.getHeight() - 1, region.top / s);
-        int height = Math.max(1, Math.min(full.getHeight() - top, region.height() / s));
-        Bitmap cropped = Bitmap.createBitmap(full, 0, top, full.getWidth(), height);
-        if (cropped != full) full.recycle();
-        return cropped;
     }
 
     /**
@@ -517,12 +524,6 @@ public class PageLoader {
         }
     }
 
-    private static int sampleSize(int sourceWidth, int targetWidth) {
-        int sample = 1;
-        while (targetWidth > 0 && sourceWidth / (sample * 2) >= targetWidth) sample *= 2;
-        return sample;
-    }
-
     // endregion
 
     /**
@@ -541,6 +542,20 @@ public class PageLoader {
         }
         decoding.clear();
         slices.evictAll();
+    }
+
+    public interface Listener {
+        void onPageStateChanged(int index);
+
+        void onPageProgress(int index, int percent);
+    }
+
+    public interface SliceCallback {
+        /**
+         * @param bitmap the slice, or null when it failed
+         * @param error  string resource describing the failure, 0 on success
+         */
+        void onSlice(@Nullable Bitmap bitmap, int error);
     }
 
     public static class Page {
@@ -594,19 +609,5 @@ public class PageLoader {
             this.width = width;
             this.height = height;
         }
-    }
-
-    public interface Listener {
-        void onPageStateChanged(int index);
-
-        void onPageProgress(int index, int percent);
-    }
-
-    public interface SliceCallback {
-        /**
-         * @param bitmap the slice, or null when it failed
-         * @param error  string resource describing the failure, 0 on success
-         */
-        void onSlice(@Nullable Bitmap bitmap, int error);
     }
 }

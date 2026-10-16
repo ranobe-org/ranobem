@@ -37,147 +37,6 @@ public class AniList extends Tracker {
 
     // region account
 
-    @Override
-    public Uri loginUri() {
-        return Uri.parse("https://anilist.co/api/v2/oauth/authorize").buildUpon()
-                .appendQueryParameter("client_id", CLIENT_ID)
-                .appendQueryParameter("response_type", "token")
-                .build();
-    }
-
-    /**
-     * The implicit grant redirects to ranobem://anilist-auth#access_token=...&expires_in=...
-     */
-    @Override
-    public boolean handleLogin(Uri redirect) {
-        String fragment = redirect != null ? redirect.getEncodedFragment() : null;
-        // the fragment reads like a query string
-        Uri params = Uri.parse("?" + (fragment != null ? fragment : ""));
-        String token = params.getQueryParameter("access_token");
-        if (token == null || token.isEmpty()) return false;
-
-        long expiry = 0;
-        try {
-            expiry = System.currentTimeMillis() + Long.parseLong(params.getQueryParameter("expires_in")) * 1000L;
-        } catch (NumberFormatException ignored) {
-            // AniList tokens last a year; without a hint, keep it until a request is refused
-        }
-        AppSettings.setTrackerToken(context(), key, token, expiry);
-        return true;
-    }
-
-    @Override
-    protected void fetchAccount() throws IOException, JSONException {
-        JSONObject viewer = query("query { Viewer { name mediaListOptions { scoreFormat } } }", new JSONObject())
-                .getJSONObject("Viewer");
-        AppSettings.setTrackerUser(context(), key, viewer.getString("name"));
-        JSONObject options = viewer.optJSONObject("mediaListOptions");
-        if (options != null && !options.isNull("scoreFormat")) {
-            AppSettings.setTrackerScoreFormat(context(), key, options.getString("scoreFormat"));
-        }
-    }
-
-    @Override
-    public ScoreFormat scoreFormat() {
-        String format = AppSettings.trackerScoreFormat(context(), key);
-        if (format == null) return ScoreFormat.POINT_10;
-        switch (format) {
-            case "POINT_100":
-                return ScoreFormat.POINT_100;
-            case "POINT_10_DECIMAL":
-                return ScoreFormat.POINT_10_DECIMAL;
-            case "POINT_5":
-                return ScoreFormat.POINT_5;
-            case "POINT_3":
-                return ScoreFormat.POINT_3;
-            case "POINT_10":
-            default:
-                return ScoreFormat.POINT_10;
-        }
-    }
-
-    // endregion
-
-    @Override
-    public boolean supportsDates() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsPrivate() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsNotes() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsRemove() {
-        return true;
-    }
-
-    // region API
-
-    /**
-     * Comics only: light novels share the MANGA type on AniList but count chapters differently.
-     */
-    @Override
-    public List<TrackMedia> search(String search) throws IOException, JSONException {
-        JSONObject variables = new JSONObject().put("search", search);
-        JSONObject data = query("query ($search: String) { Page(perPage: 25) { media(search: $search, "
-                + "type: MANGA, format_not: NOVEL, sort: SEARCH_MATCH) { " + MEDIA_FIELDS + " } } }", variables);
-        JSONArray items = data.getJSONObject("Page").getJSONArray("media");
-        List<TrackMedia> result = new ArrayList<>();
-        for (int i = 0; i < items.length(); i++) result.add(media(items.getJSONObject(i)));
-        return result;
-    }
-
-    @Override
-    public TrackMedia media(long remoteId) throws IOException, JSONException {
-        JSONObject variables = new JSONObject().put("id", remoteId);
-        JSONObject data = query("query ($id: Int) { Media(id: $id) { " + MEDIA_FIELDS + " } }", variables);
-        return media(data.getJSONObject("Media"));
-    }
-
-    @Override
-    public TrackEntry save(TrackedManga tracked) throws IOException, JSONException {
-        JSONObject variables = new JSONObject()
-                .put("mediaId", tracked.remoteId)
-                .put("progress", tracked.progress)
-                .put("status", tracked.status)
-                .put("scoreRaw", tracked.score)
-                .put("repeat", tracked.repeatCount)
-                .put("private", tracked.isPrivate)
-                // an empty string clears the notes, null would leave them as they are
-                .put("notes", tracked.notes != null ? tracked.notes : "")
-                .put("startedAt", dateInput(tracked.startedAt))
-                .put("completedAt", dateInput(tracked.completedAt));
-        JSONObject data = query("mutation ($mediaId: Int, $progress: Int, $status: MediaListStatus, $scoreRaw: Int, "
-                + "$repeat: Int, $private: Boolean, $notes: String, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput) { "
-                + "SaveMediaListEntry(mediaId: $mediaId, progress: $progress, status: $status, scoreRaw: $scoreRaw, "
-                + "repeat: $repeat, private: $private, notes: $notes, startedAt: $startedAt, completedAt: $completedAt) { "
-                + ENTRY_FIELDS + " } }", variables);
-        return entry(data.getJSONObject("SaveMediaListEntry"));
-    }
-
-    @Override
-    public void remove(TrackedManga tracked) throws IOException, JSONException {
-        long entryId = tracked.entryId;
-        if (entryId == 0) {
-            // linked before the entry existed there, look it up
-            TrackEntry entry = media(tracked.remoteId).entry;
-            if (entry == null) return;
-            entryId = entry.entryId;
-        }
-        query("mutation ($id: Int) { DeleteMediaListEntry(id: $id) { deleted } }", new JSONObject().put("id", entryId));
-    }
-
-    // endregion
-
-    // region parsing
-
     private static TrackMedia media(JSONObject o) {
         TrackMedia media = new TrackMedia();
         media.remoteId = o.optLong("id");
@@ -226,6 +85,8 @@ public class AniList extends Tracker {
         return TrackDates.of(o.optInt("year"), o.optInt("month"), o.optInt("day"));
     }
 
+    // endregion
+
     // all three null clears the date
     private static JSONObject dateInput(int date) throws JSONException {
         JSONObject o = new JSONObject();
@@ -239,7 +100,155 @@ public class AniList extends Tracker {
                 .put("day", day > 0 ? day : JSONObject.NULL);
     }
 
+    private static String errorMessage(String body, String fallback) {
+        try {
+            JSONArray errors = new JSONObject(body).getJSONArray("errors");
+            return errors.getJSONObject(0).getString("message");
+        } catch (Exception ignored) {
+            return fallback;
+        }
+    }
+
+    @Override
+    public Uri loginUri() {
+        return Uri.parse("https://anilist.co/api/v2/oauth/authorize").buildUpon()
+                .appendQueryParameter("client_id", CLIENT_ID)
+                .appendQueryParameter("response_type", "token")
+                .build();
+    }
+
+    /**
+     * The implicit grant redirects to ranobem://anilist-auth#access_token=...&expires_in=...
+     */
+    @Override
+    public boolean handleLogin(Uri redirect) {
+        String fragment = redirect != null ? redirect.getEncodedFragment() : null;
+        // the fragment reads like a query string
+        Uri params = Uri.parse("?" + (fragment != null ? fragment : ""));
+        String token = params.getQueryParameter("access_token");
+        if (token == null || token.isEmpty()) return false;
+
+        long expiry = 0;
+        try {
+            expiry = System.currentTimeMillis() + Long.parseLong(params.getQueryParameter("expires_in")) * 1000L;
+        } catch (NumberFormatException ignored) {
+            // AniList tokens last a year; without a hint, keep it until a request is refused
+        }
+        AppSettings.setTrackerToken(context(), key, token, expiry);
+        return true;
+    }
+
+    // region API
+
+    @Override
+    protected void fetchAccount() throws IOException, JSONException {
+        JSONObject viewer = query("query { Viewer { name mediaListOptions { scoreFormat } } }", new JSONObject())
+                .getJSONObject("Viewer");
+        AppSettings.setTrackerUser(context(), key, viewer.getString("name"));
+        JSONObject options = viewer.optJSONObject("mediaListOptions");
+        if (options != null && !options.isNull("scoreFormat")) {
+            AppSettings.setTrackerScoreFormat(context(), key, options.getString("scoreFormat"));
+        }
+    }
+
+    @Override
+    public ScoreFormat scoreFormat() {
+        String format = AppSettings.trackerScoreFormat(context(), key);
+        if (format == null) return ScoreFormat.POINT_10;
+        switch (format) {
+            case "POINT_100":
+                return ScoreFormat.POINT_100;
+            case "POINT_10_DECIMAL":
+                return ScoreFormat.POINT_10_DECIMAL;
+            case "POINT_5":
+                return ScoreFormat.POINT_5;
+            case "POINT_3":
+                return ScoreFormat.POINT_3;
+            case "POINT_10":
+            default:
+                return ScoreFormat.POINT_10;
+        }
+    }
+
+    @Override
+    public boolean supportsDates() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsPrivate() {
+        return true;
+    }
+
     // endregion
+
+    // region parsing
+
+    @Override
+    public boolean supportsNotes() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsRemove() {
+        return true;
+    }
+
+    /**
+     * Comics only: light novels share the MANGA type on AniList but count chapters differently.
+     */
+    @Override
+    public List<TrackMedia> search(String search) throws IOException, JSONException {
+        JSONObject variables = new JSONObject().put("search", search);
+        JSONObject data = query("query ($search: String) { Page(perPage: 25) { media(search: $search, "
+                + "type: MANGA, format_not: NOVEL, sort: SEARCH_MATCH) { " + MEDIA_FIELDS + " } } }", variables);
+        JSONArray items = data.getJSONObject("Page").getJSONArray("media");
+        List<TrackMedia> result = new ArrayList<>();
+        for (int i = 0; i < items.length(); i++) result.add(media(items.getJSONObject(i)));
+        return result;
+    }
+
+    @Override
+    public TrackMedia media(long remoteId) throws IOException, JSONException {
+        JSONObject variables = new JSONObject().put("id", remoteId);
+        JSONObject data = query("query ($id: Int) { Media(id: $id) { " + MEDIA_FIELDS + " } }", variables);
+        return media(data.getJSONObject("Media"));
+    }
+
+    @Override
+    public TrackEntry save(TrackedManga tracked) throws IOException, JSONException {
+        JSONObject variables = new JSONObject()
+                .put("mediaId", tracked.remoteId)
+                .put("progress", tracked.progress)
+                .put("status", tracked.status)
+                .put("scoreRaw", tracked.score)
+                .put("repeat", tracked.repeatCount)
+                .put("private", tracked.isPrivate)
+                // an empty string clears the notes, null would leave them as they are
+                .put("notes", tracked.notes != null ? tracked.notes : "")
+                .put("startedAt", dateInput(tracked.startedAt))
+                .put("completedAt", dateInput(tracked.completedAt));
+        JSONObject data = query("mutation ($mediaId: Int, $progress: Int, $status: MediaListStatus, $scoreRaw: Int, "
+                + "$repeat: Int, $private: Boolean, $notes: String, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput) { "
+                + "SaveMediaListEntry(mediaId: $mediaId, progress: $progress, status: $status, scoreRaw: $scoreRaw, "
+                + "repeat: $repeat, private: $private, notes: $notes, startedAt: $startedAt, completedAt: $completedAt) { "
+                + ENTRY_FIELDS + " } }", variables);
+        return entry(data.getJSONObject("SaveMediaListEntry"));
+    }
+
+    // endregion
+
+    @Override
+    public void remove(TrackedManga tracked) throws IOException, JSONException {
+        long entryId = tracked.entryId;
+        if (entryId == 0) {
+            // linked before the entry existed there, look it up
+            TrackEntry entry = media(tracked.remoteId).entry;
+            if (entry == null) return;
+            entryId = entry.entryId;
+        }
+        query("mutation ($id: Int) { DeleteMediaListEntry(id: $id) { deleted } }", new JSONObject().put("id", entryId));
+    }
 
     private JSONObject query(String query, JSONObject variables) throws IOException, JSONException {
         String token = token();
@@ -266,14 +275,5 @@ public class AniList extends Tracker {
             throw new IOException(errorMessage(response, "AniList error"));
         }
         return json.getJSONObject("data");
-    }
-
-    private static String errorMessage(String body, String fallback) {
-        try {
-            JSONArray errors = new JSONObject(body).getJSONArray("errors");
-            return errors.getJSONObject(0).getString("message");
-        } catch (Exception ignored) {
-            return fallback;
-        }
     }
 }

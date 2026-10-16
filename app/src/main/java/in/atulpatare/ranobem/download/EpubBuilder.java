@@ -35,51 +35,6 @@ final class EpubBuilder {
     private EpubBuilder() {
     }
 
-    static final class Book {
-        String id;
-        String title;
-        String author;
-        String description;
-        String language = "en";
-        String source;
-        File cover;
-        final List<Section> sections = new ArrayList<>();
-    }
-
-    static final class Section {
-        final String title;
-        final List<File> pages = new ArrayList<>();
-
-        Section(String title) {
-            this.title = title;
-        }
-    }
-
-    interface Progress {
-        // may throw to abort the build
-        void onPage(int done, int total);
-    }
-
-    private static final class Page {
-        final File file;
-        final ImageInfo info;
-        final String name; // file name without extension, unique in the book
-
-        Page(File file, ImageInfo info, String name) {
-            this.file = file;
-            this.info = info;
-            this.name = name;
-        }
-
-        String imageHref() {
-            return "images/" + name + "." + info.format;
-        }
-
-        String pageHref() {
-            return "text/" + name + ".xhtml";
-        }
-    }
-
     static void write(Book book, OutputStream out, Progress progress) throws IOException {
         // read every header up front, an unreadable page is left out rather than breaking the book
         List<List<Page>> sections = new ArrayList<>();
@@ -171,11 +126,13 @@ final class EpubBuilder {
                 .append("    <dc:identifier id=\"book-id\">").append(esc(book.id)).append("</dc:identifier>\n")
                 .append("    <dc:title>").append(esc(book.title)).append("</dc:title>\n")
                 .append("    <dc:language>").append(esc(book.language)).append("</dc:language>\n");
-        if (!isBlank(book.author)) b.append("    <dc:creator>").append(esc(book.author)).append("</dc:creator>\n");
+        if (!isBlank(book.author))
+            b.append("    <dc:creator>").append(esc(book.author)).append("</dc:creator>\n");
         if (!isBlank(book.description)) {
             b.append("    <dc:description>").append(esc(book.description)).append("</dc:description>\n");
         }
-        if (!isBlank(book.source)) b.append("    <dc:source>").append(esc(book.source)).append("</dc:source>\n");
+        if (!isBlank(book.source))
+            b.append("    <dc:source>").append(esc(book.source)).append("</dc:source>\n");
         b.append("    <meta property=\"dcterms:modified\">").append(iso.format(new Date())).append("</meta>\n")
                 // EPUB 2 readers find the cover through this
                 .append("    <meta name=\"cover\" content=\"img-cover\"/>\n")
@@ -199,7 +156,8 @@ final class EpubBuilder {
                 .append("  <spine toc=\"ncx\">\n")
                 .append("    <itemref idref=\"page-cover\"/>\n");
         for (List<Page> pages : sections) {
-            for (Page page : pages) b.append("    <itemref idref=\"page-").append(page.name).append("\"/>\n");
+            for (Page page : pages)
+                b.append("    <itemref idref=\"page-").append(page.name).append("\"/>\n");
         }
         b.append("  </spine>\n")
                 .append("  <guide>\n")
@@ -360,5 +318,50 @@ final class EpubBuilder {
 
     private static boolean isBlank(String s) {
         return s == null || s.trim().isEmpty();
+    }
+
+    interface Progress {
+        // may throw to abort the build
+        void onPage(int done, int total);
+    }
+
+    static final class Book {
+        final List<Section> sections = new ArrayList<>();
+        String id;
+        String title;
+        String author;
+        String description;
+        String language = "en";
+        String source;
+        File cover;
+    }
+
+    static final class Section {
+        final String title;
+        final List<File> pages = new ArrayList<>();
+
+        Section(String title) {
+            this.title = title;
+        }
+    }
+
+    private static final class Page {
+        final File file;
+        final ImageInfo info;
+        final String name; // file name without extension, unique in the book
+
+        Page(File file, ImageInfo info, String name) {
+            this.file = file;
+            this.info = info;
+            this.name = name;
+        }
+
+        String imageHref() {
+            return "images/" + name + "." + info.format;
+        }
+
+        String pageHref() {
+            return "text/" + name + ".xhtml";
+        }
     }
 }

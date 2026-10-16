@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -53,7 +54,8 @@ public class Tracking {
         tracked.progress = read;
         tracked.status = statusAfterReading(before, read, tracked.totalChapters);
         if (tracked.startedAt == 0) tracked.startedAt = today;
-        if (TrackStatus.COMPLETED.equals(tracked.status) && !TrackStatus.COMPLETED.equals(before)) finished(tracked, before, today);
+        if (TrackStatus.COMPLETED.equals(tracked.status) && !TrackStatus.COMPLETED.equals(before))
+            finished(tracked, before, today);
         return true;
     }
 
@@ -66,7 +68,8 @@ public class Tracking {
         tracked.status = status;
         switch (status) {
             case TrackStatus.COMPLETED:
-                if (tracked.totalChapters > tracked.progress) tracked.progress = tracked.totalChapters;
+                if (tracked.totalChapters > tracked.progress)
+                    tracked.progress = tracked.totalChapters;
                 if (tracked.startedAt == 0) tracked.startedAt = today;
                 finished(tracked, before, today);
                 break;
@@ -97,7 +100,8 @@ public class Tracking {
     public static float readUpTo(List<TrackedManga> links) {
         float upTo = 0;
         for (TrackedManga tracked : links) {
-            if (TrackStatus.REREADING.equals(tracked.status) || tracked.repeatCount > 0) return Float.MAX_VALUE;
+            if (TrackStatus.REREADING.equals(tracked.status) || tracked.repeatCount > 0)
+                return Float.MAX_VALUE;
             float read = TrackStatus.COMPLETED.equals(tracked.status) && tracked.totalChapters <= 0
                     ? Float.MAX_VALUE : tracked.progress;
             upTo = Math.max(upTo, read);
@@ -234,7 +238,7 @@ public class Tracking {
     public static void setNotes(String mangaId, int tracker, @Nullable String notes) {
         String value = notes == null || notes.trim().isEmpty() ? null : notes.trim();
         edit(mangaId, tracker, tracked -> {
-            if (value == null ? tracked.notes == null : value.equals(tracked.notes)) return false;
+            if (Objects.equals(value, tracked.notes)) return false;
             tracked.notes = value;
             return true;
         });
@@ -279,7 +283,8 @@ public class Tracking {
             long now = System.currentTimeMillis();
             for (TrackedManga tracked : dao().listByManga(mangaId)) {
                 Tracker tracker = Trackers.get(tracked.tracker);
-                if (tracker == null || !tracker.isLoggedIn() || now - tracked.syncedAt < STALE_MS) continue;
+                if (tracker == null || !tracker.isLoggedIn() || now - tracked.syncedAt < STALE_MS)
+                    continue;
                 try {
                     pull(mangaId, tracked.tracker);
                 } catch (Exception e) {

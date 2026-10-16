@@ -157,7 +157,8 @@ public class LibraryFragment extends Fragment implements MangaAdapter.OnMangaIte
         InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (show) {
             binding.searchField.requestFocus();
-            if (imm != null) imm.showSoftInput(binding.searchField, InputMethodManager.SHOW_IMPLICIT);
+            if (imm != null)
+                imm.showSoftInput(binding.searchField, InputMethodManager.SHOW_IMPLICIT);
         } else {
             // closing the search shows the whole library again
             binding.searchField.setText("");
@@ -198,7 +199,8 @@ public class LibraryFragment extends Fragment implements MangaAdapter.OnMangaIte
             shownShelves.clear();
             shownShelves.addAll(shelves);
             binding.shelves.removeAllTabs();
-            for (String status : shelves) binding.shelves.addTab(binding.shelves.newTab().setTag(status), false);
+            for (String status : shelves)
+                binding.shelves.addTab(binding.shelves.newTab().setTag(status), false);
         }
         for (int i = 0; i < shelves.size(); i++) {
             String status = shelves.get(i);
@@ -280,6 +282,8 @@ public class LibraryFragment extends Fragment implements MangaAdapter.OnMangaIte
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // the adapter outlives the view while the tab is in the back stack, and would keep the old list alive
+        binding.novelList.setAdapter(null);
         binding = null;
     }
 

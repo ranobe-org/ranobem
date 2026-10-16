@@ -65,6 +65,48 @@ class ImageFetcher {
         return null;
     }
 
+    // long strips can be huge, fall back to a smaller copy rather than fail the page
+    private static Bitmap decode(File file) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        for (int sample = 1; sample <= 4; sample *= 2) {
+            options.inSampleSize = sample;
+            try {
+                return BitmapFactory.decodeFile(file.getPath(), options);
+            } catch (OutOfMemoryError e) {
+                // try again at a smaller size
+            }
+        }
+        return null;
+    }
+
+    private static File moveInto(File from, File to) throws IOException {
+        //noinspection ResultOfMethodCallIgnored
+        to.delete();
+        if (from.renameTo(to)) return to;
+        // rename can fail across mount points, copy instead
+        try (InputStream in = new FileInputStream(from); OutputStream out = new FileOutputStream(to)) {
+            byte[] buffer = new byte[32 * 1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) out.write(buffer, 0, read);
+        } catch (IOException e) {
+            //noinspection ResultOfMethodCallIgnored
+            to.delete();
+            throw e;
+        }
+        return to;
+    }
+
+    private static long retryAfter(PageCache.HttpException e) {
+        if (!(e instanceof RetryAfterException)) return 0;
+        String header = ((RetryAfterException) e).retryAfter;
+        if (header == null) return 0;
+        try {
+            return Math.min(120_000, Long.parseLong(header.trim()) * 1000);
+        } catch (NumberFormatException ignored) {
+            return 0;
+        }
+    }
+
     /**
      * Aborts the downloads in flight, used when the job is paused or cancelled.
      */
@@ -114,7 +156,8 @@ class ImageFetcher {
         Call call = client().newCall(request);
         calls.add(call);
         try (Response response = call.execute()) {
-            if (!response.isSuccessful()) throw new RetryAfterException(response.code(), response.header("Retry-After"));
+            if (!response.isSuccessful())
+                throw new RetryAfterException(response.code(), response.header("Retry-After"));
             ResponseBody body = response.body();
             if (body == null) throw new IOException("Empty response");
 
@@ -165,52 +208,10 @@ class ImageFetcher {
         }
     }
 
-    // long strips can be huge, fall back to a smaller copy rather than fail the page
-    private static Bitmap decode(File file) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        for (int sample = 1; sample <= 4; sample *= 2) {
-            options.inSampleSize = sample;
-            try {
-                return BitmapFactory.decodeFile(file.getPath(), options);
-            } catch (OutOfMemoryError e) {
-                // try again at a smaller size
-            }
-        }
-        return null;
-    }
-
-    private static File moveInto(File from, File to) throws IOException {
-        //noinspection ResultOfMethodCallIgnored
-        to.delete();
-        if (from.renameTo(to)) return to;
-        // rename can fail across mount points, copy instead
-        try (InputStream in = new FileInputStream(from); OutputStream out = new FileOutputStream(to)) {
-            byte[] buffer = new byte[32 * 1024];
-            int read;
-            while ((read = in.read(buffer)) != -1) out.write(buffer, 0, read);
-        } catch (IOException e) {
-            //noinspection ResultOfMethodCallIgnored
-            to.delete();
-            throw e;
-        }
-        return to;
-    }
-
     // 1s, 2s, 4s ... capped, with jitter so parallel pages don't retry in lockstep
     private long backoff(int attempt) {
         long base = Math.min(MAX_BACKOFF_MS, 1000L << Math.min(attempt - 1, 5));
         return base / 2 + (long) (random.nextDouble() * base / 2);
-    }
-
-    private static long retryAfter(PageCache.HttpException e) {
-        if (!(e instanceof RetryAfterException)) return 0;
-        String header = ((RetryAfterException) e).retryAfter;
-        if (header == null) return 0;
-        try {
-            return Math.min(120_000, Long.parseLong(header.trim()) * 1000);
-        } catch (NumberFormatException ignored) {
-            return 0;
-        }
     }
 
     private static class RetryAfterException extends PageCache.HttpException {

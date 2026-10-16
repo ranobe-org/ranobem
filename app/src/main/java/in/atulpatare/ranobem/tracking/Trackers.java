@@ -2,7 +2,6 @@ package in.atulpatare.ranobem.tracking;
 
 import androidx.annotation.Nullable;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import in.atulpatare.ranobem.model.TrackedManga;
  * Every tracker the app supports, in the order settings and the details page list them.
  */
 public final class Trackers {
-    private static final List<Tracker> ALL = Collections.unmodifiableList(Arrays.asList(
+    private static final List<Tracker> ALL = Collections.unmodifiableList(List.of(
             new AniList(TrackedManga.TRACKER_ANILIST)
     ));
 

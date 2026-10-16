@@ -40,6 +40,17 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
         this.listener = listener;
     }
 
+    // "Title · 3 days ago", either part may be missing
+    private static String meta(Chapter item, long now) {
+        List<String> parts = new ArrayList<>();
+        if (item.name != null && !item.name.trim().isEmpty()) parts.add(item.name.trim());
+        if (item.updatedAt > 0) {
+            parts.add(DateUtils.getRelativeTimeSpanString(item.updatedAt, now, DateUtils.MINUTE_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_RELATIVE).toString());
+        }
+        return String.join(" · ", parts);
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     public void submit(List<Chapter> chapters) {
         items.clear();
@@ -118,17 +129,6 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
         holder.binding.chapterTag.setVisibility(View.VISIBLE);
     }
 
-    // "Title · 3 days ago", either part may be missing
-    private static String meta(Chapter item, long now) {
-        List<String> parts = new ArrayList<>();
-        if (item.name != null && !item.name.trim().isEmpty()) parts.add(item.name.trim());
-        if (item.updatedAt > 0) {
-            parts.add(DateUtils.getRelativeTimeSpanString(item.updatedAt, now, DateUtils.MINUTE_IN_MILLIS,
-                    DateUtils.FORMAT_ABBREV_RELATIVE).toString());
-        }
-        return String.join(" · ", parts);
-    }
-
     @Override
     public int getItemCount() {
         return items.size();
@@ -149,7 +149,8 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
 
             binding.chapterItemLayout.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) listener.onChapterItemClick(items.get(position));
+                if (position != RecyclerView.NO_POSITION)
+                    listener.onChapterItemClick(items.get(position));
             });
         }
     }

@@ -88,6 +88,10 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
     private EpubDownloadPrompt downloadPrompt;
     private DownloadJob downloadJob;
 
+    private static boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +119,8 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         } else {
             // a series saved from a source that has since been switched off, only what's stored can be shown
             binding.progress.hide();
-            if (savedInstanceState == null) SourceAccess.showUnavailable(this, manga.sourceId, null);
+            if (savedInstanceState == null)
+                SourceAccess.showUnavailable(this, manga.sourceId, null);
         }
 
         binding.back.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
@@ -152,7 +157,8 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         Tracking.refreshIfStale(manga.id);
         // read elsewhere counts as started, the chapter list then opens at the next chapter
         AppDatabase.getDatabase().trackedMangaDao().observeByManga(manga.id).observe(this, links -> {
-            if (Tracking.readUpTo(links) > 0) binding.read.setText(getString(R.string.continue_reading));
+            if (Tracking.readUpTo(links) > 0)
+                binding.read.setText(getString(R.string.continue_reading));
         });
     }
 
@@ -310,8 +316,10 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
 
     private int statusColor(String status) {
         String s = status == null ? "" : status.toLowerCase(Locale.ROOT);
-        if (s.contains("ongoing") || s.contains("releasing")) return ContextCompat.getColor(this, R.color.status_ongoing);
-        if (s.contains("complete") || s.contains("finished")) return ContextCompat.getColor(this, R.color.status_completed);
+        if (s.contains("ongoing") || s.contains("releasing"))
+            return ContextCompat.getColor(this, R.color.status_ongoing);
+        if (s.contains("complete") || s.contains("finished"))
+            return ContextCompat.getColor(this, R.color.status_completed);
         if (s.contains("hiatus")) return ContextCompat.getColor(this, R.color.status_hiatus);
         if (s.contains("cancel") || s.contains("discontinued") || s.contains("dropped")) {
             return ContextCompat.getColor(this, R.color.status_cancelled);
@@ -518,7 +526,8 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
             binding.downloadProgress.setIndeterminate(indeterminate);
         }
         binding.downloadProgress.setVisibility(showProgress ? View.VISIBLE : View.GONE);
-        if (showProgress && !indeterminate) binding.downloadProgress.setProgressCompat(downloadJob.percent(), true);
+        if (showProgress && !indeterminate)
+            binding.downloadProgress.setProgressCompat(downloadJob.percent(), true);
     }
 
     private void navigateToChapterList() {
@@ -532,9 +541,5 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         ChapterFragment chapters = new ChapterFragment();
         chapters.setArguments(bundle);
         chapters.show(getSupportFragmentManager(), "chapters-sheet");
-    }
-
-    private static boolean isBlank(String s) {
-        return s == null || s.trim().isEmpty();
     }
 }

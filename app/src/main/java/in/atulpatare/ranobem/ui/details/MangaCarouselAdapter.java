@@ -59,7 +59,8 @@ public class MangaCarouselAdapter extends RecyclerView.Adapter<MangaCarouselAdap
             this.binding = binding;
             binding.coverCard.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) listener.onMangaItemClick(items.get(position));
+                if (position != RecyclerView.NO_POSITION)
+                    listener.onMangaItemClick(items.get(position));
             });
         }
     }

@@ -515,8 +515,10 @@ public class TrackSheet extends BottomSheetDialogFragment {
             if (media.year > 0) parts.add(String.valueOf(media.year));
             String publishing = publishingLabel(context, media.publishing);
             if (publishing != null) parts.add(publishing);
-            if (media.chapters > 0) parts.add(context.getString(R.string.tracking_chapters, media.chapters));
-            if (media.meanScore > 0) parts.add(context.getString(R.string.tracking_mean_score, media.meanScore));
+            if (media.chapters > 0)
+                parts.add(context.getString(R.string.tracking_chapters, media.chapters));
+            if (media.meanScore > 0)
+                parts.add(context.getString(R.string.tracking_mean_score, media.meanScore));
             if (media.entry != null) parts.add(statusLabel(context, media.entry.status));
             holder.binding.subtitle.setText(String.join(" · ", parts));
 

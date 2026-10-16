@@ -39,6 +39,17 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.MyViewHolder
         this.listener = listener;
     }
 
+    // one sentence for TalkBack: title, shelf and unread chapters
+    private static String describe(Context context, Manga item) {
+        List<String> parts = new ArrayList<>();
+        parts.add(item.name);
+        if (item.readStatus != null) parts.add(TrackSheet.statusLabel(context, item.readStatus));
+        if (item.unreadChapters > 0) {
+            parts.add(context.getResources().getQuantityString(R.plurals.library_unread, item.unreadChapters, item.unreadChapters));
+        }
+        return String.join(", ", parts);
+    }
+
     public void showSearchName(Boolean show) {
         this.showSourceName = show;
     }
@@ -76,19 +87,9 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.MyViewHolder
 
         boolean badge = libraryMode && item.unreadChapters > 0;
         holder.binding.unreadBadge.setVisibility(badge ? View.VISIBLE : View.GONE);
-        if (badge) holder.binding.unreadBadge.setText(item.unreadChapters > 999 ? "999+" : String.valueOf(item.unreadChapters));
+        if (badge)
+            holder.binding.unreadBadge.setText(item.unreadChapters > 999 ? "999+" : String.valueOf(item.unreadChapters));
         holder.binding.novelCoverLayout.setContentDescription(libraryMode ? describe(holder.itemView.getContext(), item) : item.name);
-    }
-
-    // one sentence for TalkBack: title, shelf and unread chapters
-    private static String describe(Context context, Manga item) {
-        List<String> parts = new ArrayList<>();
-        parts.add(item.name);
-        if (item.readStatus != null) parts.add(TrackSheet.statusLabel(context, item.readStatus));
-        if (item.unreadChapters > 0) {
-            parts.add(context.getResources().getQuantityString(R.plurals.library_unread, item.unreadChapters, item.unreadChapters));
-        }
-        return String.join(", ", parts);
     }
 
     private void setSourceName(@NonNull MyViewHolder holder, int sourceId) {
@@ -119,7 +120,8 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.MyViewHolder
 
             binding.novelCoverLayout.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) listener.onMangaItemClick(items.get(position));
+                if (position != RecyclerView.NO_POSITION)
+                    listener.onMangaItemClick(items.get(position));
             });
             // only library covers do anything on a long press, elsewhere it isn't offered at all
             if (libraryMode && longClickListener != null) {

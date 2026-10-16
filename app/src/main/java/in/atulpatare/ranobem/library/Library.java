@@ -157,7 +157,8 @@ public final class Library {
     public static void setStatus(String mangaId, String status) {
         AppDatabase.databaseExecutor.execute(() -> {
             dao().setReadStatus(mangaId, status);
-            for (TrackedManga tracked : links(mangaId)) Tracking.setStatus(mangaId, tracked.tracker, status);
+            for (TrackedManga tracked : links(mangaId))
+                Tracking.setStatus(mangaId, tracked.tracker, status);
         });
     }
 

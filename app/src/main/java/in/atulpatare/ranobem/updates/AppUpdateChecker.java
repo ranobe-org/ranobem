@@ -43,7 +43,8 @@ public final class AppUpdateChecker {
             if (now - AppSettings.updateCheckedAt(app) >= CHECK_EVERY_MS) {
                 try {
                     Release latest = fetchLatest();
-                    if (latest != null) AppSettings.setLatestRelease(app, latest.tag, latest.pageUrl, latest.apkUrl, now);
+                    if (latest != null)
+                        AppSettings.setLatestRelease(app, latest.tag, latest.pageUrl, latest.apkUrl, now);
                 } catch (Exception e) {
                     // offline or rate limited, the last result stands until the next try
                     Log.w(TAG, "update check failed", e);
@@ -120,6 +121,10 @@ public final class AppUpdateChecker {
         return result;
     }
 
+    public interface Callback {
+        void onResult(@Nullable Release release);
+    }
+
     public static class Release {
         public final String tag;
         public final String pageUrl;
@@ -137,9 +142,5 @@ public final class AppUpdateChecker {
         public String version() {
             return tag.replaceFirst("^[vV]", "");
         }
-    }
-
-    public interface Callback {
-        void onResult(@Nullable Release release);
     }
 }

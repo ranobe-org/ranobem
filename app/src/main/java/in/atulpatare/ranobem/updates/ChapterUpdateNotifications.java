@@ -55,6 +55,10 @@ public final class ChapterUpdateNotifications {
         context.getSystemService(NotificationManager.class).createNotificationChannel(channel);
     }
 
+    private static int id(Manga manga) {
+        return SUMMARY_ID + 1 + ((manga.sourceId + ":" + manga.id).hashCode() & 0xffff);
+    }
+
     // called on the worker thread, the covers are fetched synchronously
     void show(List<ChapterUpdateWorker.ChapterUpdate> updates) {
         if (!canNotify()) return;
@@ -126,10 +130,6 @@ public final class ChapterUpdateNotifications {
         } catch (SecurityException e) {
             // permission revoked between the check and now
         }
-    }
-
-    private static int id(Manga manga) {
-        return SUMMARY_ID + 1 + ((manga.sourceId + ":" + manga.id).hashCode() & 0xffff);
     }
 
     // the series, with the app's tabs under it so back stays in the app

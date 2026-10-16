@@ -24,7 +24,7 @@ public final class LibraryStatusDialog {
     }
 
     /**
-     * @param anchor where the confirmation shows
+     * @param anchor   where the confirmation shows
      * @param onRemove removes the series, so the caller can offer an undo
      */
     public static void show(Context context, View anchor, Manga manga, @Nullable String current, Runnable onRemove) {

@@ -105,12 +105,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
 
             binding.historyLayout.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) listener.onHistoryItemClick(items.get(position));
+                if (position != RecyclerView.NO_POSITION)
+                    listener.onHistoryItemClick(items.get(position));
             });
 
             binding.deleteHistory.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) listener.onHistoryItemDeleteClick(items.get(position));
+                if (position != RecyclerView.NO_POSITION)
+                    listener.onHistoryItemDeleteClick(items.get(position));
             });
         }
     }

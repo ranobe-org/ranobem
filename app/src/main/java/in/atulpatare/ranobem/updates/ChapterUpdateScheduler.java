@@ -19,9 +19,9 @@ import java.util.concurrent.TimeUnit;
  * WorkManager keeps the schedule across reboots and app updates.
  */
 public final class ChapterUpdateScheduler {
+    static final String KEY_MANUAL = "manual";
     private static final String PERIODIC = "chapter_updates";
     private static final String ONE_TIME = "chapter_updates_now";
-    static final String KEY_MANUAL = "manual";
     private static final long INTERVAL_HOURS = 12;
     private static final long BACKOFF_MINUTES = 15;
 

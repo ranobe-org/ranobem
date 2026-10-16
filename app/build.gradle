@@ -91,4 +91,6 @@ dependencies {
     implementation libs.constraintlayout
 
     testImplementation libs.junit
+    // reports leaked activities and fragments in debug builds
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.14"
 }
