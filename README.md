@@ -39,7 +39,7 @@ where you are. No account, no sign-up.
   in any e-book reader.
 - **AniList tracking**: link a series and your progress, status, score and
   dates sync as you read. Chapters you read elsewhere show up as read here.
-- **Update alerts**: the home screen tells you when a new version is out.
+- **Update alerts**: a dot on the Settings tab tells you when a new version is out.
 
 ### Coming soon
 
