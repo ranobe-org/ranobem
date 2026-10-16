@@ -16,6 +16,7 @@ import in.atulpatare.ranobem.config.AppSettings;
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.database.MangaDao;
 import in.atulpatare.ranobem.download.ChapterResolver;
+import in.atulpatare.ranobem.library.Library;
 import in.atulpatare.ranobem.utils.NotificationAccess;
 import in.atulpatare.ranobem.utils.SourceAccess;
 
@@ -67,6 +68,11 @@ public class ChapterUpdateWorker extends Worker {
                 }
                 int known = grew && !canNotify ? manga.knownChapters : count;
                 dao.setKnownChapters(manga.id, manga.sourceId, known, System.currentTimeMillis());
+                // for "Recently updated" in the library and its unread counts
+                if (count > manga.knownChapters && manga.knownChapters > 0) {
+                    dao.setNewChaptersAt(manga.id, manga.sourceId, System.currentTimeMillis());
+                }
+                Library.onChaptersLoaded(manga.id, chapters);
             } catch (Exception e) {
                 failed++;
                 Log.w(TAG, "Couldn't check " + manga.name, e);

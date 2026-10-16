@@ -149,7 +149,7 @@ final class DownloadNotifications {
         return 7100 + (job.id.hashCode() & 0xffff);
     }
 
-    // opened with the home screen under it, so back lands in the app rather than closing it
+    // opened with the app's tabs under it, so back lands in the app rather than closing it
     // when the app wasn't running
     private PendingIntent openDownloads() {
         return TaskStackBuilder.create(context)

@@ -6,19 +6,15 @@
     <string name="sort">sort</string>
     <string name="start_typing">Start typing...</string>
     <string name="page">page</string>
-    <string name="manga_downloader">manga now</string>
     <string name="browse">browse</string>
-    <string name="join_discord">join discord</string>
     <string name="build_with">built with ❤️</string>
     <string name="search_text">Search</string>
     <string name="next_chapter">next chapter</string>
     <string name="continue_text">continue</string>
     <string name="add_to_library">add to library</string>
-    <string name="library">view library</string>
     <string name="remove_from_library">remove from library</string>
     <string name="no_items_in_the_library">Your library is empty — start exploring and add your favorites!</string>
     <string name="no_items_in_ths_history">Your history is empty — start exploring to see items here!</string>
-    <string name="title_activity_home">HomeActivity</string>
     <string name="title_browse">Browse</string>
     <string name="title_search">Search</string>
     <string name="title_library">Library</string>
@@ -31,12 +27,7 @@
     <string name="genres">Genres</string>
     <string name="apply">apply</string>
     <string name="clear">clear</string>
-    <string name="home_eyebrow">MangaD</string>
-    <string name="home_tagline">Discover new series, read anywhere, and keep every favorite in one place.</string>
     <string name="start_browsing">start browsing</string>
-    <string name="quick_access">Jump back in</string>
-    <string name="quick_search_desc">Find any title fast</string>
-    <string name="quick_history_desc">Pick up where you left off</string>
     <string name="footer_version" translatable="false">%1$s · v%2$s</string>
 
     <!-- reader -->
@@ -145,8 +136,6 @@
     <string name="load_failed_title">Couldn\'t load anything</string>
     <string name="load_failed_message">Check your connection and try again.</string>
     <string name="load_more_failed">Couldn\'t load more</string>
-    <string name="sorted_a_z">Sorted A to Z</string>
-    <string name="sorted_z_a">Sorted Z to A</string>
     <string name="library_empty_title">Nothing saved yet</string>
     <string name="library_empty_message">Tap Save on any manga to keep it here.</string>
     <string name="library_no_matches">No matches</string>
@@ -176,8 +165,6 @@
     <string name="update_whats_new">What\'s new</string>
     <string name="update_dismiss">Hide this update</string>
     <!-- main: where to get new versions -->
-    <string name="updates_title">Stay in touch</string>
-    <string name="updates_desc">Grab new versions from GitHub releases, or join the Discord to chat and hear about them first.</string>
     <string name="releases_url_label" translatable="false">github.com/ranobe-org/ranobem/releases</string>
     <string name="updates_form">GitHub releases</string>
     <string name="reader_suggest_webtoon">This chapter is one long vertical strip. It reads better in Webtoon mode.</string>
@@ -188,7 +175,6 @@
 
     <!-- EPUB downloads -->
     <string name="title_downloads">Downloads</string>
-    <string name="downloads_desc">Your EPUB books</string>
     <string name="downloads_empty">No downloads yet. Open a series and tap Download EPUB to save it as a book.</string>
     <string name="download_epub">Download EPUB</string>
     <string name="download_epub_desc">Read offline in any e-book reader</string>
@@ -282,8 +268,8 @@
     <string name="roadmap_intro">Here\'s what we\'re building for upcoming versions. Have an idea? Tell us below.</string>
     <string name="roadmap_backup">Backup &amp; restore</string>
     <string name="roadmap_backup_sub">Save your library and reading history to a file and take them to a new phone</string>
-    <string name="roadmap_tracking">AniList &amp; MyAnimeList sync</string>
-    <string name="roadmap_tracking_sub">Your reading progress, updated on your tracker as you read</string>
+    <string name="roadmap_tracking">MyAnimeList sync</string>
+    <string name="roadmap_tracking_sub">Your reading progress kept on MyAnimeList too, like AniList already is</string>
     <string name="roadmap_categories">Library categories</string>
     <string name="roadmap_categories_sub">Sort series into your own shelves, like Reading, On hold or Plan to read</string>
     <string name="roadmap_offline">Offline chapters</string>
@@ -387,4 +373,32 @@
         <item quantity="one">Reread once</item>
         <item quantity="other">Reread %d times</item>
     </plurals>
+    <!-- library shelves -->
+    <string name="library_tab_all">All</string>
+    <string name="library_tab_label">%1$s · %2$d</string>
+    <plurals name="library_tab_description">
+        <item quantity="one">%1$s, %2$d series</item>
+        <item quantity="other">%1$s, %2$d series</item>
+    </plurals>
+    <string name="library_sort_by">Sort by</string>
+    <string name="library_sort_chip">Sort: %1$s</string>
+    <string name="library_sort_chip_description">Sorted by %1$s. Change sort order</string>
+    <string name="library_sort_last_read">Last read</string>
+    <string name="library_sort_updated">Recently updated</string>
+    <string name="library_sort_unread">Most unread</string>
+    <string name="library_sort_added">Date added</string>
+    <string name="library_sort_title">Title</string>
+    <string name="library_filter_unread">Unread</string>
+    <plurals name="library_unread">
+        <item quantity="one">%d unread chapter</item>
+        <item quantity="other">%d unread chapters</item>
+    </plurals>
+    <string name="library_change_status">Change status</string>
+    <string name="library_remove">Remove from library</string>
+    <string name="library_moved_to">Moved to %1$s</string>
+    <string name="library_in_library_description">In your library: %1$s. Change status or remove</string>
+    <string name="library_shelf_empty_title">Nothing here yet</string>
+    <string name="library_shelf_empty_message">Series you\'ve marked %1$s show up here.</string>
+    <string name="library_caught_up_title">All caught up</string>
+    <string name="library_caught_up_message">No series here has unread chapters.</string>
 </resources>

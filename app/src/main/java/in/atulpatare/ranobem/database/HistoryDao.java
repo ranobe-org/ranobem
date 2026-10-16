@@ -27,6 +27,10 @@ public interface HistoryDao {
     @Query("SELECT MAX(chapterIndex) FROM history WHERE mangaId = :mangaId")
     float maxChapterRead(String mangaId);
 
+    // 0 when never read
+    @Query("SELECT COALESCE(MAX(createdAt), 0) FROM history WHERE mangaId = :mangaId")
+    long lastReadAt(String mangaId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(History history);
 

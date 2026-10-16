@@ -46,6 +46,7 @@ import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.ActivityReaderBinding;
+import in.atulpatare.ranobem.library.Library;
 import in.atulpatare.ranobem.model.ChapterList;
 import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.tracking.Tracking;
@@ -636,6 +637,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
 
     private void setAllChapters(List<Chapter> chapters) {
         list = new ChapterList(chapters);
+        Library.onChaptersLoaded(manga.id, chapters);
         updateChapterButtons();
         updateTransition();
     }
@@ -832,6 +834,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
         AppDatabase.databaseExecutor.execute(() -> {
             AppDatabase.getDatabase().historyDao().insert(history);
             Tracking.onChapterRead(history.mangaId, history.chapterIndex);
+            Library.onChapterRead(history.mangaId);
         });
     }
 

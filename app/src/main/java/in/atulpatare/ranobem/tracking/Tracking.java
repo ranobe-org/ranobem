@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.database.TrackedMangaDao;
+import in.atulpatare.ranobem.library.Library;
 import in.atulpatare.ranobem.model.TrackedManga;
 
 /**
@@ -165,6 +166,7 @@ public class Tracking {
                 tracked.updatedAt = System.currentTimeMillis();
                 tracked.syncedAt = tracked.updatedAt;
                 dao().save(tracked);
+                Library.refresh(mangaId);
                 if (tracked.pendingSync) syncNow(mangaId, tracker.id);
                 callback.onComplete(dao().get(mangaId, tracker.id));
             } catch (Exception e) {
@@ -184,6 +186,7 @@ public class Tracking {
                 Tracker tracker = Trackers.get(trackerId);
                 if (removeRemote && tracked != null && tracker != null) tracker.remove(tracked);
                 dao().delete(mangaId, trackerId);
+                Library.refresh(mangaId);
                 callback.onComplete(null);
             } catch (Exception e) {
                 callback.onError(e);
@@ -250,6 +253,7 @@ public class Tracking {
         tracked.pendingSync = true;
         tracked.updatedAt = System.currentTimeMillis();
         dao().save(tracked);
+        Library.refresh(tracked.mangaId);
     }
 
     /**
@@ -319,6 +323,7 @@ public class Tracking {
         tracked.updatedAt = System.currentTimeMillis();
         tracked.syncedAt = tracked.updatedAt;
         dao().save(tracked);
+        Library.refresh(mangaId);
         if (tracked.pendingSync) syncNow(mangaId, trackerId);
     }
 
@@ -365,6 +370,8 @@ public class Tracking {
         if (saved.entryId != 0) dao().setEntryId(mangaId, trackerId, saved.entryId);
         dao().markSynced(mangaId, trackerId, tracked.updatedAt, saved.status != null ? saved.status : tracked.status,
                 System.currentTimeMillis());
+        // the tracker may have stored another status, e.g. completed at the last chapter
+        Library.refresh(mangaId);
     }
 
     private interface Edit {

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import in.atulpatare.core.network.HttpClient;
 import in.atulpatare.ranobem.config.AppSettings;
+import in.atulpatare.ranobem.library.Library;
 import in.atulpatare.ranobem.tracking.Tracking;
 import in.atulpatare.ranobem.updates.ChapterUpdateNotifications;
 import in.atulpatare.ranobem.updates.ChapterUpdateScheduler;
@@ -34,5 +35,7 @@ public class App extends Application {
         }
         // tracking changes that couldn't be sent last time, e.g. read offline
         Tracking.syncPending();
+        // shelves and unread counts for anything saved before they existed
+        Library.refreshAll();
     }
 }

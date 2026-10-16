@@ -29,6 +29,7 @@ import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.FragmentChapterBinding;
+import in.atulpatare.ranobem.library.Library;
 import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.tracking.Tracking;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
@@ -165,6 +166,7 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
         binding.progress.hide();
         scrollToLastRead();
         markSeen(chapters.size());
+        Library.onChaptersLoaded(manga.id, chapters);
     }
 
     // "Updated 3 days ago", from the newest chapter's date when the source gives one

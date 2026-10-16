@@ -33,12 +33,15 @@ import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentSettingsBinding;
 import in.atulpatare.ranobem.tracking.Tracker;
 import in.atulpatare.ranobem.tracking.Trackers;
+import in.atulpatare.ranobem.ui.HomeActivity;
 import in.atulpatare.ranobem.ui.downloads.DownloadsActivity;
+import in.atulpatare.ranobem.updates.AppUpdateChecker;
 import in.atulpatare.ranobem.updates.ChapterUpdateScheduler;
 import in.atulpatare.ranobem.utils.NotificationAccess;
 
 /**
- * The settings tab: theme, new chapter notifications for the library, and links about the app.
+ * The settings tab: a newer app version, theme, new chapter notifications for the library, and
+ * links about the app.
  */
 public class SettingsFragment extends Fragment {
     private final ExecutorService trackerExecutor = Executors.newSingleThreadExecutor();
@@ -100,6 +103,26 @@ public class SettingsFragment extends Fragment {
         syncChapterUpdates();
         // coming back from a tracker login in the browser
         syncTrackers();
+        AppUpdateChecker.check(requireContext(), this::showUpdate);
+    }
+
+    private void showUpdate(@Nullable AppUpdateChecker.Release release) {
+        if (binding == null) return;
+        if (release == null) {
+            binding.updateCard.setVisibility(View.GONE);
+            return;
+        }
+        binding.updateTitle.setText(getString(R.string.update_title, release.version()));
+        binding.updateDesc.setText(getString(R.string.update_desc, BuildConfig.VERSION_NAME));
+        // the APK straight away when the release has one, its page otherwise
+        binding.updateDownload.setOnClickListener(v -> openLink(release.apkUrl != null ? release.apkUrl : release.pageUrl));
+        binding.updateNotes.setOnClickListener(v -> openLink(release.pageUrl));
+        binding.updateDismiss.setOnClickListener(v -> {
+            AppUpdateChecker.dismiss(requireContext(), release);
+            binding.updateCard.setVisibility(View.GONE);
+            if (requireActivity() instanceof HomeActivity) ((HomeActivity) requireActivity()).showUpdateBadge(false);
+        });
+        binding.updateCard.setVisibility(View.VISIBLE);
     }
 
     private void setUpHeader() {

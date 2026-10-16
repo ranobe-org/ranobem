@@ -37,11 +37,14 @@ where you are. No account, no sign-up.
   by hand anytime.
 - **Save as EPUB**: download whole series as EPUB books for offline reading
   in any e-book reader.
+- **AniList tracking**: link a series and your progress, status, score and
+  dates sync as you read. Chapters you read elsewhere show up as read here.
+- **Update alerts**: the home screen tells you when a new version is out.
 
 ### Coming soon
 
 - Backup and restore for your library and history
-- AniList and MyAnimeList sync
+- MyAnimeList sync
 - Library categories
 - Offline chapters inside the app
 - More sources

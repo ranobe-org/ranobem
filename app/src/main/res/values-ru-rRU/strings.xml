@@ -6,19 +6,15 @@
     <string name="sort">сортировка</string>
     <string name="start_typing">Начните вводить...</string>
     <string name="page">страница</string>
-    <string name="manga_downloader">манга сейчас</string>
     <string name="browse">обзор</string>
-    <string name="join_discord">присоединиться к Discord</string>
     <string name="build_with">создано с ❤️</string>
     <string name="search_text">Поиск</string>
     <string name="next_chapter">следующая глава</string>
     <string name="continue_text">продолжить</string>
     <string name="add_to_library">добавить в библиотеку</string>
-    <string name="library">библиотека</string>
     <string name="remove_from_library">удалить из библиотеки</string>
     <string name="no_items_in_the_library">Ваша библиотека пуста — начните обзор и добавляйте в избранное!</string>
     <string name="no_items_in_ths_history">Ваша история пуста — начните обзор, чтобы увидеть элементы здесь!</string>
-    <string name="title_activity_home">Главная</string>
     <string name="title_browse">Обзор</string>
     <string name="title_search">Поиск</string>
     <string name="title_library">Книги</string>
@@ -31,12 +27,7 @@
     <string name="genres">Жанры</string>
     <string name="apply">применить</string>
     <string name="clear">очистить</string>
-    <string name="home_eyebrow">MangaD</string>
-    <string name="home_tagline">Открывайте новые серии, читайте где угодно и храните всё любимое в одном месте.</string>
     <string name="start_browsing">начать обзор</string>
-    <string name="quick_access">Продолжить</string>
-    <string name="quick_search_desc">Быстро найти любой тайтл</string>
-    <string name="quick_history_desc">Вернуться к прочитанному</string>
 
     <!-- reader -->
     <string name="reader_settings">Настройки</string>
@@ -144,8 +135,6 @@
     <string name="load_failed_title">Не удалось загрузить</string>
     <string name="load_failed_message">Проверьте подключение и попробуйте снова.</string>
     <string name="load_more_failed">Не удалось загрузить ещё</string>
-    <string name="sorted_a_z">Сортировка от А до Я</string>
-    <string name="sorted_z_a">Сортировка от Я до А</string>
     <string name="library_empty_title">Пока ничего нет</string>
     <string name="library_empty_message">Нажмите «В закладки» на любой манге, чтобы она появилась здесь.</string>
     <string name="library_no_matches">Нет совпадений</string>
@@ -177,8 +166,6 @@
     <string name="update_whats_new">Что нового</string>
     <string name="update_dismiss">Скрыть это обновление</string>
     <!-- main: where to get new versions -->
-    <string name="updates_title">Оставайтесь на связи</string>
-    <string name="updates_desc">Скачивайте новые версии в релизах на GitHub или присоединяйтесь к Discord, чтобы общаться и узнавать о них первыми.</string>
     <string name="updates_form">Релизы на GitHub</string>
     <string name="reader_suggest_webtoon">Эта глава — одна длинная вертикальная лента. Удобнее читать в режиме «Вебтун».</string>
     <string name="reader_suggest_paged">В этой главе обычные страницы манги. Удобнее читать по одной странице.</string>
@@ -188,7 +175,6 @@
 
     <!-- EPUB downloads -->
     <string name="title_downloads">Загрузки</string>
-    <string name="downloads_desc">Ваши EPUB-книги</string>
     <string name="downloads_empty">Загрузок пока нет. Откройте тайтл и нажмите «Скачать EPUB», чтобы сохранить его как книгу.</string>
     <string name="download_epub">Скачать EPUB</string>
     <string name="download_epub_desc">Читайте офлайн в любой читалке</string>
@@ -288,8 +274,8 @@
     <string name="roadmap_intro">Вот что мы готовим для следующих версий. Есть идея? Расскажите нам ниже.</string>
     <string name="roadmap_backup">Резервная копия</string>
     <string name="roadmap_backup_sub">Сохраняйте библиотеку и историю чтения в файл и переносите их на новый телефон</string>
-    <string name="roadmap_tracking">Синхронизация с AniList и MyAnimeList</string>
-    <string name="roadmap_tracking_sub">Прогресс чтения обновляется в вашем трекере по мере чтения</string>
+    <string name="roadmap_tracking">Синхронизация с MyAnimeList</string>
+    <string name="roadmap_tracking_sub">Прогресс чтения и в MyAnimeList, как уже сейчас в AniList</string>
     <string name="roadmap_categories">Категории библиотеки</string>
     <string name="roadmap_categories_sub">Раскладывайте тайтлы по своим полкам: «Читаю», «Отложено», «В планах»</string>
     <string name="roadmap_offline">Главы офлайн</string>
@@ -401,4 +387,36 @@
         <item quantity="many">Перечитано %d раз</item>
         <item quantity="other">Перечитано %d раза</item>
     </plurals>
+    <!-- library shelves -->
+    <string name="library_tab_all">Все</string>
+    <string name="library_tab_label">%1$s · %2$d</string>
+    <plurals name="library_tab_description">
+        <item quantity="one">%1$s, %2$d тайтл</item>
+        <item quantity="few">%1$s, %2$d тайтла</item>
+        <item quantity="many">%1$s, %2$d тайтлов</item>
+        <item quantity="other">%1$s, %2$d тайтла</item>
+    </plurals>
+    <string name="library_sort_by">Сортировка</string>
+    <string name="library_sort_chip">Сортировка: %1$s</string>
+    <string name="library_sort_chip_description">Сортировка: %1$s. Изменить порядок</string>
+    <string name="library_sort_last_read">Недавно читали</string>
+    <string name="library_sort_updated">Недавно обновлённые</string>
+    <string name="library_sort_unread">Больше непрочитанного</string>
+    <string name="library_sort_added">Дата добавления</string>
+    <string name="library_sort_title">Название</string>
+    <string name="library_filter_unread">Непрочитанные</string>
+    <plurals name="library_unread">
+        <item quantity="one">%d непрочитанная глава</item>
+        <item quantity="few">%d непрочитанные главы</item>
+        <item quantity="many">%d непрочитанных глав</item>
+        <item quantity="other">%d непрочитанной главы</item>
+    </plurals>
+    <string name="library_change_status">Изменить статус</string>
+    <string name="library_remove">Убрать из библиотеки</string>
+    <string name="library_moved_to">Перемещено: %1$s</string>
+    <string name="library_in_library_description">В вашей библиотеке: %1$s. Изменить статус или убрать</string>
+    <string name="library_shelf_empty_title">Здесь пока пусто</string>
+    <string name="library_shelf_empty_message">Здесь появятся тайтлы со статусом «%1$s».</string>
+    <string name="library_caught_up_title">Всё прочитано</string>
+    <string name="library_caught_up_message">Здесь нет тайтлов с непрочитанными главами.</string>
 </resources>

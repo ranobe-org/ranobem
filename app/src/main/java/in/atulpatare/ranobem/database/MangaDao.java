@@ -12,11 +12,15 @@ import in.atulpatare.core.models.Manga;
 
 @Dao
 public interface MangaDao {
-    @Query("SELECT * FROM manga ORDER BY name ASC")
-    LiveData<List<Manga>> getAll();
+    // sorted and filtered on screen, the library is small enough
+    @Query("SELECT * FROM manga")
+    LiveData<List<Manga>> observeAll();
 
-    @Query("SELECT * FROM manga ORDER BY name DESC")
-    LiveData<List<Manga>> getAllSortedDesc();
+    @Query("SELECT * FROM manga WHERE id = :id")
+    Manga get(String id);
+
+    @Query("SELECT id FROM manga")
+    List<String> allIds();
 
     @Query("SELECT * FROM manga WHERE id = :id")
     LiveData<Manga> getById(String id);
@@ -35,6 +39,18 @@ public interface MangaDao {
      */
     @Query("UPDATE manga SET knownChapters = :count WHERE id = :id AND sourceId = :sourceId AND knownChapters < :count")
     void raiseKnownChapters(String id, int sourceId, int count);
+
+    @Query("UPDATE manga SET newChaptersAt = :at WHERE id = :id AND sourceId = :sourceId")
+    void setNewChaptersAt(String id, int sourceId, long at);
+
+    @Query("UPDATE manga SET chapterNumbers = :numbers WHERE id = :id")
+    void setChapterNumbers(String id, String numbers);
+
+    @Query("UPDATE manga SET readStatus = :status WHERE id = :id")
+    void setReadStatus(String id, String status);
+
+    @Query("UPDATE manga SET readStatus = :status, unreadChapters = :unread, lastReadAt = :lastReadAt WHERE id = :id")
+    void setShelfState(String id, String status, int unread, long lastReadAt);
 
     @Insert
     void insert(Manga manga);

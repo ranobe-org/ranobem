@@ -37,6 +37,18 @@ public class Manga implements Parcelable {
     public int knownChapters;
     @ColumnInfo(defaultValue = "0")
     public long checkedAt; // epoch millis of the last successful check
+    @ColumnInfo(defaultValue = "0")
+    public long newChaptersAt; // epoch millis when the check last found new chapters
+
+    // library shelves, kept by the app; never parceled either
+    public String readStatus; // a reading status like CURRENT or PLANNING, null until first worked out
+    @ColumnInfo(defaultValue = "0")
+    public int unreadChapters; // chapters after the furthest one read
+    public String chapterNumbers; // the chapter numbers last seen, comma separated, to recount unread offline
+    @ColumnInfo(defaultValue = "0")
+    public long addedAt; // epoch millis
+    @ColumnInfo(defaultValue = "0")
+    public long lastReadAt; // epoch millis, 0 when never read
 
     // extra details, filled by Source.details() and never stored in the library
     @Ignore

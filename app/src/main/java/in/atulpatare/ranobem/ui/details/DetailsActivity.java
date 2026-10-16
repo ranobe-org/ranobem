@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
@@ -56,6 +57,7 @@ import in.atulpatare.ranobem.databinding.ItemTrackerCardBinding;
 import in.atulpatare.ranobem.download.DownloadJob;
 import in.atulpatare.ranobem.download.DownloadQueue;
 import in.atulpatare.ranobem.download.DownloadText;
+import in.atulpatare.ranobem.library.Library;
 import in.atulpatare.ranobem.tracking.Tracker;
 import in.atulpatare.ranobem.tracking.Trackers;
 import in.atulpatare.ranobem.tracking.Tracking;
@@ -64,6 +66,7 @@ import in.atulpatare.ranobem.ui.browse.adapter.MangaAdapter;
 import in.atulpatare.ranobem.ui.chapters.ChapterFragment;
 import in.atulpatare.ranobem.ui.downloads.DownloadsActivity;
 import in.atulpatare.ranobem.ui.downloads.EpubDownloadPrompt;
+import in.atulpatare.ranobem.ui.library.LibraryStatusDialog;
 import in.atulpatare.ranobem.ui.tracking.TrackSheet;
 import in.atulpatare.ranobem.utils.SourceAccess;
 
@@ -77,6 +80,9 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
     private DetailsViewModel viewModel;
     private Manga manga;
     private boolean inLibrary = false;
+    // the library row while saved, for its shelf
+    @Nullable
+    private Manga saved;
     private boolean summaryExpanded = false;
     private String loadedCover = null;
     private EpubDownloadPrompt downloadPrompt;
@@ -435,17 +441,21 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         startActivity(new Intent(this, DetailsActivity.class).putExtra(Config.KEY_MANGA, item));
     }
 
+    // saves the series, or once saved, picks its shelf or takes it out again
     private void toggleLibrary() {
-        Manga m = manga;
-        boolean adding = !inLibrary;
-        AppDatabase.databaseExecutor.execute(() -> {
-            if (adding) {
-                AppDatabase.getDatabase().mangaDao().insert(m);
-            } else {
-                AppDatabase.getDatabase().mangaDao().delete(m);
-            }
+        if (!inLibrary || saved == null) {
+            Library.add(manga);
+            Snackbar.make(binding.getRoot(), R.string.added_to_library, Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+        Manga row = saved;
+        LibraryStatusDialog.show(this, binding.getRoot(), row, row.readStatus, () -> {
+            AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().mangaDao().delete(row));
+            Snackbar.make(binding.getRoot(), R.string.removed_from_library, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.undo, v -> AppDatabase.databaseExecutor.execute(() ->
+                            AppDatabase.getDatabase().mangaDao().insert(row)))
+                    .show();
         });
-        Snackbar.make(binding.getRoot(), adding ? R.string.added_to_library : R.string.removed_from_library, Snackbar.LENGTH_SHORT).show();
     }
 
     private void checkIfMangaInLibrary(String id) {
@@ -455,11 +465,14 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
                 MaterialColors.getColor(binding.libraryToggle, androidx.appcompat.R.attr.colorPrimary));
         AppDatabase.getDatabase().mangaDao().getById(id).observe(this, m -> {
             inLibrary = m != null;
+            saved = m;
             binding.libraryToggle.setIconResource(inLibrary ? R.drawable.ic_bookmark : R.drawable.ic_bookmark_border);
             binding.libraryToggle.setText(inLibrary ? R.string.library_saved : R.string.library_save);
             binding.libraryToggle.setIconTint(inLibrary ? savedTint : defaultTint);
             binding.libraryToggle.setTextColor(inLibrary ? savedTint : defaultText);
-            binding.libraryToggle.setContentDescription(getString(inLibrary ? R.string.remove_from_library : R.string.add_to_library));
+            binding.libraryToggle.setContentDescription(inLibrary && m.readStatus != null
+                    ? getString(R.string.library_in_library_description, TrackSheet.statusLabel(this, m.readStatus))
+                    : getString(inLibrary ? R.string.remove_from_library : R.string.add_to_library));
         });
     }
 

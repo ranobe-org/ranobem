@@ -13,6 +13,10 @@ public final class AppSettings {
     private static final String PREFS = "app_settings";
     private static final String KEY_THEME_MODE = "theme_mode";
     private static final String KEY_CHAPTER_UPDATES = "chapter_updates";
+    // the library screen, as it was left
+    private static final String KEY_LIBRARY_SHELF = "library_shelf";
+    private static final String KEY_LIBRARY_SORT = "library_sort";
+    private static final String KEY_LIBRARY_UNREAD_ONLY = "library_unread_only";
     // the latest GitHub release, as last checked
     private static final String KEY_UPDATE_TAG = "update_tag";
     private static final String KEY_UPDATE_PAGE = "update_page";
@@ -50,6 +54,31 @@ public final class AppSettings {
 
     public static void setChapterUpdatesEnabled(Context context, boolean enabled) {
         prefs(context).edit().putBoolean(KEY_CHAPTER_UPDATES, enabled).apply();
+    }
+
+    // a reading status, or null for all of them
+    public static String libraryShelf(Context context) {
+        return prefs(context).getString(KEY_LIBRARY_SHELF, null);
+    }
+
+    public static void setLibraryShelf(Context context, String shelf) {
+        prefs(context).edit().putString(KEY_LIBRARY_SHELF, shelf).apply();
+    }
+
+    public static int librarySort(Context context, int fallback) {
+        return prefs(context).getInt(KEY_LIBRARY_SORT, fallback);
+    }
+
+    public static void setLibrarySort(Context context, int sort) {
+        prefs(context).edit().putInt(KEY_LIBRARY_SORT, sort).apply();
+    }
+
+    public static boolean libraryUnreadOnly(Context context) {
+        return prefs(context).getBoolean(KEY_LIBRARY_UNREAD_ONLY, false);
+    }
+
+    public static void setLibraryUnreadOnly(Context context, boolean unreadOnly) {
+        prefs(context).edit().putBoolean(KEY_LIBRARY_UNREAD_ONLY, unreadOnly).apply();
     }
 
     public static long updateCheckedAt(Context context) {
