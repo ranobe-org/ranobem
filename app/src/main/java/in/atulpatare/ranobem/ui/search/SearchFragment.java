@@ -21,8 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -270,8 +270,9 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
 
     private String decode(String value) {
         try {
-            return URLDecoder.decode(value, StandardCharsets.UTF_8);
-        } catch (IllegalArgumentException e) {
+            // the Charset overload is API 33+
+            return URLDecoder.decode(value, "UTF-8");
+        } catch (IllegalArgumentException | UnsupportedEncodingException e) {
             return value;
         }
     }
