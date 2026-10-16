@@ -12,8 +12,10 @@ import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.FormBody;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -59,6 +61,32 @@ public class HttpClient {
         }
         ResponseBody response = HttpClient.client().newCall(builder.post(formBody.build()).build()).execute().body();
         return response == null ? "" : response.string();
+    }
+
+    // for JSON APIs (trackers): the body of a 2xx reply, anything else throws with its status code
+    public static String POST_JSON(String url, HashMap<String, String> headers, String json) throws IOException {
+        Request.Builder builder = new Request.Builder().url(url);
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            builder.addHeader(entry.getKey(), entry.getValue());
+        }
+        RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
+        try (Response response = HttpClient.client().newCall(builder.post(body).build()).execute()) {
+            ResponseBody responseBody = response.body();
+            String text = responseBody == null ? "" : responseBody.string();
+            if (!response.isSuccessful()) throw new HttpException(response.code(), text);
+            return text;
+        }
+    }
+
+    public static class HttpException extends IOException {
+        public final int code;
+        public final String body;
+
+        public HttpException(int code, String body) {
+            super("HTTP " + code);
+            this.code = code;
+            this.body = body;
+        }
     }
 
     public static class CacheInterceptor implements Interceptor {

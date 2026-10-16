@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import in.atulpatare.core.network.HttpClient;
 import in.atulpatare.ranobem.config.AppSettings;
-import in.atulpatare.ranobem.config.Config;
+import in.atulpatare.ranobem.tracking.Tracking;
 import in.atulpatare.ranobem.updates.ChapterUpdateNotifications;
 import in.atulpatare.ranobem.updates.ChapterUpdateScheduler;
 
@@ -28,11 +28,11 @@ public class App extends Application {
         AppCompatDelegate.setDefaultNightMode(AppSettings.themeMode(this));
         ChapterUpdateNotifications.createChannel(this);
         // WorkManager keeps the schedule, this only restores it if it was lost, e.g. after a data
-        // restore. Automatic checks are Pro only, a free install drops any leftover schedule.
-        if (Config.isFree()) {
-            ChapterUpdateScheduler.cancelPeriodic(this);
-        } else if (AppSettings.chapterUpdatesEnabled(this)) {
+        // restore.
+        if (AppSettings.chapterUpdatesEnabled(this)) {
             ChapterUpdateScheduler.schedule(this);
         }
+        // tracking changes that couldn't be sent last time, e.g. read offline
+        Tracking.syncPending();
     }
 }

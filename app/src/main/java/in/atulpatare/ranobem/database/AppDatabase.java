@@ -11,12 +11,17 @@ import java.util.concurrent.Executors;
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.App;
 import in.atulpatare.ranobem.model.History;
+import in.atulpatare.ranobem.model.TrackedManga;
 
 
-@Database(entities = {Manga.class, History.class}, version = 3, exportSchema = true, autoMigrations = {
+@Database(entities = {Manga.class, History.class, TrackedManga.class}, version = 5, exportSchema = true, autoMigrations = {
         @AutoMigration(from = 1, to = 2),
         // Manga.knownChapters and Manga.checkedAt, for the new chapter check
-        @AutoMigration(from = 2, to = 3)
+        @AutoMigration(from = 2, to = 3),
+        // TrackedManga, for AniList sync
+        @AutoMigration(from = 3, to = 4),
+        // TrackedManga score, dates, rereads, privacy and notes
+        @AutoMigration(from = 4, to = 5)
 })
 public abstract class AppDatabase extends RoomDatabase {
     public static final ExecutorService databaseExecutor = Executors.newSingleThreadExecutor();
@@ -33,4 +38,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract MangaDao mangaDao();
 
     public abstract HistoryDao historyDao();
+
+    public abstract TrackedMangaDao trackedMangaDao();
 }

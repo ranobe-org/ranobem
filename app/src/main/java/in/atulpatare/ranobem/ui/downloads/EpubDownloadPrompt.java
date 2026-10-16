@@ -3,7 +3,6 @@ package in.atulpatare.ranobem.ui.downloads;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.view.View;
 
@@ -21,14 +20,13 @@ import java.util.List;
 
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.R;
-import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.DialogEpubDownloadBinding;
 import in.atulpatare.ranobem.download.DownloadQueue;
 import in.atulpatare.ranobem.utils.NotificationAccess;
 
 /**
- * Starts an EPUB download: free users are pointed to Pro, Pro users pick the chapters and grant
- * what the download needs. Create it in {@code onCreate}, it registers for permission results.
+ * Starts an EPUB download: the user picks the chapters and grants what the download needs.
+ * Create it in {@code onCreate}, it registers for permission results.
  */
 public class EpubDownloadPrompt {
     private final AppCompatActivity activity;
@@ -47,10 +45,6 @@ public class EpubDownloadPrompt {
     }
 
     public void show(Manga manga) {
-        if (Config.isFree()) {
-            showProUpsell();
-            return;
-        }
         DialogEpubDownloadBinding binding = DialogEpubDownloadBinding.inflate(activity.getLayoutInflater());
         binding.scope.setOnCheckedChangeListener((group, checked) ->
                 binding.range.setVisibility(checked == R.id.scope_range ? View.VISIBLE : View.GONE));
@@ -77,17 +71,6 @@ public class EpubDownloadPrompt {
             start(manga, from, to);
         }));
         dialog.show();
-    }
-
-    private void showProUpsell() {
-        new MaterialAlertDialogBuilder(activity)
-                .setIcon(R.drawable.ic_download)
-                .setTitle(R.string.download_pro_title)
-                .setMessage(R.string.download_pro_message)
-                .setPositiveButton(R.string.download_get_pro, (d, w) ->
-                        activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Config.PRO_LINK))))
-                .setNegativeButton(R.string.download_not_now, null)
-                .show();
     }
 
     private void start(Manga manga, float from, float to) {

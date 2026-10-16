@@ -53,6 +53,10 @@ public class SettingOptionView extends LinearLayout {
         if (!clickable) binding.getRoot().setBackground(null);
     }
 
+    public void setTitle(@Nullable CharSequence title) {
+        binding.title.setText(title);
+    }
+
     public void setSubtitle(@Nullable CharSequence subtitle) {
         binding.subtitle.setText(subtitle);
         binding.subtitle.setVisibility(subtitle == null || subtitle.length() == 0 ? View.GONE : View.VISIBLE);

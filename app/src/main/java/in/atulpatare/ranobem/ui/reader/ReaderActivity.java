@@ -48,6 +48,7 @@ import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.ActivityReaderBinding;
 import in.atulpatare.ranobem.model.ChapterList;
 import in.atulpatare.ranobem.model.History;
+import in.atulpatare.ranobem.tracking.Tracking;
 import in.atulpatare.ranobem.ui.chapters.ChaptersViewModel;
 import in.atulpatare.ranobem.ui.details.DetailsActivity;
 import in.atulpatare.ranobem.utils.NumberUtils;
@@ -828,7 +829,10 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
 
     private void saveChapterToHistory(Chapter item) {
         History history = new History(manga, item);
-        AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().historyDao().insert(history));
+        AppDatabase.databaseExecutor.execute(() -> {
+            AppDatabase.getDatabase().historyDao().insert(history);
+            Tracking.onChapterRead(history.mangaId, history.chapterIndex);
+        });
     }
 
     // endregion

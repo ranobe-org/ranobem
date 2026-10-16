@@ -30,6 +30,7 @@ import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.FragmentChapterBinding;
 import in.atulpatare.ranobem.model.History;
+import in.atulpatare.ranobem.tracking.Tracking;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
 
 public class ChapterFragment extends BottomSheetDialogFragment implements ChapterAdapter.OnChapterItemClickListener {
@@ -40,6 +41,10 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     private ChapterAdapter adapter;
     private String keyword = "";
     private int lastReadId = Integer.MIN_VALUE;
+    // read up to here according to a tracker, e.g. on another device, 0 for nothing
+    private float trackedUpTo = 0;
+    private boolean historyLoaded;
+    private boolean trackingLoaded;
     private boolean scrolledToLastRead;
 
 
@@ -72,6 +77,13 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
 
         // get history
         AppDatabase.getDatabase().historyDao().getByMangaId(manga.id).observe(getViewLifecycleOwner(), this::setUpHistory);
+        // chapters read elsewhere, as far as the trackers know
+        AppDatabase.getDatabase().trackedMangaDao().observeByManga(manga.id).observe(getViewLifecycleOwner(), links -> {
+            trackedUpTo = Tracking.readUpTo(links);
+            adapter.setTrackedUpTo(trackedUpTo);
+            trackingLoaded = true;
+            scrollToLastRead();
+        });
     }
 
     private void setUpUi() {
@@ -86,19 +98,40 @@ public class ChapterFragment extends BottomSheetDialogFragment implements Chapte
     private void setUpHistory(List<History> h) {
         adapter.setHistory(h);
         lastReadId = h.isEmpty() ? Integer.MIN_VALUE : h.get(0).chapterId;
+        historyLoaded = true;
         scrollToLastRead();
     }
 
-    // once, when both the chapters and the history are in
+    // once, when the chapters, the history and the tracking are all in: to the last chapter read
+    // here, or to the next one after what a tracker says was read, whichever is further along
     private void scrollToLastRead() {
-        if (scrolledToLastRead || originalItems.isEmpty() || lastReadId == Integer.MIN_VALUE) return;
+        if (scrolledToLastRead || originalItems.isEmpty() || !historyLoaded || !trackingLoaded) return;
         scrolledToLastRead = true;
+        int target = -1;
+        float lastReadIndex = -1;
         for (int i = 0; i < originalItems.size(); i++) {
             if (originalItems.get(i).id == lastReadId) {
-                ((LinearLayoutManager) binding.chapterList.getLayoutManager()).scrollToPositionWithOffset(i, 0);
-                return;
+                target = i;
+                lastReadIndex = originalItems.get(i).index;
+                break;
             }
         }
+        if (trackedUpTo > lastReadIndex && trackedUpTo < Float.MAX_VALUE) {
+            int next = firstAfter(trackedUpTo);
+            if (next >= 0) target = next;
+        }
+        if (target < 0) return;
+        ((LinearLayoutManager) binding.chapterList.getLayoutManager()).scrollToPositionWithOffset(target, 0);
+    }
+
+    // the position of the lowest numbered chapter after {@code number}, -1 when there's none
+    private int firstAfter(float number) {
+        int best = -1;
+        for (int i = 0; i < originalItems.size(); i++) {
+            float index = originalItems.get(i).index;
+            if (index > number && (best < 0 || index < originalItems.get(best).index)) best = i;
+        }
+        return best;
     }
 
     private void setUpError(String error) {

@@ -29,7 +29,6 @@ import java.util.concurrent.Executors;
 
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.R;
-import in.atulpatare.ranobem.config.Config;
 
 /**
  * Every EPUB download, newest first. Jobs run one at a time on a background thread while
@@ -125,7 +124,6 @@ public class DownloadQueue {
      */
     @Nullable
     public DownloadJob enqueue(Manga manga, float from, float to) {
-        if (Config.isFree()) return null;
         DownloadJob job = new DownloadJob(manga, from, to);
         jobs.add(0, job);
         changed();

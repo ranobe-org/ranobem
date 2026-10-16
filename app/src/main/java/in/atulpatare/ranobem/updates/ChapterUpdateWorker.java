@@ -13,7 +13,6 @@ import java.util.List;
 import in.atulpatare.core.models.Chapter;
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.config.AppSettings;
-import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.database.MangaDao;
 import in.atulpatare.ranobem.download.ChapterResolver;
@@ -39,9 +38,9 @@ public class ChapterUpdateWorker extends Worker {
     @Override
     public Result doWork() {
         Context context = getApplicationContext();
-        // automatic checks are Pro only, a check started by hand runs everywhere
+        // a check started by hand runs even with automatic checks off
         boolean manual = getInputData().getBoolean(ChapterUpdateScheduler.KEY_MANUAL, false);
-        boolean automatic = !Config.isFree() && AppSettings.chapterUpdatesEnabled(context);
+        boolean automatic = AppSettings.chapterUpdatesEnabled(context);
         if (!manual && !automatic) return Result.success();
 
         MangaDao dao = AppDatabase.getDatabase().mangaDao();

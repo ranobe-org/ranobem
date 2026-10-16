@@ -52,14 +52,19 @@ import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.ActivityDetailsBinding;
+import in.atulpatare.ranobem.databinding.ItemTrackerCardBinding;
 import in.atulpatare.ranobem.download.DownloadJob;
 import in.atulpatare.ranobem.download.DownloadQueue;
 import in.atulpatare.ranobem.download.DownloadText;
+import in.atulpatare.ranobem.tracking.Tracker;
+import in.atulpatare.ranobem.tracking.Trackers;
+import in.atulpatare.ranobem.tracking.Tracking;
 import in.atulpatare.ranobem.ui.HomeActivity;
 import in.atulpatare.ranobem.ui.browse.adapter.MangaAdapter;
 import in.atulpatare.ranobem.ui.chapters.ChapterFragment;
 import in.atulpatare.ranobem.ui.downloads.DownloadsActivity;
 import in.atulpatare.ranobem.ui.downloads.EpubDownloadPrompt;
+import in.atulpatare.ranobem.ui.tracking.TrackSheet;
 import in.atulpatare.ranobem.utils.SourceAccess;
 
 public class DetailsActivity extends AppCompatActivity implements MangaAdapter.OnMangaItemClickListener {
@@ -117,11 +122,32 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
 
         downloadPrompt = new EpubDownloadPrompt(this, binding.getRoot());
         binding.downloadCard.setOnClickListener(v -> onDownloadClick());
-        binding.downloadProBadge.setVisibility(Config.isFree() ? View.VISIBLE : View.GONE);
-        if (!Config.isFree()) DownloadQueue.get(this).jobs().observe(this, jobs -> showDownload());
+        DownloadQueue.get(this).jobs().observe(this, jobs -> showDownload());
+
+        setUpTracking();
 
         checkIfMangaInLibrary(manga.id);
         checkIfMangaInHistory(manga.id);
+    }
+
+    // a card per tracker, each showing the linked entry or an invite to link it
+    private void setUpTracking() {
+        binding.trackingList.removeAllViews();
+        for (Tracker tracker : Trackers.all()) {
+            ItemTrackerCardBinding card = ItemTrackerCardBinding.inflate(getLayoutInflater(), binding.trackingList, true);
+            card.name.setText(tracker.name);
+            card.card.setOnClickListener(v -> TrackSheet.newInstance(manga, tracker).show(getSupportFragmentManager(), "track-sheet"));
+            AppDatabase.getDatabase().trackedMangaDao().observe(manga.id, tracker.id).observe(this, tracked ->
+                    card.trackingStatus.setText(tracked == null
+                            ? getString(R.string.tracking_not_linked, tracker.name)
+                            : TrackSheet.summary(this, tracker, tracked)));
+        }
+        // picks up chapters read or edits made elsewhere since the last sync
+        Tracking.refreshIfStale(manga.id);
+        // read elsewhere counts as started, the chapter list then opens at the next chapter
+        AppDatabase.getDatabase().trackedMangaDao().observeByManga(manga.id).observe(this, links -> {
+            if (Tracking.readUpTo(links) > 0) binding.read.setText(getString(R.string.continue_reading));
+        });
     }
 
     private void setUpInsets() {

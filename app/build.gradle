@@ -22,21 +22,6 @@ android {
         }
     }
 
-    flavorDimensions "version"
-    productFlavors {
-        free {
-            dimension "version"
-            buildConfigField "boolean", "IS_PRO", "false"
-        }
-        pro {
-            dimension "version"
-            applicationIdSuffix ".pro"
-            versionNameSuffix "-pro"
-
-            buildConfigField "boolean", "IS_PRO", "true"
-        }
-    }
-
     // the app is only translated to these, so drop the other ~90 languages libraries bring along
     androidResources {
         localeFilters += ["en", "ru"]
@@ -50,8 +35,23 @@ android {
         }
     }
 
+    signingConfigs {
+        // populated by CI (.github/workflows/release.yml); local release builds stay unsigned
+        if (System.getenv("KEYSTORE_PATH")) {
+            release {
+                storeFile file(System.getenv("KEYSTORE_PATH"))
+                storePassword System.getenv("KEYSTORE_PASSWORD")
+                keyAlias System.getenv("KEY_ALIAS")
+                keyPassword System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (System.getenv("KEYSTORE_PATH")) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -89,4 +89,6 @@ dependencies {
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
+
+    testImplementation libs.junit
 }
