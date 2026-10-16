@@ -39,6 +39,10 @@ final class DownloadNotifications {
         createChannels();
     }
 
+    private static int jobNotificationId(DownloadJob job) {
+        return 7100 + (job.id.hashCode() & 0xffff);
+    }
+
     private void createChannels() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
         NotificationManager nm = context.getSystemService(NotificationManager.class);
@@ -79,7 +83,8 @@ final class DownloadNotifications {
                 .setProgress(100, current.percent(), DownloadText.indeterminate(current))
                 .addAction(0, context.getString(R.string.download_pause), action(DownloadActionReceiver.ACTION_PAUSE, current))
                 .addAction(0, context.getString(R.string.download_cancel), action(DownloadActionReceiver.ACTION_CANCEL, current));
-        if (active > 1) b.setSubText(context.getResources().getQuantityString(R.plurals.download_more_queued, active - 1, active - 1));
+        if (active > 1)
+            b.setSubText(context.getResources().getQuantityString(R.plurals.download_more_queued, active - 1, active - 1));
         return b.build();
     }
 
@@ -145,11 +150,7 @@ final class DownloadNotifications {
         manager.notify(id, notification);
     }
 
-    private static int jobNotificationId(DownloadJob job) {
-        return 7100 + (job.id.hashCode() & 0xffff);
-    }
-
-    // opened with the home screen under it, so back lands in the app rather than closing it
+    // opened with the app's tabs under it, so back lands in the app rather than closing it
     // when the app wasn't running
     private PendingIntent openDownloads() {
         return TaskStackBuilder.create(context)

@@ -13,10 +13,10 @@ import java.util.List;
 import in.atulpatare.core.models.Chapter;
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.config.AppSettings;
-import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.database.MangaDao;
 import in.atulpatare.ranobem.download.ChapterResolver;
+import in.atulpatare.ranobem.library.Library;
 import in.atulpatare.ranobem.utils.NotificationAccess;
 import in.atulpatare.ranobem.utils.SourceAccess;
 
@@ -39,9 +39,9 @@ public class ChapterUpdateWorker extends Worker {
     @Override
     public Result doWork() {
         Context context = getApplicationContext();
-        // automatic checks are Pro only, a check started by hand runs everywhere
+        // a check started by hand runs even with automatic checks off
         boolean manual = getInputData().getBoolean(ChapterUpdateScheduler.KEY_MANUAL, false);
-        boolean automatic = !Config.isFree() && AppSettings.chapterUpdatesEnabled(context);
+        boolean automatic = AppSettings.chapterUpdatesEnabled(context);
         if (!manual && !automatic) return Result.success();
 
         MangaDao dao = AppDatabase.getDatabase().mangaDao();
@@ -68,6 +68,11 @@ public class ChapterUpdateWorker extends Worker {
                 }
                 int known = grew && !canNotify ? manga.knownChapters : count;
                 dao.setKnownChapters(manga.id, manga.sourceId, known, System.currentTimeMillis());
+                // for "Recently updated" in the library and its unread counts
+                if (count > manga.knownChapters && manga.knownChapters > 0) {
+                    dao.setNewChaptersAt(manga.id, manga.sourceId, System.currentTimeMillis());
+                }
+                Library.onChaptersLoaded(manga.id, chapters);
             } catch (Exception e) {
                 failed++;
                 Log.w(TAG, "Couldn't check " + manga.name, e);

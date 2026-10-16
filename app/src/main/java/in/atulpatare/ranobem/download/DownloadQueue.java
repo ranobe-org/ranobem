@@ -29,7 +29,6 @@ import java.util.concurrent.Executors;
 
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.R;
-import in.atulpatare.ranobem.config.Config;
 
 /**
  * Every EPUB download, newest first. Jobs run one at a time on a background thread while
@@ -55,12 +54,11 @@ public class DownloadQueue {
     private final List<DownloadJob> jobs = new CopyOnWriteArrayList<>();
     private final MutableLiveData<List<DownloadJob>> live = new MutableLiveData<>();
     private final List<Runnable> listeners = new CopyOnWriteArrayList<>();
-    private final Runnable dispatch = this::dispatch;
-
     private volatile DownloadJob running;
     private volatile JobControl control;
     private boolean draining;
     private boolean dispatchPending;
+    private final Runnable dispatch = this::dispatch;
 
     private DownloadQueue(Context context) {
         this.context = context.getApplicationContext();
@@ -77,6 +75,13 @@ public class DownloadQueue {
     public static DownloadQueue get(Context context) {
         if (instance == null) instance = new DownloadQueue(context);
         return instance;
+    }
+
+    private static void deleteRecursively(File file) {
+        File[] children = file.listFiles();
+        if (children != null) for (File child : children) deleteRecursively(child);
+        //noinspection ResultOfMethodCallIgnored
+        file.delete();
     }
 
     public LiveData<List<DownloadJob>> jobs() {
@@ -125,7 +130,6 @@ public class DownloadQueue {
      */
     @Nullable
     public DownloadJob enqueue(Manga manga, float from, float to) {
-        if (Config.isFree()) return null;
         DownloadJob job = new DownloadJob(manga, from, to);
         jobs.add(0, job);
         changed();
@@ -444,12 +448,5 @@ public class DownloadQueue {
                 if (find(dir.getName()) == null) deleteRecursively(dir);
             }
         });
-    }
-
-    private static void deleteRecursively(File file) {
-        File[] children = file.listFiles();
-        if (children != null) for (File child : children) deleteRecursively(child);
-        //noinspection ResultOfMethodCallIgnored
-        file.delete();
     }
 }

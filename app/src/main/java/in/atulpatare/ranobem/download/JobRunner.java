@@ -38,24 +38,6 @@ class JobRunner {
     private static final int RESOLVE_ATTEMPTS = 5;
     private static final int CHAPTER_ROUNDS = 3;
     private static final long MIN_FREE_BYTES = 150L * 1024 * 1024;
-
-    interface Listener {
-        // frequent, may be throttled
-        void onProgress(DownloadJob job);
-
-        // something worth saving happened
-        void onChanged(DownloadJob job);
-    }
-
-    /**
-     * An error retrying won't fix.
-     */
-    static class FatalException extends Exception {
-        FatalException(String message) {
-            super(message);
-        }
-    }
-
     private final Context context;
     private final DownloadJob job;
     private final JobControl control;
@@ -76,8 +58,40 @@ class JobRunner {
         this.resolver = new ChapterResolver(job.manga);
     }
 
+    private static String pageName(int page) {
+        return String.format(Locale.ROOT, "p%04d", page + 1);
+    }
+
+    static String formatIndex(float index) {
+        if (index == Math.rint(index)) return String.valueOf((long) index);
+        return String.valueOf(index);
+    }
+
+    /**
+     * A short, user facing explanation of a failure.
+     */
+    static String describe(Context context, Throwable e) {
+        if (e instanceof FatalException) return e.getMessage();
+        if (e instanceof UnknownHostException || e instanceof ConnectException) {
+            return context.getString(R.string.reader_error_offline);
+        }
+        if (e instanceof SocketTimeoutException)
+            return context.getString(R.string.reader_error_timeout);
+        if (e instanceof PageCache.HttpException) {
+            int code = ((PageCache.HttpException) e).code;
+            if (code == 404 || code == 410)
+                return context.getString(R.string.reader_error_not_found);
+            if (code == 401 || code == 403) return context.getString(R.string.reader_error_refused);
+            if (code >= 500 || code == 429) return context.getString(R.string.reader_error_server);
+        }
+        if (e instanceof OutOfMemoryError) return context.getString(R.string.reader_error_memory);
+        String message = e.getLocalizedMessage();
+        return message == null || message.trim().isEmpty() ? context.getString(R.string.reader_error_unknown) : message;
+    }
+
     void run() throws Exception {
-        if (!workDir.isDirectory() && !workDir.mkdirs()) throw new IOException("Couldn't create " + workDir);
+        if (!workDir.isDirectory() && !workDir.mkdirs())
+            throw new IOException("Couldn't create " + workDir);
         control.setOnStop(fetcher::cancelAll);
 
         if (job.chapterCount() == 0) fetchChapters();
@@ -162,7 +176,8 @@ class JobRunner {
     // a missing cover isn't worth failing over, the book falls back to its first page
     private void downloadCover() {
         String cover = job.manga.cover;
-        if (cover == null || cover.trim().isEmpty() || ImageFetcher.existing(workDir, "cover") != null) return;
+        if (cover == null || cover.trim().isEmpty() || ImageFetcher.existing(workDir, "cover") != null)
+            return;
         try {
             fetcher.fetch(cover.trim(), workDir, "cover", control, this::waitingForNetwork);
         } catch (IOException e) {
@@ -321,7 +336,8 @@ class JobRunner {
                 control.check();
                 last = e;
             }
-            if (attempt < RESOLVE_ATTEMPTS) control.sleep(Math.min(30_000L, 2000L << (attempt - 1)));
+            if (attempt < RESOLVE_ATTEMPTS)
+                control.sleep(Math.min(30_000L, 2000L << (attempt - 1)));
         }
         throw last;
     }
@@ -331,7 +347,8 @@ class JobRunner {
             future.get();
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
-            if (cause instanceof JobControl.StoppedException) throw (JobControl.StoppedException) cause;
+            if (cause instanceof JobControl.StoppedException)
+                throw (JobControl.StoppedException) cause;
             if (cause instanceof Exception) throw (Exception) cause;
             if (cause instanceof Error) throw (Error) cause;
             throw e;
@@ -357,10 +374,6 @@ class JobRunner {
         return new File(workDir, String.format(Locale.ROOT, "c%04d", position + 1));
     }
 
-    private static String pageName(int page) {
-        return String.format(Locale.ROOT, "p%04d", page + 1);
-    }
-
     private String title() {
         String name = job.manga.name == null || job.manga.name.trim().isEmpty() ? "Manga" : job.manga.name.trim();
         if (!job.hasRange()) return name;
@@ -379,29 +392,21 @@ class JobRunner {
         return context.getString(R.string.reader_chapter_title, formatIndex(item.index));
     }
 
-    static String formatIndex(float index) {
-        if (index == Math.rint(index)) return String.valueOf((long) index);
-        return String.valueOf(index);
+    interface Listener {
+        // frequent, may be throttled
+        void onProgress(DownloadJob job);
+
+        // something worth saving happened
+        void onChanged(DownloadJob job);
     }
 
     /**
-     * A short, user facing explanation of a failure.
+     * An error retrying won't fix.
      */
-    static String describe(Context context, Throwable e) {
-        if (e instanceof FatalException) return e.getMessage();
-        if (e instanceof UnknownHostException || e instanceof ConnectException) {
-            return context.getString(R.string.reader_error_offline);
+    static class FatalException extends Exception {
+        FatalException(String message) {
+            super(message);
         }
-        if (e instanceof SocketTimeoutException) return context.getString(R.string.reader_error_timeout);
-        if (e instanceof PageCache.HttpException) {
-            int code = ((PageCache.HttpException) e).code;
-            if (code == 404 || code == 410) return context.getString(R.string.reader_error_not_found);
-            if (code == 401 || code == 403) return context.getString(R.string.reader_error_refused);
-            if (code >= 500 || code == 429) return context.getString(R.string.reader_error_server);
-        }
-        if (e instanceof OutOfMemoryError) return context.getString(R.string.reader_error_memory);
-        String message = e.getLocalizedMessage();
-        return message == null || message.trim().isEmpty() ? context.getString(R.string.reader_error_unknown) : message;
     }
 
     private static class CountingOutputStream extends FilterOutputStream {

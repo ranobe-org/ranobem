@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import in.atulpatare.core.models.Manga;
-import in.atulpatare.ranobem.MainActivity;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.ui.HomeActivity;
@@ -54,6 +53,10 @@ public final class ChapterUpdateNotifications {
                 context.getString(R.string.chapter_updates_channel), NotificationManager.IMPORTANCE_DEFAULT);
         channel.setDescription(context.getString(R.string.chapter_updates_channel_desc));
         context.getSystemService(NotificationManager.class).createNotificationChannel(channel);
+    }
+
+    private static int id(Manga manga) {
+        return SUMMARY_ID + 1 + ((manga.sourceId + ":" + manga.id).hashCode() & 0xffff);
     }
 
     // called on the worker thread, the covers are fetched synchronously
@@ -129,23 +132,18 @@ public final class ChapterUpdateNotifications {
         }
     }
 
-    private static int id(Manga manga) {
-        return SUMMARY_ID + 1 + ((manga.sourceId + ":" + manga.id).hashCode() & 0xffff);
-    }
-
-    // the series, with the home screen under it so back stays in the app
+    // the series, with the app's tabs under it so back stays in the app
     private PendingIntent openDetails(Manga manga) {
         Intent details = new Intent(context, DetailsActivity.class).putExtra(Config.KEY_MANGA, manga);
         return TaskStackBuilder.create(context)
-                .addNextIntent(new Intent(context, MainActivity.class))
+                .addNextIntent(new Intent(context, HomeActivity.class))
                 .addNextIntent(details)
                 .getPendingIntent(id(manga), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     private PendingIntent openLibrary() {
-        Intent library = new Intent(context, HomeActivity.class).putExtra(HomeActivity.TARGET_FRAGMENT, "LIBRARY");
+        Intent library = new Intent(context, HomeActivity.class).putExtra(HomeActivity.TARGET_FRAGMENT, HomeActivity.TARGET_LIBRARY);
         return TaskStackBuilder.create(context)
-                .addNextIntent(new Intent(context, MainActivity.class))
                 .addNextIntent(library)
                 .getPendingIntent(SUMMARY_ID, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }

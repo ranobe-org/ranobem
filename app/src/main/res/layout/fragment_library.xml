@@ -38,14 +38,49 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
-    </com.google.android.material.appbar.AppBarLayout>
 
-    <include
-        android:id="@+id/empty_state"
-        layout="@layout/view_empty_state"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        <!-- shelves by reading status, filled in by LibraryFragment with their counts -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/shelves"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:tabGravity="start"
+            app:tabMode="scrollable" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/library_filters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                app:singleLine="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/sort_chip"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipIcon="@drawable/ic_sort"
+                    app:chipIconVisible="true"
+                    tools:text="Sort: Last read" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unread_chip"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_filter_unread" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/novel_list"
@@ -54,6 +89,14 @@
         android:layout_below="@id/panel"
         android:clipToPadding="false"
         android:layoutAnimation="@anim/layout_fade_in" />
+
+    <!-- after the list so its action button is on top and gets the taps -->
+    <include
+        android:id="@+id/empty_state"
+        layout="@layout/view_empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"

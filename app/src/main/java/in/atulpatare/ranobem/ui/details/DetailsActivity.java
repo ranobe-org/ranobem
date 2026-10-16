@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
@@ -52,14 +53,21 @@ import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.ActivityDetailsBinding;
+import in.atulpatare.ranobem.databinding.ItemTrackerCardBinding;
 import in.atulpatare.ranobem.download.DownloadJob;
 import in.atulpatare.ranobem.download.DownloadQueue;
 import in.atulpatare.ranobem.download.DownloadText;
+import in.atulpatare.ranobem.library.Library;
+import in.atulpatare.ranobem.tracking.Tracker;
+import in.atulpatare.ranobem.tracking.Trackers;
+import in.atulpatare.ranobem.tracking.Tracking;
 import in.atulpatare.ranobem.ui.HomeActivity;
 import in.atulpatare.ranobem.ui.browse.adapter.MangaAdapter;
 import in.atulpatare.ranobem.ui.chapters.ChapterFragment;
 import in.atulpatare.ranobem.ui.downloads.DownloadsActivity;
 import in.atulpatare.ranobem.ui.downloads.EpubDownloadPrompt;
+import in.atulpatare.ranobem.ui.library.LibraryStatusDialog;
+import in.atulpatare.ranobem.ui.tracking.TrackSheet;
 import in.atulpatare.ranobem.utils.SourceAccess;
 
 public class DetailsActivity extends AppCompatActivity implements MangaAdapter.OnMangaItemClickListener {
@@ -72,10 +80,17 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
     private DetailsViewModel viewModel;
     private Manga manga;
     private boolean inLibrary = false;
+    // the library row while saved, for its shelf
+    @Nullable
+    private Manga saved;
     private boolean summaryExpanded = false;
     private String loadedCover = null;
     private EpubDownloadPrompt downloadPrompt;
     private DownloadJob downloadJob;
+
+    private static boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +119,8 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         } else {
             // a series saved from a source that has since been switched off, only what's stored can be shown
             binding.progress.hide();
-            if (savedInstanceState == null) SourceAccess.showUnavailable(this, manga.sourceId, null);
+            if (savedInstanceState == null)
+                SourceAccess.showUnavailable(this, manga.sourceId, null);
         }
 
         binding.back.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
@@ -117,11 +133,33 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
 
         downloadPrompt = new EpubDownloadPrompt(this, binding.getRoot());
         binding.downloadCard.setOnClickListener(v -> onDownloadClick());
-        binding.downloadProBadge.setVisibility(Config.isFree() ? View.VISIBLE : View.GONE);
-        if (!Config.isFree()) DownloadQueue.get(this).jobs().observe(this, jobs -> showDownload());
+        DownloadQueue.get(this).jobs().observe(this, jobs -> showDownload());
+
+        setUpTracking();
 
         checkIfMangaInLibrary(manga.id);
         checkIfMangaInHistory(manga.id);
+    }
+
+    // a card per tracker, each showing the linked entry or an invite to link it
+    private void setUpTracking() {
+        binding.trackingList.removeAllViews();
+        for (Tracker tracker : Trackers.all()) {
+            ItemTrackerCardBinding card = ItemTrackerCardBinding.inflate(getLayoutInflater(), binding.trackingList, true);
+            card.name.setText(tracker.name);
+            card.card.setOnClickListener(v -> TrackSheet.newInstance(manga, tracker).show(getSupportFragmentManager(), "track-sheet"));
+            AppDatabase.getDatabase().trackedMangaDao().observe(manga.id, tracker.id).observe(this, tracked ->
+                    card.trackingStatus.setText(tracked == null
+                            ? getString(R.string.tracking_not_linked, tracker.name)
+                            : TrackSheet.summary(this, tracker, tracked)));
+        }
+        // picks up chapters read or edits made elsewhere since the last sync
+        Tracking.refreshIfStale(manga.id);
+        // read elsewhere counts as started, the chapter list then opens at the next chapter
+        AppDatabase.getDatabase().trackedMangaDao().observeByManga(manga.id).observe(this, links -> {
+            if (Tracking.readUpTo(links) > 0)
+                binding.read.setText(getString(R.string.continue_reading));
+        });
     }
 
     private void setUpInsets() {
@@ -278,8 +316,10 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
 
     private int statusColor(String status) {
         String s = status == null ? "" : status.toLowerCase(Locale.ROOT);
-        if (s.contains("ongoing") || s.contains("releasing")) return ContextCompat.getColor(this, R.color.status_ongoing);
-        if (s.contains("complete") || s.contains("finished")) return ContextCompat.getColor(this, R.color.status_completed);
+        if (s.contains("ongoing") || s.contains("releasing"))
+            return ContextCompat.getColor(this, R.color.status_ongoing);
+        if (s.contains("complete") || s.contains("finished"))
+            return ContextCompat.getColor(this, R.color.status_completed);
         if (s.contains("hiatus")) return ContextCompat.getColor(this, R.color.status_hiatus);
         if (s.contains("cancel") || s.contains("discontinued") || s.contains("dropped")) {
             return ContextCompat.getColor(this, R.color.status_cancelled);
@@ -409,17 +449,21 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         startActivity(new Intent(this, DetailsActivity.class).putExtra(Config.KEY_MANGA, item));
     }
 
+    // saves the series, or once saved, picks its shelf or takes it out again
     private void toggleLibrary() {
-        Manga m = manga;
-        boolean adding = !inLibrary;
-        AppDatabase.databaseExecutor.execute(() -> {
-            if (adding) {
-                AppDatabase.getDatabase().mangaDao().insert(m);
-            } else {
-                AppDatabase.getDatabase().mangaDao().delete(m);
-            }
+        if (!inLibrary || saved == null) {
+            Library.add(manga);
+            Snackbar.make(binding.getRoot(), R.string.added_to_library, Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+        Manga row = saved;
+        LibraryStatusDialog.show(this, binding.getRoot(), row, row.readStatus, () -> {
+            AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().mangaDao().delete(row));
+            Snackbar.make(binding.getRoot(), R.string.removed_from_library, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.undo, v -> AppDatabase.databaseExecutor.execute(() ->
+                            AppDatabase.getDatabase().mangaDao().insert(row)))
+                    .show();
         });
-        Snackbar.make(binding.getRoot(), adding ? R.string.added_to_library : R.string.removed_from_library, Snackbar.LENGTH_SHORT).show();
     }
 
     private void checkIfMangaInLibrary(String id) {
@@ -429,11 +473,14 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
                 MaterialColors.getColor(binding.libraryToggle, androidx.appcompat.R.attr.colorPrimary));
         AppDatabase.getDatabase().mangaDao().getById(id).observe(this, m -> {
             inLibrary = m != null;
+            saved = m;
             binding.libraryToggle.setIconResource(inLibrary ? R.drawable.ic_bookmark : R.drawable.ic_bookmark_border);
             binding.libraryToggle.setText(inLibrary ? R.string.library_saved : R.string.library_save);
             binding.libraryToggle.setIconTint(inLibrary ? savedTint : defaultTint);
             binding.libraryToggle.setTextColor(inLibrary ? savedTint : defaultText);
-            binding.libraryToggle.setContentDescription(getString(inLibrary ? R.string.remove_from_library : R.string.add_to_library));
+            binding.libraryToggle.setContentDescription(inLibrary && m.readStatus != null
+                    ? getString(R.string.library_in_library_description, TrackSheet.statusLabel(this, m.readStatus))
+                    : getString(inLibrary ? R.string.remove_from_library : R.string.add_to_library));
         });
     }
 
@@ -479,7 +526,8 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
             binding.downloadProgress.setIndeterminate(indeterminate);
         }
         binding.downloadProgress.setVisibility(showProgress ? View.VISIBLE : View.GONE);
-        if (showProgress && !indeterminate) binding.downloadProgress.setProgressCompat(downloadJob.percent(), true);
+        if (showProgress && !indeterminate)
+            binding.downloadProgress.setProgressCompat(downloadJob.percent(), true);
     }
 
     private void navigateToChapterList() {
@@ -493,9 +541,5 @@ public class DetailsActivity extends AppCompatActivity implements MangaAdapter.O
         ChapterFragment chapters = new ChapterFragment();
         chapters.setArguments(bundle);
         chapters.show(getSupportFragmentManager(), "chapters-sheet");
-    }
-
-    private static boolean isBlank(String s) {
-        return s == null || s.trim().isEmpty();
     }
 }

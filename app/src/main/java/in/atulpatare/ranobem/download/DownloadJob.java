@@ -18,15 +18,6 @@ import in.atulpatare.core.models.Manga;
  * The runner thread writes these fields and the UI reads them, hence the volatiles.
  */
 public class DownloadJob {
-    public enum Status {
-        QUEUED, RUNNING, PAUSED,
-        // every chapter was tried but some pages couldn't be fetched, the user picks retry or build anyway
-        INCOMPLETE,
-        FAILED, COMPLETED
-    }
-
-    public enum Phase {CHAPTERS, PAGES, BUILDING}
-
     public final String id;
     public final Manga manga;
     // inclusive chapter number range, NaN for open ends
@@ -35,7 +26,6 @@ public class DownloadJob {
     public final long createdAt;
     // filled once the chapter list is fetched, in reading order
     public final List<Item> chapters = new ArrayList<>();
-
     public volatile Status status = Status.QUEUED;
     public volatile Phase phase = Phase.CHAPTERS;
     // last error, why the job is paused, or what it is waiting for
@@ -43,14 +33,12 @@ public class DownloadJob {
     public volatile boolean waitingForNetwork;
     // set by "build anyway", pages that couldn't be fetched are left out
     public volatile boolean allowMissing;
-
     // progress of the chapter being downloaded
     public volatile int currentChapter = -1;
     public volatile int currentPagesDone;
     public volatile int currentPagesTotal;
     public volatile int buildDone;
     public volatile int buildTotal;
-
     // result
     public volatile String outputUri;
     public volatile String outputName;
@@ -67,6 +55,36 @@ public class DownloadJob {
         this.from = from;
         this.to = to;
         this.createdAt = createdAt;
+    }
+
+    public static DownloadJob fromJson(JSONObject o) throws JSONException {
+        JSONObject m = o.getJSONObject("manga");
+        Manga manga = new Manga();
+        manga.id = m.getString("id");
+        manga.name = m.optString("name", null);
+        manga.url = m.optString("url", null);
+        manga.cover = m.optString("cover", null);
+        manga.author = m.optString("author", null);
+        manga.summary = m.optString("summary", null);
+        manga.sourceId = m.getInt("sourceId");
+
+        DownloadJob job = new DownloadJob(o.getString("id"), manga,
+                (float) o.optDouble("from", Double.NaN), (float) o.optDouble("to", Double.NaN),
+                o.optLong("createdAt"));
+        job.status = Status.valueOf(o.getString("status"));
+        job.phase = Phase.valueOf(o.optString("phase", Phase.CHAPTERS.name()));
+        job.message = o.optString("message", null);
+        job.allowMissing = o.optBoolean("allowMissing");
+        job.outputUri = o.optString("outputUri", null);
+        job.outputName = o.optString("outputName", null);
+        job.outputSize = o.optLong("outputSize");
+        job.missingPages = o.optInt("missingPages");
+        JSONArray items = o.optJSONArray("chapters");
+        if (items != null) {
+            for (int i = 0; i < items.length(); i++)
+                job.chapters.add(Item.fromJson(items.getJSONObject(i)));
+        }
+        return job;
     }
 
     public boolean isActive() {
@@ -151,34 +169,14 @@ public class DownloadJob {
                 .put("chapters", items);
     }
 
-    public static DownloadJob fromJson(JSONObject o) throws JSONException {
-        JSONObject m = o.getJSONObject("manga");
-        Manga manga = new Manga();
-        manga.id = m.getString("id");
-        manga.name = m.optString("name", null);
-        manga.url = m.optString("url", null);
-        manga.cover = m.optString("cover", null);
-        manga.author = m.optString("author", null);
-        manga.summary = m.optString("summary", null);
-        manga.sourceId = m.getInt("sourceId");
-
-        DownloadJob job = new DownloadJob(o.getString("id"), manga,
-                (float) o.optDouble("from", Double.NaN), (float) o.optDouble("to", Double.NaN),
-                o.optLong("createdAt"));
-        job.status = Status.valueOf(o.getString("status"));
-        job.phase = Phase.valueOf(o.optString("phase", Phase.CHAPTERS.name()));
-        job.message = o.optString("message", null);
-        job.allowMissing = o.optBoolean("allowMissing");
-        job.outputUri = o.optString("outputUri", null);
-        job.outputName = o.optString("outputName", null);
-        job.outputSize = o.optLong("outputSize");
-        job.missingPages = o.optInt("missingPages");
-        JSONArray items = o.optJSONArray("chapters");
-        if (items != null) {
-            for (int i = 0; i < items.length(); i++) job.chapters.add(Item.fromJson(items.getJSONObject(i)));
-        }
-        return job;
+    public enum Status {
+        QUEUED, RUNNING, PAUSED,
+        // every chapter was tried but some pages couldn't be fetched, the user picks retry or build anyway
+        INCOMPLETE,
+        FAILED, COMPLETED
     }
+
+    public enum Phase {CHAPTERS, PAGES, BUILDING}
 
     /**
      * A chapter of the job, {@code done} once every page was tried.
@@ -203,6 +201,14 @@ public class DownloadJob {
             return new Item(c.id, c.url, c.name, c.index);
         }
 
+        static Item fromJson(JSONObject o) throws JSONException {
+            Item item = new Item(o.optInt("id"), o.getString("url"), o.optString("name", null), (float) o.getDouble("index"));
+            item.pageCount = o.optInt("pageCount", -1);
+            item.missing = o.optInt("missing");
+            item.done = o.optBoolean("done");
+            return item;
+        }
+
         Chapter toChapter(Manga manga) {
             Chapter c = new Chapter();
             c.id = id;
@@ -223,14 +229,6 @@ public class DownloadJob {
                     .put("pageCount", pageCount)
                     .put("missing", missing)
                     .put("done", done);
-        }
-
-        static Item fromJson(JSONObject o) throws JSONException {
-            Item item = new Item(o.optInt("id"), o.getString("url"), o.optString("name", null), (float) o.getDouble("index"));
-            item.pageCount = o.optInt("pageCount", -1);
-            item.missing = o.optInt("missing");
-            item.done = o.optBoolean("done");
-            return item;
         }
     }
 }

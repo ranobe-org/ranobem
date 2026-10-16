@@ -3,7 +3,6 @@ package in.atulpatare.ranobem.ui.downloads;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.view.View;
 
@@ -21,14 +20,13 @@ import java.util.List;
 
 import in.atulpatare.core.models.Manga;
 import in.atulpatare.ranobem.R;
-import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.DialogEpubDownloadBinding;
 import in.atulpatare.ranobem.download.DownloadQueue;
 import in.atulpatare.ranobem.utils.NotificationAccess;
 
 /**
- * Starts an EPUB download: free users are pointed to Pro, Pro users pick the chapters and grant
- * what the download needs. Create it in {@code onCreate}, it registers for permission results.
+ * Starts an EPUB download: the user picks the chapters and grants what the download needs.
+ * Create it in {@code onCreate}, it registers for permission results.
  */
 public class EpubDownloadPrompt {
     private final AppCompatActivity activity;
@@ -46,11 +44,16 @@ public class EpubDownloadPrompt {
                 result -> startPending());
     }
 
-    public void show(Manga manga) {
-        if (Config.isFree()) {
-            showProUpsell();
-            return;
+    private static float parse(CharSequence text) {
+        if (text == null || text.toString().trim().isEmpty()) return Float.NaN;
+        try {
+            return Float.parseFloat(text.toString().trim().replace(',', '.'));
+        } catch (NumberFormatException e) {
+            return Float.NaN;
         }
+    }
+
+    public void show(Manga manga) {
         DialogEpubDownloadBinding binding = DialogEpubDownloadBinding.inflate(activity.getLayoutInflater());
         binding.scope.setOnCheckedChangeListener((group, checked) ->
                 binding.range.setVisibility(checked == R.id.scope_range ? View.VISIBLE : View.GONE));
@@ -79,26 +82,18 @@ public class EpubDownloadPrompt {
         dialog.show();
     }
 
-    private void showProUpsell() {
-        new MaterialAlertDialogBuilder(activity)
-                .setIcon(R.drawable.ic_download)
-                .setTitle(R.string.download_pro_title)
-                .setMessage(R.string.download_pro_message)
-                .setPositiveButton(R.string.download_get_pro, (d, w) ->
-                        activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Config.PRO_LINK))))
-                .setNegativeButton(R.string.download_not_now, null)
-                .show();
-    }
-
     private void start(Manga manga, float from, float to) {
         pendingManga = manga;
         pendingFrom = from;
         pendingTo = to;
         List<String> missing = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) missing.add(Manifest.permission.POST_NOTIFICATIONS);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) missing.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            missing.add(Manifest.permission.POST_NOTIFICATIONS);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+            missing.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         for (int i = missing.size() - 1; i >= 0; i--) {
-            if (ContextCompat.checkSelfPermission(activity, missing.get(i)) == PackageManager.PERMISSION_GRANTED) missing.remove(i);
+            if (ContextCompat.checkSelfPermission(activity, missing.get(i)) == PackageManager.PERMISSION_GRANTED)
+                missing.remove(i);
         }
         if (missing.isEmpty()) {
             startPending();
@@ -121,14 +116,5 @@ public class EpubDownloadPrompt {
         Snackbar.make(anchor, R.string.download_started, Snackbar.LENGTH_LONG)
                 .setAction(R.string.download_view, v -> activity.startActivity(new Intent(activity, DownloadsActivity.class)))
                 .show();
-    }
-
-    private static float parse(CharSequence text) {
-        if (text == null || text.toString().trim().isEmpty()) return Float.NaN;
-        try {
-            return Float.parseFloat(text.toString().trim().replace(',', '.'));
-        } catch (NumberFormatException e) {
-            return Float.NaN;
-        }
     }
 }

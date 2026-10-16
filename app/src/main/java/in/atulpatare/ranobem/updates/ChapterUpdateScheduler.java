@@ -15,14 +15,13 @@ import androidx.work.WorkManager;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Runs {@link ChapterUpdateWorker} every few hours while new chapter notifications are on, Pro only.
- * WorkManager keeps the schedule across reboots and app updates. A check started by hand runs in
- * every edition.
+ * Runs {@link ChapterUpdateWorker} every few hours while new chapter notifications are on.
+ * WorkManager keeps the schedule across reboots and app updates.
  */
 public final class ChapterUpdateScheduler {
+    static final String KEY_MANUAL = "manual";
     private static final String PERIODIC = "chapter_updates";
     private static final String ONE_TIME = "chapter_updates_now";
-    static final String KEY_MANUAL = "manual";
     private static final long INTERVAL_HOURS = 12;
     private static final long BACKOFF_MINUTES = 15;
 
@@ -51,13 +50,6 @@ public final class ChapterUpdateScheduler {
         WorkManager manager = WorkManager.getInstance(context);
         manager.cancelUniqueWork(PERIODIC);
         manager.cancelUniqueWork(ONE_TIME);
-    }
-
-    /**
-     * Drops the periodic check only, a check started by hand still finishes.
-     */
-    public static void cancelPeriodic(Context context) {
-        WorkManager.getInstance(context).cancelUniqueWork(PERIODIC);
     }
 
     /**

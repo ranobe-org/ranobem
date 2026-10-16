@@ -27,7 +27,8 @@ public class SettingOptionView extends LinearLayout {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SettingOptionView, 0, 0);
         try {
             binding.icon.setImageResource(a.getResourceId(R.styleable.SettingOptionView_settingIcon, R.drawable.ic_settings));
-            if (!a.getBoolean(R.styleable.SettingOptionView_settingIconTinted, true)) ImageViewCompat.setImageTintList(binding.icon, null);
+            if (!a.getBoolean(R.styleable.SettingOptionView_settingIconTinted, true))
+                ImageViewCompat.setImageTintList(binding.icon, null);
             binding.title.setText(a.getString(R.styleable.SettingOptionView_settingTitle));
             setSubtitle(a.getString(R.styleable.SettingOptionView_settingSubtitle));
             boolean external = a.getBoolean(R.styleable.SettingOptionView_settingExternal, false);
@@ -51,6 +52,10 @@ public class SettingOptionView extends LinearLayout {
         binding.getRoot().setFocusable(clickable);
         // drop the ripple so a label-only row doesn't look tappable
         if (!clickable) binding.getRoot().setBackground(null);
+    }
+
+    public void setTitle(@Nullable CharSequence title) {
+        binding.title.setText(title);
     }
 
     public void setSubtitle(@Nullable CharSequence subtitle) {

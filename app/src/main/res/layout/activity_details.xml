@@ -328,7 +328,7 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Download as EPUB, Pro only -->
+            <!-- Download as EPUB -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/download_card"
                 style="@style/Widget.Material3.CardView.Outlined"
@@ -380,13 +380,6 @@
                                     android:textColor="?colorOnSurface"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:id="@+id/download_pro_badge"
-                                    style="@style/Widget.RanobeM.Details.Badge"
-                                    android:layout_marginStart="8dp"
-                                    android:text="@string/pro_badge"
-                                    android:visibility="gone"
-                                    tools:visibility="visible" />
                             </LinearLayout>
 
                             <TextView
@@ -423,6 +416,13 @@
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- a card per tracker, filled in by DetailsActivity -->
+            <LinearLayout
+                android:id="@+id/tracking_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
 
             <!-- Synopsis -->
             <TextView

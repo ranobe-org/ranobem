@@ -19,23 +19,50 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import in.atulpatare.ranobem.BuildConfig;
 import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.AppSettings;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.databinding.FragmentSettingsBinding;
+import in.atulpatare.ranobem.tracking.Tracker;
+import in.atulpatare.ranobem.tracking.Trackers;
+import in.atulpatare.ranobem.ui.HomeActivity;
 import in.atulpatare.ranobem.ui.downloads.DownloadsActivity;
+import in.atulpatare.ranobem.updates.AppUpdateChecker;
 import in.atulpatare.ranobem.updates.ChapterUpdateScheduler;
 import in.atulpatare.ranobem.utils.NotificationAccess;
 
 /**
- * The settings tab: theme, new chapter notifications for the library, and links about the app.
+ * The settings tab: a newer app version, theme, new chapter notifications for the library, and
+ * links about the app.
  */
 public class SettingsFragment extends Fragment {
+    private final ExecutorService trackerExecutor = Executors.newSingleThreadExecutor();
+    private final Map<Integer, SettingOptionView> trackerRows = new HashMap<>();
+    private final Set<Integer> loadingAccounts = new HashSet<>();
     private FragmentSettingsBinding binding;
     private ActivityResultLauncher<String> notificationPermission;
     // what the notification permission was asked for: a check by hand, or turning on automatic checks
     private boolean permissionForCheckNow;
+
+    private static int themeButton(int mode) {
+        if (mode == AppCompatDelegate.MODE_NIGHT_NO) return R.id.theme_light;
+        if (mode == AppCompatDelegate.MODE_NIGHT_YES) return R.id.theme_dark;
+        return R.id.theme_auto;
+    }
+
+    private static int themeIcon(int mode) {
+        if (mode == AppCompatDelegate.MODE_NIGHT_NO) return R.drawable.ic_theme_mode_light;
+        if (mode == AppCompatDelegate.MODE_NIGHT_YES) return R.drawable.ic_theme_mode_night;
+        return R.drawable.ic_theme_mode_auto;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,8 +91,15 @@ public class SettingsFragment extends Fragment {
         setUpHeader();
         setUpTheme();
         setUpChapterUpdates();
+        setUpTracking();
         setUpDownloads();
         setUpAbout();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        trackerExecutor.shutdownNow();
     }
 
     @Override
@@ -79,14 +113,33 @@ public class SettingsFragment extends Fragment {
         super.onResume();
         // notifications may have been turned on or off in system settings meanwhile
         syncChapterUpdates();
+        // coming back from a tracker login in the browser
+        syncTrackers();
+        AppUpdateChecker.check(requireContext(), this::showUpdate);
+    }
+
+    private void showUpdate(@Nullable AppUpdateChecker.Release release) {
+        if (binding == null) return;
+        if (release == null) {
+            binding.updateCard.setVisibility(View.GONE);
+            return;
+        }
+        binding.updateTitle.setText(getString(R.string.update_title, release.version()));
+        binding.updateDesc.setText(getString(R.string.update_desc, BuildConfig.VERSION_NAME));
+        // the APK straight away when the release has one, its page otherwise
+        binding.updateDownload.setOnClickListener(v -> openLink(release.apkUrl != null ? release.apkUrl : release.pageUrl));
+        binding.updateNotes.setOnClickListener(v -> openLink(release.pageUrl));
+        binding.updateDismiss.setOnClickListener(v -> {
+            AppUpdateChecker.dismiss(requireContext(), release);
+            binding.updateCard.setVisibility(View.GONE);
+            if (requireActivity() instanceof HomeActivity)
+                ((HomeActivity) requireActivity()).showUpdateBadge(false);
+        });
+        binding.updateCard.setVisibility(View.VISIBLE);
     }
 
     private void setUpHeader() {
-        boolean pro = !Config.isFree();
-        binding.editionBadge.setText(pro ? R.string.edition_pro : R.string.edition_free);
         binding.appVersion.setText(getString(R.string.settings_version, BuildConfig.VERSION_NAME));
-        binding.proApp.setVisibility(pro ? View.GONE : View.VISIBLE);
-        binding.proApp.setOnClickListener(v -> openLink(Config.PRO_LINK));
         binding.footer.setText(getString(R.string.footer_version, getString(R.string.build_with), BuildConfig.VERSION_NAME));
     }
 
@@ -100,31 +153,84 @@ public class SettingsFragment extends Fragment {
             if (!isChecked) return;
             int selected = checkedId == R.id.theme_light ? AppCompatDelegate.MODE_NIGHT_NO
                     : checkedId == R.id.theme_dark ? AppCompatDelegate.MODE_NIGHT_YES
-                    : AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+                      : AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
             // stored first: changing the mode recreates the activity, which reads it back
             AppSettings.setThemeMode(requireContext(), selected);
             AppCompatDelegate.setDefaultNightMode(selected);
         });
     }
 
-    private static int themeButton(int mode) {
-        if (mode == AppCompatDelegate.MODE_NIGHT_NO) return R.id.theme_light;
-        if (mode == AppCompatDelegate.MODE_NIGHT_YES) return R.id.theme_dark;
-        return R.id.theme_auto;
+    private void setUpTracking() {
+        binding.trackerList.removeAllViews();
+        for (Tracker tracker : Trackers.all()) {
+            if (binding.trackerList.getChildCount() > 0) {
+                getLayoutInflater().inflate(R.layout.view_settings_divider, binding.trackerList, true);
+            }
+            SettingOptionView row = new SettingOptionView(requireContext(), null);
+            row.setTitle(tracker.name);
+            row.setIcon(R.drawable.ic_sync);
+            row.showChevron();
+            row.setOnClickListener(v -> onTrackerClick(tracker));
+            binding.trackerList.addView(row);
+            trackerRows.put(tracker.id, row);
+        }
+        syncTrackers();
     }
 
-    private static int themeIcon(int mode) {
-        if (mode == AppCompatDelegate.MODE_NIGHT_NO) return R.drawable.ic_theme_mode_light;
-        if (mode == AppCompatDelegate.MODE_NIGHT_YES) return R.drawable.ic_theme_mode_night;
-        return R.drawable.ic_theme_mode_auto;
+    private void onTrackerClick(Tracker tracker) {
+        if (!tracker.isLoggedIn()) {
+            openLink(tracker.loginUri().toString());
+            return;
+        }
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.tracker_logout_title, tracker.name))
+                .setMessage(R.string.tracker_logout_message)
+                .setPositiveButton(R.string.tracker_logout, (d, w) -> {
+                    tracker.logout();
+                    syncTrackers();
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void syncTrackers() {
+        if (binding == null) return;
+        for (Tracker tracker : Trackers.all()) {
+            SettingOptionView row = trackerRows.get(tracker.id);
+            if (row == null) continue;
+            String user = tracker.userName();
+            if (!tracker.isLoggedIn()) {
+                row.setSubtitle(getString(R.string.tracker_login_sub));
+            } else if (user != null) {
+                row.setSubtitle(getString(R.string.tracker_logged_in_as, user));
+                loadAccount(tracker);
+            } else {
+                row.setSubtitle(getString(R.string.tracker_logged_in));
+                loadAccount(tracker);
+            }
+        }
+    }
+
+    // the login redirect only carries a token, the name and score format are fetched when first
+    // shown, and again once a day in case they changed on the site
+    private void loadAccount(Tracker tracker) {
+        if (!loadingAccounts.add(tracker.id)) return;
+        trackerExecutor.execute(() -> {
+            try {
+                tracker.loadAccountIfStale();
+            } catch (Exception ignored) {
+                // stays "Logged in" without a name
+            }
+            View root = binding != null ? binding.getRoot() : null;
+            if (root != null) root.post(() -> {
+                // only once per screen, a failed load waits for the next visit
+                if (tracker.userName() != null) syncTrackers();
+            });
+        });
     }
 
     private void setUpChapterUpdates() {
         binding.chapterUpdatesOption.setOnClickListener(v -> {
-            if (Config.isFree()) {
-                showProUpsell();
-                return;
-            }
             boolean enabled = AppSettings.chapterUpdatesEnabled(requireContext());
             if (enabled && !NotificationAccess.enabled(requireContext())) {
                 askToUnblock();
@@ -139,14 +245,6 @@ public class SettingsFragment extends Fragment {
     }
 
     private void syncChapterUpdates() {
-        if (Config.isFree()) {
-            // automatic checks are Pro only, checking by hand is always there
-            binding.chapterUpdatesOption.setChecked(false);
-            binding.chapterUpdatesOption.setSubtitle(getString(R.string.settings_chapter_updates_pro_sub));
-            binding.checkNowOption.setVisibility(View.VISIBLE);
-            binding.checkNowDivider.setVisibility(View.VISIBLE);
-            return;
-        }
         boolean enabled = AppSettings.chapterUpdatesEnabled(requireContext());
         boolean canNotify = NotificationAccess.enabled(requireContext());
         binding.chapterUpdatesOption.setChecked(enabled);
@@ -172,16 +270,6 @@ public class SettingsFragment extends Fragment {
     private void checkNow() {
         ChapterUpdateScheduler.checkNow(requireContext());
         Snackbar.make(binding.getRoot(), R.string.settings_check_now_started, Snackbar.LENGTH_LONG).show();
-    }
-
-    private void showProUpsell() {
-        new MaterialAlertDialogBuilder(requireContext())
-                .setIcon(R.drawable.ic_notifications)
-                .setTitle(R.string.download_pro_title)
-                .setMessage(R.string.chapter_updates_pro_message)
-                .setPositiveButton(R.string.download_get_pro, (d, w) -> openLink(Config.PRO_LINK))
-                .setNegativeButton(R.string.download_not_now, null)
-                .show();
     }
 
     private void requestAndEnable() {
@@ -215,7 +303,8 @@ public class SettingsFragment extends Fragment {
         boolean canAskAgain = NotificationAccess.needsPermission(requireContext())
                 && shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS);
         Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.notifications_blocked, Snackbar.LENGTH_LONG);
-        if (!canAskAgain) snackbar.setAction(R.string.open_settings, v -> NotificationAccess.openSettings(requireContext()));
+        if (!canAskAgain)
+            snackbar.setAction(R.string.open_settings, v -> NotificationAccess.openSettings(requireContext()));
         snackbar.show();
     }
 
@@ -236,9 +325,6 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setUpDownloads() {
-        int visibility = Config.isFree() ? View.GONE : View.VISIBLE;
-        binding.downloadsTitle.setVisibility(visibility);
-        binding.downloadsCard.setVisibility(visibility);
         binding.downloadsOption.showChevron();
         binding.downloadsOption.setOnClickListener(v -> startActivity(new Intent(requireContext(), DownloadsActivity.class)));
     }
@@ -247,8 +333,7 @@ public class SettingsFragment extends Fragment {
         binding.roadmapOption.showChevron();
         binding.roadmapOption.setOnClickListener(v -> startActivity(new Intent(requireContext(), RoadmapActivity.class)));
         binding.discordLink.setOnClickListener(v -> openLink(Config.DISCORD_LINK));
-        binding.updatesLink.setOnClickListener(v -> openLink(Config.GOOGLE_FORM_LINK));
-        binding.keepAndroidOpenLink.setOnClickListener(v -> openLink(Config.KEEP_ANDROID_OPEN_LINK));
+        binding.updatesLink.setOnClickListener(v -> openLink(Config.RELEASES_LINK));
         binding.ranobeLink.setOnClickListener(v -> openLink(Config.RANOBE_LINK));
     }
 

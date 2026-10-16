@@ -23,6 +23,18 @@ public class ChapterResolver {
         this.source = SourceManager.getSource(manga.sourceId);
     }
 
+    private static Manga copy(Manga m) {
+        Manga c = new Manga();
+        c.id = m.id;
+        c.name = m.name;
+        c.url = m.url;
+        c.cover = m.cover;
+        c.author = m.author;
+        c.summary = m.summary;
+        c.sourceId = m.sourceId;
+        return c;
+    }
+
     String language() {
         String lang = source.meta().lang;
         return lang == null || lang.isEmpty() ? "en" : lang;
@@ -50,17 +62,5 @@ public class ChapterResolver {
         }
         if (pages.isEmpty()) throw new IOException("The source returned no pages");
         return pages;
-    }
-
-    private static Manga copy(Manga m) {
-        Manga c = new Manga();
-        c.id = m.id;
-        c.name = m.name;
-        c.url = m.url;
-        c.cover = m.cover;
-        c.author = m.author;
-        c.summary = m.summary;
-        c.sourceId = m.sourceId;
-        return c;
     }
 }

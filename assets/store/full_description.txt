@@ -1,4 +1,4 @@
-Manga Reader Pro is a clean, fast reader for manga, manhwa, manhua and webtoons. Follow the series you love, see the moment a new chapter drops, and read it the way you like, with no ads.
+MangaD is a clean, fast reader for manga, manhwa, manhua and webtoons. Follow the series you love, see the moment a new chapter drops, and read it the way you like, with no ads.
 
 Whether you binge long-running shonen, scroll through Korean webtoons or catch up on the latest manhua, everything lives in one simple library.
 
@@ -28,6 +28,11 @@ Whether you binge long-running shonen, scroll through Korean webtoons or catch u
 • Fullscreen mode, keep screen on, custom brightness and orientation lock
 • The next chapter loads automatically when you reach the end
 
+🔄 ANILIST TRACKING
+• Link a series to AniList and your progress, status, score, dates and notes sync as you read
+• Chapters you read on AniList or in another app show up as read here
+• Works offline too: changes are sent once you're back online
+
 📥 TAKE IT OFFLINE
 • Save a whole series or just a few chapters as EPUB books
 • Open or share them from the downloads screen and read in any e-book reader, even without internet
@@ -38,11 +43,11 @@ Whether you binge long-running shonen, scroll through Korean webtoons or catch u
 
 ⚡ LIGHT AND FAST
 • Small app that opens quickly
-• No ads, no sign-up, no account needed
+• No ads, no sign-up, no account needed (an AniList login is optional)
 • Available in English and Russian
 
 Genres include action, adventure, romance, fantasy, isekai, comedy, drama, horror, mystery, sci-fi, slice of life, sports, school life, martial arts and more.
 
-Every feature is unlocked: new chapter notifications, EPUB downloads and the full reader, with no ads. Thank you for supporting development of the app.
+Everything is free: new chapter notifications, EPUB downloads, AniList tracking and the full reader, with no ads.
 
 Have an idea or found a bug? Join our Discord or reach out from the Settings screen. New features are added regularly.

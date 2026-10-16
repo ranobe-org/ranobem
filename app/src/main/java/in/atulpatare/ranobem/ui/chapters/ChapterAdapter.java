@@ -33,9 +33,22 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
     private final OnChapterItemClickListener listener;
     private final Set<Integer> read = new HashSet<>();
     private int lastReadId = Integer.MIN_VALUE;
+    // chapters up to this number count as read too, as a tracker reported, 0 for none
+    private float trackedUpTo = 0;
 
     public ChapterAdapter(OnChapterItemClickListener listener) {
         this.listener = listener;
+    }
+
+    // "Title · 3 days ago", either part may be missing
+    private static String meta(Chapter item, long now) {
+        List<String> parts = new ArrayList<>();
+        if (item.name != null && !item.name.trim().isEmpty()) parts.add(item.name.trim());
+        if (item.updatedAt > 0) {
+            parts.add(DateUtils.getRelativeTimeSpanString(item.updatedAt, now, DateUtils.MINUTE_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_RELATIVE).toString());
+        }
+        return String.join(" · ", parts);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -57,6 +70,20 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
         notifyDataSetChanged();
     }
 
+    /**
+     * Marks chapters up to {@code number} as read, from what a tracker says was read elsewhere.
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    public void setTrackedUpTo(float number) {
+        if (number == trackedUpTo) return;
+        trackedUpTo = number;
+        notifyDataSetChanged();
+    }
+
+    public boolean isRead(Chapter chapter) {
+        return read.contains(chapter.id) || (chapter.index > 0 && chapter.index <= trackedUpTo);
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -68,7 +95,7 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
         Chapter item = items.get(position);
-        boolean isRead = read.contains(item.id);
+        boolean isRead = isRead(item);
         boolean isLastRead = item.id == lastReadId;
         long now = System.currentTimeMillis();
         boolean isNew = !isRead && item.updatedAt > 0 && now - item.updatedAt < NEW_WINDOW_MS;
@@ -102,17 +129,6 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
         holder.binding.chapterTag.setVisibility(View.VISIBLE);
     }
 
-    // "Title · 3 days ago", either part may be missing
-    private static String meta(Chapter item, long now) {
-        List<String> parts = new ArrayList<>();
-        if (item.name != null && !item.name.trim().isEmpty()) parts.add(item.name.trim());
-        if (item.updatedAt > 0) {
-            parts.add(DateUtils.getRelativeTimeSpanString(item.updatedAt, now, DateUtils.MINUTE_IN_MILLIS,
-                    DateUtils.FORMAT_ABBREV_RELATIVE).toString());
-        }
-        return String.join(" · ", parts);
-    }
-
     @Override
     public int getItemCount() {
         return items.size();
@@ -133,7 +149,8 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
 
             binding.chapterItemLayout.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) listener.onChapterItemClick(items.get(position));
+                if (position != RecyclerView.NO_POSITION)
+                    listener.onChapterItemClick(items.get(position));
             });
         }
     }

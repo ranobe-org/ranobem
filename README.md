@@ -4,7 +4,6 @@
 <div align="center">
     <h2>MangaD</h2>
     <p>A simple manga reader for Android.</p>
-    <br/><br/>
     <a href="https://github.com/ranobe-org/ranobem/releases/latest" title="Download">
         <img height="30" src="https://img.shields.io/badge/download-2da44e?style=flat&logo=android&logoColor=white" alt="Download">
     </a>
@@ -34,17 +33,29 @@ where you are. No account, no sign-up.
 - **Pick up where you left off**: your reading history remembers the last
   chapter you read in every series.
 - **Light and dark themes**: or let it follow your phone.
+- **New chapter alerts**: your library is checked every 12 hours, or check
+  by hand anytime.
+- **Save as EPUB**: download whole series as EPUB books for offline reading
+  in any e-book reader.
+- **AniList tracking**: link a series and your progress, status, score and
+  dates sync as you read. Chapters you read elsewhere show up as read here.
+- **Update alerts**: a dot on the Settings tab tells you when a new version is out.
 
 ### Coming soon
 
 - Backup and restore for your library and history
-- AniList and MyAnimeList sync
+- MyAnimeList sync
 - Library categories
 - Offline chapters inside the app
 - More sources
 - Reading stats
 
 Have an idea? Tell us on [Discord](https://discord.gg/6CQ6u64dca).
+
+### Also from us
+
+[Ranobe](https://github.com/ranobe-org/ranobe),
+a light novel reader.
 
 ### Disclaimer
 

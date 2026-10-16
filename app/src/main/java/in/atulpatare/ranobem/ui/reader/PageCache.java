@@ -30,11 +30,10 @@ import okhttp3.ResponseBody;
  * so a cached file is never partial.
  */
 public class PageCache {
-    private static final long MAX_BYTES = 300L * 1024 * 1024;
-    private static final int TRIM_EVERY = 20;
     public static final String REFERER = "https://mangafire.to";
     public static final String USER_AGENT = "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36";
-
+    private static final long MAX_BYTES = 300L * 1024 * 1024;
+    private static final int TRIM_EVERY = 20;
     private static volatile PageCache instance;
 
     private final File dir;
@@ -60,6 +59,17 @@ public class PageCache {
             }
         }
         return instance;
+    }
+
+    private static String key(String url) {
+        try {
+            byte[] hash = MessageDigest.getInstance("SHA-1").digest(url.getBytes(StandardCharsets.UTF_8));
+            StringBuilder builder = new StringBuilder();
+            for (byte b : hash) builder.append(String.format("%02x", b));
+            return builder.toString();
+        } catch (NoSuchAlgorithmException e) {
+            return String.valueOf(url.hashCode());
+        }
     }
 
     /**
@@ -140,17 +150,6 @@ public class PageCache {
             if (size <= MAX_BYTES * 0.8) break;
             long length = f.length();
             if (f.delete()) size -= length;
-        }
-    }
-
-    private static String key(String url) {
-        try {
-            byte[] hash = MessageDigest.getInstance("SHA-1").digest(url.getBytes(StandardCharsets.UTF_8));
-            StringBuilder builder = new StringBuilder();
-            for (byte b : hash) builder.append(String.format("%02x", b));
-            return builder.toString();
-        } catch (NoSuchAlgorithmException e) {
-            return String.valueOf(url.hashCode());
         }
     }
 

@@ -46,8 +46,10 @@ import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.ActivityReaderBinding;
+import in.atulpatare.ranobem.library.Library;
 import in.atulpatare.ranobem.model.ChapterList;
 import in.atulpatare.ranobem.model.History;
+import in.atulpatare.ranobem.tracking.Tracking;
 import in.atulpatare.ranobem.ui.chapters.ChaptersViewModel;
 import in.atulpatare.ranobem.ui.details.DetailsActivity;
 import in.atulpatare.ranobem.utils.NumberUtils;
@@ -92,6 +94,40 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
     private Snackbar suggestion;
     // incremented for every chapter request, stale responses are ignored
     private int loadToken;
+
+    private static boolean isInside(View view, float x, float y) {
+        if (view.getVisibility() != View.VISIBLE) return false;
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        return x >= location[0] && x < location[0] + view.getWidth()
+                && y >= location[1] && y < location[1] + view.getHeight();
+    }
+
+    /**
+     * @return true if a visible button inside {@code root} is under the given screen point
+     */
+    private static boolean isOnButton(View root, float x, float y) {
+        if (!isInside(root, x, y)) return false;
+        if (root instanceof Button) return root.isEnabled();
+        if (root instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) root;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                if (isOnButton(group.getChildAt(i), x, y)) return true;
+            }
+        }
+        return false;
+    }
+
+    private static <T extends Parcelable> T copy(T source, Parcelable.Creator<T> creator) {
+        Parcel parcel = Parcel.obtain();
+        try {
+            source.writeToParcel(parcel, 0);
+            parcel.setDataPosition(0);
+            return creator.createFromParcel(parcel);
+        } finally {
+            parcel.recycle();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +176,8 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
         if (currentChapter != null) outState.putParcelable(Config.KEY_CHAPTER, currentChapter);
     }
 
+    // region setup
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -158,8 +196,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
             pageLoader = null;
         }
     }
-
-    // region setup
 
     private void setupToolbar() {
         binding.appbar.setTitle(manga.name);
@@ -235,6 +271,10 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
         });
     }
 
+    // endregion
+
+    // region settings
+
     private void setupControls() {
         binding.nextChapter.setOnClickListener(v -> loadNextChapter());
         binding.prevChapter.setOnClickListener(v -> loadPreviousChapter());
@@ -276,10 +316,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
         if (gestureDetector != null) gestureDetector.onTouchEvent(ev);
         return super.dispatchTouchEvent(ev);
     }
-
-    // endregion
-
-    // region settings
 
     @Override
     public void onLayoutChanged() {
@@ -387,6 +423,10 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
         binding.actionOrientation.setText(orientations[settings.getOrientation()]);
     }
 
+    // endregion
+
+    // region menu & navigation
+
     private void showModeMenu(View anchor) {
         int[] modes = {R.string.reader_mode_webtoon, R.string.reader_mode_ltr,
                 R.string.reader_mode_rtl, R.string.reader_mode_vertical};
@@ -426,10 +466,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
         popup.show();
     }
 
-    // endregion
-
-    // region menu & navigation
-
     private void setMenuVisible(boolean visible, boolean animate) {
         menuVisible = visible;
         View top = binding.topBar;
@@ -464,8 +500,10 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
     }
 
     private boolean isOnControl(float x, float y) {
-        if (menuVisible && (isInside(binding.topBar, x, y) || isInside(binding.bottomBar, x, y))) return true;
-        if (suggestion != null && suggestion.isShown() && isInside(suggestion.getView(), x, y)) return true;
+        if (menuVisible && (isInside(binding.topBar, x, y) || isInside(binding.bottomBar, x, y)))
+            return true;
+        if (suggestion != null && suggestion.isShown() && isInside(suggestion.getView(), x, y))
+            return true;
         return isOnButton(binding.list, x, y) || isOnButton(binding.errorView, x, y);
     }
 
@@ -490,9 +528,11 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
         if (mode == ReaderSettings.MODE_LTR || mode == ReaderSettings.MODE_RTL) {
             boolean rtl = mode == ReaderSettings.MODE_RTL;
             if (relX < 1 / 3f) {
-                if (rtl) nextPage(); else previousPage();
+                if (rtl) nextPage();
+                else previousPage();
             } else if (relX > 2 / 3f) {
-                if (rtl) previousPage(); else nextPage();
+                if (rtl) previousPage();
+                else nextPage();
             } else {
                 setMenuVisible(true, true);
             }
@@ -538,8 +578,10 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
             View snap = snapHelper.findSnapView(layoutManager);
             return snap == null ? RecyclerView.NO_POSITION : layoutManager.getPosition(snap);
         }
-        if (!binding.list.canScrollVertically(1)) return layoutManager.findLastVisibleItemPosition();
-        if (!binding.list.canScrollVertically(-1)) return layoutManager.findFirstVisibleItemPosition();
+        if (!binding.list.canScrollVertically(1))
+            return layoutManager.findLastVisibleItemPosition();
+        if (!binding.list.canScrollVertically(-1))
+            return layoutManager.findFirstVisibleItemPosition();
         View center = binding.list.findChildViewUnder(binding.list.getWidth() / 2f, binding.list.getHeight() / 2f);
         return center != null ? binding.list.getChildAdapterPosition(center) : layoutManager.findFirstVisibleItemPosition();
     }
@@ -576,6 +618,10 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
         }
     }
 
+    // endregion
+
+    // region chapters
+
     private void setupSlider(int total) {
         binding.pageSlider.setValue(0);
         binding.pageSlider.setValueFrom(0);
@@ -607,10 +653,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
         return super.onKeyUp(keyCode, event);
     }
 
-    // endregion
-
-    // region chapters
-
     private void setUpError(String error) {
         if (loadingChapter) {
             loadingChapter = false;
@@ -635,6 +677,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
 
     private void setAllChapters(List<Chapter> chapters) {
         list = new ChapterList(chapters);
+        Library.onChaptersLoaded(manga.id, chapters);
         updateChapterButtons();
         updateTransition();
     }
@@ -813,6 +856,10 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
         if (previous != null) loadChapter(previous, R.string.reader_loading_previous);
     }
 
+    // endregion
+
+    // region helpers
+
     private String chapterTitle(Chapter chapter) {
         String index = NumberUtils.normalize(chapter.index);
         return chapter.name == null || chapter.name.trim().isEmpty()
@@ -828,12 +875,12 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
 
     private void saveChapterToHistory(Chapter item) {
         History history = new History(manga, item);
-        AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().historyDao().insert(history));
+        AppDatabase.databaseExecutor.execute(() -> {
+            AppDatabase.getDatabase().historyDao().insert(history);
+            Tracking.onChapterRead(history.mangaId, history.chapterIndex);
+            Library.onChapterRead(history.mangaId);
+        });
     }
-
-    // endregion
-
-    // region helpers
 
     private int viewportWidth() {
         int width = binding.list.getWidth() - binding.list.getPaddingLeft() - binding.list.getPaddingRight();
@@ -843,40 +890,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderSettingsS
     private int viewportHeight() {
         int height = binding.list.getHeight() - binding.list.getPaddingTop() - binding.list.getPaddingBottom();
         return height > 0 ? height : getResources().getDisplayMetrics().heightPixels;
-    }
-
-    private static boolean isInside(View view, float x, float y) {
-        if (view.getVisibility() != View.VISIBLE) return false;
-        int[] location = new int[2];
-        view.getLocationOnScreen(location);
-        return x >= location[0] && x < location[0] + view.getWidth()
-                && y >= location[1] && y < location[1] + view.getHeight();
-    }
-
-    /**
-     * @return true if a visible button inside {@code root} is under the given screen point
-     */
-    private static boolean isOnButton(View root, float x, float y) {
-        if (!isInside(root, x, y)) return false;
-        if (root instanceof Button) return root.isEnabled();
-        if (root instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) root;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                if (isOnButton(group.getChildAt(i), x, y)) return true;
-            }
-        }
-        return false;
-    }
-
-    private static <T extends Parcelable> T copy(T source, Parcelable.Creator<T> creator) {
-        Parcel parcel = Parcel.obtain();
-        try {
-            source.writeToParcel(parcel, 0);
-            parcel.setDataPosition(0);
-            return creator.createFromParcel(parcel);
-        } finally {
-            parcel.recycle();
-        }
     }
 
     private int dp(int value) {

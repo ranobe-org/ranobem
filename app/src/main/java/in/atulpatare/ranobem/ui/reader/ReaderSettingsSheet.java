@@ -34,6 +34,25 @@ public class ReaderSettingsSheet extends BottomSheetDialog {
         bind();
     }
 
+    /**
+     * Maps a single selection chip group to the index of the checked chip in {@code ids}.
+     */
+    private static void onChecked(ChipGroup group, int[] ids, OnIndexSelected listener) {
+        group.setOnCheckedStateChangeListener((chipGroup, checkedIds) -> {
+            int index = indexOf(ids, checkedIds);
+            if (index >= 0) listener.onSelected(index);
+        });
+    }
+
+    private static int indexOf(int[] ids, List<Integer> checkedIds) {
+        if (checkedIds.isEmpty()) return -1;
+        int checked = checkedIds.get(0);
+        for (int i = 0; i < ids.length; i++) {
+            if (ids[i] == checked) return i;
+        }
+        return -1;
+    }
+
     private void bind() {
         // reading mode
         int[] modes = {R.id.mode_webtoon, R.id.mode_ltr, R.id.mode_rtl, R.id.mode_vertical};
@@ -164,25 +183,6 @@ public class ReaderSettingsSheet extends BottomSheetDialog {
         int[] descriptions = {R.string.reader_mode_webtoon_desc, R.string.reader_mode_ltr_desc,
                 R.string.reader_mode_rtl_desc, R.string.reader_mode_vertical_desc};
         binding.modeDesc.setText(descriptions[settings.getReadingMode()]);
-    }
-
-    /**
-     * Maps a single selection chip group to the index of the checked chip in {@code ids}.
-     */
-    private static void onChecked(ChipGroup group, int[] ids, OnIndexSelected listener) {
-        group.setOnCheckedStateChangeListener((chipGroup, checkedIds) -> {
-            int index = indexOf(ids, checkedIds);
-            if (index >= 0) listener.onSelected(index);
-        });
-    }
-
-    private static int indexOf(int[] ids, List<Integer> checkedIds) {
-        if (checkedIds.isEmpty()) return -1;
-        int checked = checkedIds.get(0);
-        for (int i = 0; i < ids.length; i++) {
-            if (ids[i] == checked) return i;
-        }
-        return -1;
     }
 
     private interface OnIndexSelected {

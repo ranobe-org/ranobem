@@ -28,6 +28,27 @@
             android:contentDescription="@string/manga_cover"
             android:scaleType="centerCrop" />
 
+        <!-- unread chapters, library only; read out as part of the cover's description -->
+        <TextView
+            android:id="@+id/unread_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:layout_margin="6dp"
+            android:background="@drawable/bg_pill"
+            android:backgroundTint="?colorPrimary"
+            android:gravity="center"
+            android:importantForAccessibility="no"
+            android:minWidth="24dp"
+            android:paddingHorizontal="7dp"
+            android:paddingVertical="2dp"
+            android:textAppearance="?textAppearanceLabelMedium"
+            android:textColor="?colorOnPrimary"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:text="12"
+            tools:visibility="visible" />
+
     </com.google.android.material.card.MaterialCardView>
 
     <TextView

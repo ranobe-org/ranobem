@@ -182,6 +182,8 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // the adapter outlives the view while the tab is in the back stack, and would keep the old list alive
+        binding.novelList.setAdapter(null);
         binding = null;
     }
 
@@ -268,8 +270,9 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnMangaItem
 
     private String decode(String value) {
         try {
+            // the Charset overload is API 33+
             return URLDecoder.decode(value, "UTF-8");
-        } catch (UnsupportedEncodingException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException | UnsupportedEncodingException e) {
             return value;
         }
     }

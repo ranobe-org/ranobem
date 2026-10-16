@@ -6,20 +6,15 @@
     <string name="sort">sort</string>
     <string name="start_typing">Start typing...</string>
     <string name="page">page</string>
-    <string name="manga_downloader">manga now</string>
     <string name="browse">browse</string>
-    <string name="join_discord">join discord</string>
     <string name="build_with">built with ❤️</string>
     <string name="search_text">Search</string>
     <string name="next_chapter">next chapter</string>
     <string name="continue_text">continue</string>
-    <string name="download_pro">download AD FREE pro</string>
     <string name="add_to_library">add to library</string>
-    <string name="library">view library</string>
     <string name="remove_from_library">remove from library</string>
     <string name="no_items_in_the_library">Your library is empty — start exploring and add your favorites!</string>
     <string name="no_items_in_ths_history">Your history is empty — start exploring to see items here!</string>
-    <string name="title_activity_home">HomeActivity</string>
     <string name="title_browse">Browse</string>
     <string name="title_search">Search</string>
     <string name="title_library">Library</string>
@@ -32,14 +27,7 @@
     <string name="genres">Genres</string>
     <string name="apply">apply</string>
     <string name="clear">clear</string>
-    <string name="home_eyebrow">MangaD</string>
-    <string name="home_tagline">Discover new series, read anywhere, and keep every favorite in one place.</string>
     <string name="start_browsing">start browsing</string>
-    <string name="quick_access">Jump back in</string>
-    <string name="quick_search_desc">Find any title fast</string>
-    <string name="quick_history_desc">Pick up where you left off</string>
-    <string name="pro_title">Go Pro</string>
-    <string name="pro_desc">No ads, no interruptions — just you and the story.</string>
     <string name="footer_version" translatable="false">%1$s · v%2$s</string>
 
     <!-- reader -->
@@ -148,8 +136,6 @@
     <string name="load_failed_title">Couldn\'t load anything</string>
     <string name="load_failed_message">Check your connection and try again.</string>
     <string name="load_more_failed">Couldn\'t load more</string>
-    <string name="sorted_a_z">Sorted A to Z</string>
-    <string name="sorted_z_a">Sorted Z to A</string>
     <string name="library_empty_title">Nothing saved yet</string>
     <string name="library_empty_message">Tap Save on any manga to keep it here.</string>
     <string name="library_no_matches">No matches</string>
@@ -172,15 +158,15 @@
 
     <string name="details_error">Couldn\'t load the details</string>
 
-    <!-- main: warning that the app may stop being installable -->
-    <string name="warning_title">This app might disappear soon</string>
-    <string name="warning_desc">Google is changing who gets to install apps on Android. Tap to see why, and how to stay in touch.</string>
-    <string name="why_title">Why it might go away</string>
-    <string name="why_desc">Starting in 2027, Google plans to block any Android app whose developer hasn\'t registered with Google, paid a fee and handed over a government ID. That includes apps installed outside the Play Store, so small independent apps like this one could suddenly stop installing on your phone.</string>
-    <string name="keep_android_open_url_label" translatable="false">keepandroidopen.org</string>
-    <string name="updates_title">Don\'t lose track of us</string>
-    <string name="updates_desc">If that happens, we\'ll share where to get the app next. Join the Discord or sign up through the form to hear about it first.</string>
-    <string name="updates_form">Get updates</string>
+    <!-- main: a newer version on GitHub -->
+    <string name="update_title">Version %1$s is out</string>
+    <string name="update_desc">You have version %1$s. Download the new APK and install it over this one, your library stays.</string>
+    <string name="update_download">Download</string>
+    <string name="update_whats_new">What\'s new</string>
+    <string name="update_dismiss">Hide this update</string>
+    <!-- main: where to get new versions -->
+    <string name="releases_url_label" translatable="false">github.com/ranobe-org/ranobem/releases</string>
+    <string name="updates_form">GitHub releases</string>
     <string name="reader_suggest_webtoon">This chapter is one long vertical strip. It reads better in Webtoon mode.</string>
     <string name="reader_suggest_paged">This chapter has regular manga pages. It reads better one page at a time.</string>
     <string name="reader_suggest_switch">Switch</string>
@@ -189,15 +175,9 @@
 
     <!-- EPUB downloads -->
     <string name="title_downloads">Downloads</string>
-    <string name="downloads_desc">Your EPUB books</string>
     <string name="downloads_empty">No downloads yet. Open a series and tap Download EPUB to save it as a book.</string>
     <string name="download_epub">Download EPUB</string>
     <string name="download_epub_desc">Read offline in any e-book reader</string>
-    <string name="pro_badge" translatable="false">Pro</string>
-    <string name="download_pro_title">A Pro feature</string>
-    <string name="download_pro_message">Save whole series as EPUB books and read them offline in any e-book reader. Get MangaD Pro to unlock downloads.</string>
-    <string name="download_get_pro">Get Pro</string>
-    <string name="download_not_now">Not now</string>
     <string name="download_dialog_title">Download as EPUB</string>
     <string name="download_all_chapters">All chapters</string>
     <string name="download_chapter_range">Chapter range</string>
@@ -263,8 +243,6 @@
 
     <!-- settings -->
     <string name="title_settings">Settings</string>
-    <string name="edition_free" translatable="false">FREE</string>
-    <string name="edition_pro" translatable="false">PRO</string>
     <string name="settings_version">Version %1$s</string>
     <string name="settings_appearance">Appearance</string>
     <string name="settings_theme">Theme</string>
@@ -276,8 +254,6 @@
     <string name="settings_chapter_updates">New chapter notifications</string>
     <string name="settings_chapter_updates_sub">Checks your library every 12 hours and lets you know when new chapters are out</string>
     <string name="ranobe_subtitle">Light novel reader from the same developer</string>
-    <string name="settings_chapter_updates_pro_sub">Pro: checks your library every 12 hours on its own. Use Check now below anytime.</string>
-    <string name="chapter_updates_pro_message">Get notified about new chapters without lifting a finger: Pro checks your library every 12 hours. In this version you can still use Check now whenever you like.</string>
     <string name="settings_chapter_updates_blocked">Notifications are blocked for this app. Tap to fix.</string>
     <string name="settings_chapter_updates_blocked_message">New chapters can\'t be shown while notifications are blocked. Allow them in system settings, or turn the checks off.</string>
     <string name="settings_chapter_updates_turn_off">Turn off</string>
@@ -292,8 +268,8 @@
     <string name="roadmap_intro">Here\'s what we\'re building for upcoming versions. Have an idea? Tell us below.</string>
     <string name="roadmap_backup">Backup &amp; restore</string>
     <string name="roadmap_backup_sub">Save your library and reading history to a file and take them to a new phone</string>
-    <string name="roadmap_tracking">AniList &amp; MyAnimeList sync</string>
-    <string name="roadmap_tracking_sub">Your reading progress, updated on your tracker as you read</string>
+    <string name="roadmap_tracking">MyAnimeList sync</string>
+    <string name="roadmap_tracking_sub">Your reading progress kept on MyAnimeList too, like AniList already is</string>
     <string name="roadmap_categories">Library categories</string>
     <string name="roadmap_categories_sub">Sort series into your own shelves, like Reading, On hold or Plan to read</string>
     <string name="roadmap_offline">Offline chapters</string>
@@ -307,7 +283,6 @@
     <string name="source_unavailable_title">%1$s isn\'t available</string>
     <string name="source_unavailable_message">%1$s changed its website and MangaD can\'t load series from it anymore. Your saved series and reading history are kept. Search for this series to keep reading from another source.</string>
     <string name="settings_about">About</string>
-    <string name="settings_app_updates_sub">Hear about new versions of the app</string>
     <string name="notifications_blocked">Notifications are blocked</string>
     <string name="notifications_blocked_title">Notifications are blocked</string>
     <string name="open_settings">Settings</string>
@@ -331,4 +306,99 @@
         <item quantity="one">%d new chapter</item>
         <item quantity="other">%d new chapters</item>
     </plurals>
+
+    <!-- Tracking -->
+    <string name="settings_tracking">Tracking</string>
+    <string name="tracker_login_sub">Log in to sync your reading progress</string>
+    <string name="tracker_logged_in">Logged in</string>
+    <string name="tracker_logged_in_to">Logged in to %1$s</string>
+    <string name="tracker_logged_in_as">Logged in as %1$s</string>
+    <string name="tracker_login_failed">%1$s login failed, try again</string>
+    <string name="tracker_login">Log in</string>
+    <string name="tracker_login_needed">Log in to %1$s to keep track of the chapters you read here.</string>
+    <string name="tracker_logout">Log out</string>
+    <string name="tracker_logout_title">Log out of %1$s?</string>
+    <string name="tracker_logout_message">Linked series stay linked and sync again once you log back in.</string>
+    <string name="tracking_not_linked">Link to %1$s and sync the chapters you read</string>
+    <string name="tracking_search_hint">Search %1$s</string>
+    <string name="tracking_search_empty">Nothing found, try another title</string>
+    <string name="tracking_search_failed">Search failed: %1$s</string>
+    <string name="tracking_failed">%1$s: %2$s</string>
+    <string name="tracking_linked">Linked to %1$s</string>
+    <string name="tracking_synced">Synced with %1$s</string>
+    <string name="tracking_pending">waiting to sync</string>
+    <string name="tracking_sync">Sync</string>
+    <string name="tracking_open">Open</string>
+    <string name="tracking_unlink">Unlink</string>
+    <string name="tracking_unlink_title">Unlink from %1$s?</string>
+    <string name="tracking_unlink_message">Reading here stops updating %1$s. You can keep the entry on your %1$s list or remove it from there too.</string>
+    <string name="tracking_unlink_message_keep">Reading here stops updating %1$s. The entry stays on your %1$s list.</string>
+    <string name="tracking_remove">Remove from list</string>
+    <string name="tracking_unlinked">Unlinked from %1$s</string>
+    <string name="tracking_removed">Removed from your %1$s list</string>
+    <string name="tracking_status">Status</string>
+    <string name="tracking_status_current">Reading</string>
+    <string name="tracking_status_planning">Plan to read</string>
+    <string name="tracking_status_completed">Completed</string>
+    <string name="tracking_status_paused">Paused</string>
+    <string name="tracking_status_dropped">Dropped</string>
+    <string name="tracking_status_repeating">Rereading</string>
+    <string name="tracking_progress">Chapter %1$d</string>
+    <string name="tracking_progress_of">Chapter %1$d of %2$d</string>
+    <string name="tracking_chapters">%1$d chapters</string>
+    <string name="tracking_kind_manga">Manga</string>
+    <string name="tracking_kind_manhwa">Manhwa</string>
+    <string name="tracking_kind_manhua">Manhua</string>
+    <string name="tracking_kind_one_shot">One shot</string>
+    <string name="tracking_publishing_releasing">Releasing</string>
+    <string name="tracking_publishing_finished">Finished</string>
+    <string name="tracking_publishing_hiatus">On hiatus</string>
+    <string name="tracking_publishing_cancelled">Cancelled</string>
+    <string name="tracking_publishing_not_yet">Not yet released</string>
+    <string name="tracking_mean_score">%1$d%% avg</string>
+    <string name="tracking_score">Score</string>
+    <string name="tracking_no_score">Not scored</string>
+    <string name="tracking_score_clear">Clear</string>
+    <string name="tracking_save">Save</string>
+    <string name="tracking_started">Started</string>
+    <string name="tracking_finished">Finished</string>
+    <string name="tracking_no_date">Not set</string>
+    <string name="tracking_date_change">Change date</string>
+    <string name="tracking_date_remove">Remove date</string>
+    <string name="tracking_private">Private</string>
+    <string name="tracking_private_sub">Hidden from your public list</string>
+    <string name="tracking_notes">Notes</string>
+    <string name="tracking_no_notes">No notes</string>
+    <plurals name="tracking_rereads">
+        <item quantity="one">Reread once</item>
+        <item quantity="other">Reread %d times</item>
+    </plurals>
+    <!-- library shelves -->
+    <string name="library_tab_all">All</string>
+    <string name="library_tab_label">%1$s · %2$d</string>
+    <plurals name="library_tab_description">
+        <item quantity="one">%1$s, %2$d series</item>
+        <item quantity="other">%1$s, %2$d series</item>
+    </plurals>
+    <string name="library_sort_by">Sort by</string>
+    <string name="library_sort_chip">Sort: %1$s</string>
+    <string name="library_sort_chip_description">Sorted by %1$s. Change sort order</string>
+    <string name="library_sort_last_read">Last read</string>
+    <string name="library_sort_updated">Recently updated</string>
+    <string name="library_sort_unread">Most unread</string>
+    <string name="library_sort_added">Date added</string>
+    <string name="library_sort_title">Title</string>
+    <string name="library_filter_unread">Unread</string>
+    <plurals name="library_unread">
+        <item quantity="one">%d unread chapter</item>
+        <item quantity="other">%d unread chapters</item>
+    </plurals>
+    <string name="library_change_status">Change status</string>
+    <string name="library_remove">Remove from library</string>
+    <string name="library_moved_to">Moved to %1$s</string>
+    <string name="library_in_library_description">In your library: %1$s. Change status or remove</string>
+    <string name="library_shelf_empty_title">Nothing here yet</string>
+    <string name="library_shelf_empty_message">Series you\'ve marked %1$s show up here.</string>
+    <string name="library_caught_up_title">All caught up</string>
+    <string name="library_caught_up_message">No series here has unread chapters.</string>
 </resources>

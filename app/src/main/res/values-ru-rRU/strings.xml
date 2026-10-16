@@ -6,20 +6,15 @@
     <string name="sort">сортировка</string>
     <string name="start_typing">Начните вводить...</string>
     <string name="page">страница</string>
-    <string name="manga_downloader">манга сейчас</string>
     <string name="browse">обзор</string>
-    <string name="join_discord">присоединиться к Discord</string>
     <string name="build_with">создано с ❤️</string>
     <string name="search_text">Поиск</string>
     <string name="next_chapter">следующая глава</string>
     <string name="continue_text">продолжить</string>
-    <string name="download_pro">скачать PRO без рекламы</string>
     <string name="add_to_library">добавить в библиотеку</string>
-    <string name="library">библиотека</string>
     <string name="remove_from_library">удалить из библиотеки</string>
     <string name="no_items_in_the_library">Ваша библиотека пуста — начните обзор и добавляйте в избранное!</string>
     <string name="no_items_in_ths_history">Ваша история пуста — начните обзор, чтобы увидеть элементы здесь!</string>
-    <string name="title_activity_home">Главная</string>
     <string name="title_browse">Обзор</string>
     <string name="title_search">Поиск</string>
     <string name="title_library">Книги</string>
@@ -32,14 +27,7 @@
     <string name="genres">Жанры</string>
     <string name="apply">применить</string>
     <string name="clear">очистить</string>
-    <string name="home_eyebrow">MangaD</string>
-    <string name="home_tagline">Открывайте новые серии, читайте где угодно и храните всё любимое в одном месте.</string>
     <string name="start_browsing">начать обзор</string>
-    <string name="quick_access">Продолжить</string>
-    <string name="quick_search_desc">Быстро найти любой тайтл</string>
-    <string name="quick_history_desc">Вернуться к прочитанному</string>
-    <string name="pro_title">Перейти на Pro</string>
-    <string name="pro_desc">Без рекламы и отвлечений — только вы и история.</string>
 
     <!-- reader -->
     <string name="reader_settings">Настройки</string>
@@ -147,8 +135,6 @@
     <string name="load_failed_title">Не удалось загрузить</string>
     <string name="load_failed_message">Проверьте подключение и попробуйте снова.</string>
     <string name="load_more_failed">Не удалось загрузить ещё</string>
-    <string name="sorted_a_z">Сортировка от А до Я</string>
-    <string name="sorted_z_a">Сортировка от Я до А</string>
     <string name="library_empty_title">Пока ничего нет</string>
     <string name="library_empty_message">Нажмите «В закладки» на любой манге, чтобы она появилась здесь.</string>
     <string name="library_no_matches">Нет совпадений</string>
@@ -173,14 +159,14 @@
 
     <string name="details_error">Не удалось загрузить информацию</string>
 
-    <!-- main: warning that the app may stop being installable -->
-    <string name="warning_title">Приложение может скоро исчезнуть</string>
-    <string name="warning_desc">Google меняет правила установки приложений на Android. Нажмите, чтобы узнать почему и как оставаться на связи.</string>
-    <string name="why_title">Почему это может случиться</string>
-    <string name="why_desc">С 2027 года Google планирует блокировать любые Android-приложения, разработчики которых не зарегистрировались в Google, не заплатили взнос и не предоставили удостоверение личности. Это касается и приложений, установленных не из Play Маркета, поэтому небольшие независимые приложения вроде этого могут внезапно перестать устанавливаться.</string>
-    <string name="updates_title">Не теряйте нас</string>
-    <string name="updates_desc">Если это произойдёт, мы расскажем, где взять приложение дальше. Присоединяйтесь к Discord или оставьте контакт в форме, чтобы узнать первыми.</string>
-    <string name="updates_form">Получать новости</string>
+    <!-- main: a newer version on GitHub -->
+    <string name="update_title">Вышла версия %1$s</string>
+    <string name="update_desc">У вас версия %1$s. Скачайте новый APK и установите поверх этого, библиотека сохранится.</string>
+    <string name="update_download">Скачать</string>
+    <string name="update_whats_new">Что нового</string>
+    <string name="update_dismiss">Скрыть это обновление</string>
+    <!-- main: where to get new versions -->
+    <string name="updates_form">Релизы на GitHub</string>
     <string name="reader_suggest_webtoon">Эта глава — одна длинная вертикальная лента. Удобнее читать в режиме «Вебтун».</string>
     <string name="reader_suggest_paged">В этой главе обычные страницы манги. Удобнее читать по одной странице.</string>
     <string name="reader_suggest_switch">Переключить</string>
@@ -189,14 +175,9 @@
 
     <!-- EPUB downloads -->
     <string name="title_downloads">Загрузки</string>
-    <string name="downloads_desc">Ваши EPUB-книги</string>
     <string name="downloads_empty">Загрузок пока нет. Откройте тайтл и нажмите «Скачать EPUB», чтобы сохранить его как книгу.</string>
     <string name="download_epub">Скачать EPUB</string>
     <string name="download_epub_desc">Читайте офлайн в любой читалке</string>
-    <string name="download_pro_title">Функция Pro</string>
-    <string name="download_pro_message">Сохраняйте тайтлы целиком как EPUB-книги и читайте их офлайн в любой читалке. Загрузки доступны в MangaD Pro.</string>
-    <string name="download_get_pro">Получить Pro</string>
-    <string name="download_not_now">Не сейчас</string>
     <string name="download_dialog_title">Скачать как EPUB</string>
     <string name="download_all_chapters">Все главы</string>
     <string name="download_chapter_range">Диапазон глав</string>
@@ -279,8 +260,6 @@
     <string name="settings_chapter_updates">Уведомления о новых главах</string>
     <string name="settings_chapter_updates_sub">Проверяет библиотеку каждые 12 часов и сообщает о выходе новых глав</string>
     <string name="ranobe_subtitle">Читалка ранобэ от того же разработчика</string>
-    <string name="settings_chapter_updates_pro_sub">Pro: сама проверяет библиотеку каждые 12 часов. Кнопка «Проверить сейчас» ниже доступна всегда.</string>
-    <string name="chapter_updates_pro_message">Узнавайте о новых главах без лишних действий: Pro проверяет библиотеку каждые 12 часов. В этой версии вы по-прежнему можете нажимать «Проверить сейчас» когда угодно.</string>
     <string name="settings_chapter_updates_blocked">Уведомления для приложения заблокированы. Нажмите, чтобы исправить.</string>
     <string name="settings_chapter_updates_blocked_message">Новые главы нельзя показать, пока уведомления заблокированы. Разрешите их в настройках системы или отключите проверку.</string>
     <string name="settings_chapter_updates_turn_off">Отключить</string>
@@ -295,8 +274,8 @@
     <string name="roadmap_intro">Вот что мы готовим для следующих версий. Есть идея? Расскажите нам ниже.</string>
     <string name="roadmap_backup">Резервная копия</string>
     <string name="roadmap_backup_sub">Сохраняйте библиотеку и историю чтения в файл и переносите их на новый телефон</string>
-    <string name="roadmap_tracking">Синхронизация с AniList и MyAnimeList</string>
-    <string name="roadmap_tracking_sub">Прогресс чтения обновляется в вашем трекере по мере чтения</string>
+    <string name="roadmap_tracking">Синхронизация с MyAnimeList</string>
+    <string name="roadmap_tracking_sub">Прогресс чтения и в MyAnimeList, как уже сейчас в AniList</string>
     <string name="roadmap_categories">Категории библиотеки</string>
     <string name="roadmap_categories_sub">Раскладывайте тайтлы по своим полкам: «Читаю», «Отложено», «В планах»</string>
     <string name="roadmap_offline">Главы офлайн</string>
@@ -310,7 +289,6 @@
     <string name="source_unavailable_title">%1$s недоступен</string>
     <string name="source_unavailable_message">%1$s изменил свой сайт, и MangaD больше не может загружать оттуда тайтлы. Сохранённые тайтлы и история чтения никуда не денутся. Найдите этот тайтл через поиск, чтобы продолжить чтение из другого источника.</string>
     <string name="settings_about">О приложении</string>
-    <string name="settings_app_updates_sub">Узнавайте о новых версиях приложения</string>
     <string name="notifications_blocked">Уведомления заблокированы</string>
     <string name="notifications_blocked_title">Уведомления заблокированы</string>
     <string name="open_settings">Настройки</string>
@@ -340,4 +318,105 @@
         <item quantity="many">%d новых глав</item>
         <item quantity="other">%d новой главы</item>
     </plurals>
+
+    <!-- Tracking -->
+    <string name="settings_tracking">Отслеживание</string>
+    <string name="tracker_login_sub">Войдите, чтобы синхронизировать прогресс чтения</string>
+    <string name="tracker_logged_in">Вход выполнен</string>
+    <string name="tracker_logged_in_to">Вход в %1$s выполнен</string>
+    <string name="tracker_logged_in_as">Вы вошли как %1$s</string>
+    <string name="tracker_login_failed">Не удалось войти в %1$s, попробуйте ещё раз</string>
+    <string name="tracker_login">Войти</string>
+    <string name="tracker_login_needed">Войдите в %1$s, чтобы отслеживать прочитанные главы.</string>
+    <string name="tracker_logout">Выйти</string>
+    <string name="tracker_logout_title">Выйти из %1$s?</string>
+    <string name="tracker_logout_message">Связанные тайтлы останутся связанными и синхронизируются после повторного входа.</string>
+    <string name="tracking_not_linked">Свяжите с %1$s и синхронизируйте прочитанные главы</string>
+    <string name="tracking_search_hint">Поиск в %1$s</string>
+    <string name="tracking_search_empty">Ничего не найдено, попробуйте другое название</string>
+    <string name="tracking_search_failed">Ошибка поиска: %1$s</string>
+    <string name="tracking_failed">%1$s: %2$s</string>
+    <string name="tracking_linked">Связано с %1$s</string>
+    <string name="tracking_synced">Синхронизировано с %1$s</string>
+    <string name="tracking_pending">ожидает синхронизации</string>
+    <string name="tracking_sync">Синхр.</string>
+    <string name="tracking_open">Открыть</string>
+    <string name="tracking_unlink">Отвязать</string>
+    <string name="tracking_unlink_title">Отвязать от %1$s?</string>
+    <string name="tracking_unlink_message">Чтение здесь больше не будет обновлять %1$s. Запись можно оставить в вашем списке %1$s или удалить и оттуда.</string>
+    <string name="tracking_unlink_message_keep">Чтение здесь больше не будет обновлять %1$s. Запись останется в вашем списке %1$s.</string>
+    <string name="tracking_remove">Удалить из списка</string>
+    <string name="tracking_unlinked">Отвязано от %1$s</string>
+    <string name="tracking_removed">Удалено из вашего списка %1$s</string>
+    <string name="tracking_status">Статус</string>
+    <string name="tracking_status_current">Читаю</string>
+    <string name="tracking_status_planning">В планах</string>
+    <string name="tracking_status_completed">Прочитано</string>
+    <string name="tracking_status_paused">Отложено</string>
+    <string name="tracking_status_dropped">Брошено</string>
+    <string name="tracking_status_repeating">Перечитываю</string>
+    <string name="tracking_progress">Глава %1$d</string>
+    <string name="tracking_progress_of">Глава %1$d из %2$d</string>
+    <string name="tracking_chapters">Глав: %1$d</string>
+    <string name="tracking_kind_manga">Манга</string>
+    <string name="tracking_kind_manhwa">Манхва</string>
+    <string name="tracking_kind_manhua">Маньхуа</string>
+    <string name="tracking_kind_one_shot">Ваншот</string>
+    <string name="tracking_publishing_releasing">Выходит</string>
+    <string name="tracking_publishing_finished">Завершено</string>
+    <string name="tracking_publishing_hiatus">На паузе</string>
+    <string name="tracking_publishing_cancelled">Отменено</string>
+    <string name="tracking_publishing_not_yet">Ещё не вышло</string>
+    <string name="tracking_mean_score">В среднем %1$d%%</string>
+    <string name="tracking_score">Оценка</string>
+    <string name="tracking_no_score">Без оценки</string>
+    <string name="tracking_score_clear">Сбросить</string>
+    <string name="tracking_save">Сохранить</string>
+    <string name="tracking_started">Начато</string>
+    <string name="tracking_finished">Закончено</string>
+    <string name="tracking_no_date">Не указано</string>
+    <string name="tracking_date_change">Изменить дату</string>
+    <string name="tracking_date_remove">Удалить дату</string>
+    <string name="tracking_private">Скрыто</string>
+    <string name="tracking_private_sub">Не показывается в вашем публичном списке</string>
+    <string name="tracking_notes">Заметки</string>
+    <string name="tracking_no_notes">Нет заметок</string>
+    <plurals name="tracking_rereads">
+        <item quantity="one">Перечитано %d раз</item>
+        <item quantity="few">Перечитано %d раза</item>
+        <item quantity="many">Перечитано %d раз</item>
+        <item quantity="other">Перечитано %d раза</item>
+    </plurals>
+    <!-- library shelves -->
+    <string name="library_tab_all">Все</string>
+    <string name="library_tab_label">%1$s · %2$d</string>
+    <plurals name="library_tab_description">
+        <item quantity="one">%1$s, %2$d тайтл</item>
+        <item quantity="few">%1$s, %2$d тайтла</item>
+        <item quantity="many">%1$s, %2$d тайтлов</item>
+        <item quantity="other">%1$s, %2$d тайтла</item>
+    </plurals>
+    <string name="library_sort_by">Сортировка</string>
+    <string name="library_sort_chip">Сортировка: %1$s</string>
+    <string name="library_sort_chip_description">Сортировка: %1$s. Изменить порядок</string>
+    <string name="library_sort_last_read">Недавно читали</string>
+    <string name="library_sort_updated">Недавно обновлённые</string>
+    <string name="library_sort_unread">Больше непрочитанного</string>
+    <string name="library_sort_added">Дата добавления</string>
+    <string name="library_sort_title">Название</string>
+    <string name="library_filter_unread">Непрочитанные</string>
+    <plurals name="library_unread">
+        <item quantity="one">%d непрочитанная глава</item>
+        <item quantity="few">%d непрочитанные главы</item>
+        <item quantity="many">%d непрочитанных глав</item>
+        <item quantity="other">%d непрочитанной главы</item>
+    </plurals>
+    <string name="library_change_status">Изменить статус</string>
+    <string name="library_remove">Убрать из библиотеки</string>
+    <string name="library_moved_to">Перемещено: %1$s</string>
+    <string name="library_in_library_description">В вашей библиотеке: %1$s. Изменить статус или убрать</string>
+    <string name="library_shelf_empty_title">Здесь пока пусто</string>
+    <string name="library_shelf_empty_message">Здесь появятся тайтлы со статусом «%1$s».</string>
+    <string name="library_caught_up_title">Всё прочитано</string>
+    <string name="library_caught_up_message">Здесь нет тайтлов с непрочитанными главами.</string>
 </resources>

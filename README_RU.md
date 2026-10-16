@@ -4,10 +4,6 @@
 <div align="center">
     <h2>MangaD</h2>
     <p>Простая читалка манги для Android.</p>
-    <a href="https://play.google.com/store/apps/details?id=in.atulpatare.ranobem.pro">
-        <img height="80" src="assets/google-play.png" alt="Доступно в Google Play">
-    </a>
-    <br/><br/>
     <a href="https://github.com/ranobe-org/ranobem/releases/latest" title="Скачать">
         <img height="30" src="https://img.shields.io/badge/download-2da44e?style=flat&logo=android&logoColor=white" alt="Скачать">
     </a>
@@ -37,26 +33,20 @@ MangaD помогает находить мангу, манхву и маньх�
 - **Продолжить с того же места**: история чтения помнит последнюю главу в
   каждом тайтле.
 - **Светлая и тёмная темы**: или как в системе.
-
-### Free и Pro
-
-В бесплатной версии есть всё перечисленное выше. Pro добавляет несколько
-возможностей и помогает развивать приложение.
-
-| | Free | Pro |
-|---|:---:|:---:|
-| Обзор, поиск и чтение | ✓ | ✓ |
-| Библиотека и история чтения | ✓ | ✓ |
-| Проверка новых глав | Вручную | Автоматически, каждые 12 часов |
-| Сохранение тайтлов в EPUB для чтения офлайн | | ✓ |
-
-Pro доступна в [Google Play](https://play.google.com/store/apps/details?id=in.atulpatare.ranobem.pro).
-Бесплатную версию можно скачать в [релизах на GitHub](https://github.com/ranobe-org/ranobem/releases/latest).
+- **Уведомления о новых главах**: библиотека проверяется каждые 12 часов,
+  или проверьте вручную в любой момент.
+- **Сохранение в EPUB**: скачивайте тайтлы целиком как EPUB-книги и читайте
+  офлайн в любой читалке.
+- **Отслеживание в AniList**: свяжите тайтл, и прогресс, статус, оценка и
+  даты синхронизируются по мере чтения. Главы, прочитанные в другом месте,
+  отмечаются прочитанными и здесь.
+- **Уведомления об обновлениях**: точка на вкладке «Настройки» показывает,
+  что вышла новая версия.
 
 ### Скоро
 
 - Резервная копия библиотеки и истории
-- Синхронизация с AniList и MyAnimeList
+- Синхронизация с MyAnimeList
 - Категории библиотеки
 - Главы офлайн в приложении
 - Больше источников
@@ -64,17 +54,9 @@ Pro доступна в [Google Play](https://play.google.com/store/apps/details
 
 Есть идея? Расскажите в [Discord](https://discord.gg/6CQ6u64dca).
 
-### Почему приложение может исчезнуть
-
-С 2027 года Google планирует блокировать Android-приложения разработчиков,
-не зарегистрированных в Google, даже если они установлены не из Play
-Store. Небольшие независимые приложения, как это, могут перестать
-устанавливаться. Подробнее на [keepandroidopen.org](https://keepandroidopen.org/).
-Чтобы узнавать о новых версиях, [подпишитесь на обновления](https://forms.gle/oGKihEBEzx9WTk6K6).
-
 ### Другие наши приложения
 
-[Ranobe](https://play.google.com/store/apps/details?id=org.ranobe.downloader.pro)
+[Ranobe](https://github.com/ranobe-org/ranobe)
 — читалка ранобэ.
 
 ### Отказ от ответственности

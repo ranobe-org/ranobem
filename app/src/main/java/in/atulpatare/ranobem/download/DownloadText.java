@@ -30,7 +30,8 @@ public final class DownloadText {
     }
 
     private static String running(Context context, DownloadJob job) {
-        if (job.waitingForNetwork) return context.getString(R.string.download_status_waiting_network);
+        if (job.waitingForNetwork)
+            return context.getString(R.string.download_status_waiting_network);
         switch (job.phase) {
             case CHAPTERS:
                 return context.getString(R.string.download_status_chapters);

@@ -25,13 +25,6 @@ import in.atulpatare.ranobem.download.DownloadText;
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.ViewHolder> {
     // progress ticks rebind the text and bar only, the cover stays put
     private static final Object PAYLOAD_PROGRESS = new Object();
-
-    public enum Action {PAUSE, RESUME, RETRY, BUILD_ANYWAY, CANCEL, OPEN, SHARE, REMOVE, OPEN_MANGA}
-
-    public interface Listener {
-        void onAction(DownloadJob job, Action action);
-    }
-
     private final List<DownloadJob> jobs = new ArrayList<>();
     private final Listener listener;
 
@@ -87,6 +80,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.View
     @Override
     public int getItemCount() {
         return jobs.size();
+    }
+
+    public enum Action {PAUSE, RESUME, RETRY, BUILD_ANYWAY, CANCEL, OPEN, SHARE, REMOVE, OPEN_MANGA}
+
+    public interface Listener {
+        void onAction(DownloadJob job, Action action);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

@@ -22,11 +22,12 @@ import in.atulpatare.ranobem.R;
 import in.atulpatare.ranobem.config.Config;
 import in.atulpatare.ranobem.database.AppDatabase;
 import in.atulpatare.ranobem.databinding.FragmentHistoryBinding;
+import in.atulpatare.ranobem.library.Library;
 import in.atulpatare.ranobem.model.History;
 import in.atulpatare.ranobem.ui.history.adapter.HistoryAdapter;
 import in.atulpatare.ranobem.ui.reader.ReaderActivity;
-import in.atulpatare.ranobem.utils.SourceAccess;
 import in.atulpatare.ranobem.utils.EmptyState;
+import in.atulpatare.ranobem.utils.SourceAccess;
 
 public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistoryItemClickListener {
 
@@ -77,7 +78,10 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
                 .setTitle(R.string.clear_history_title)
                 .setMessage(R.string.clear_history_message)
                 .setPositiveButton(R.string.clear_history_confirm, (dialog, which) ->
-                        AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().historyDao().deleteAll()))
+                        AppDatabase.databaseExecutor.execute(() -> {
+                            AppDatabase.getDatabase().historyDao().deleteAll();
+                            Library.refreshAll();
+                        }))
                 .setNegativeButton(R.string.cancel, null)
                 .show();
     }
@@ -90,6 +94,8 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // the adapter outlives the view while the tab is in the back stack, and would keep the old list alive
+        binding.mangaList.setAdapter(null);
         binding = null;
     }
 
@@ -111,10 +117,15 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     @Override
     public void onHistoryItemDeleteClick(History history) {
         if (history == null) return;
-        AppDatabase.databaseExecutor.execute(() -> AppDatabase.getDatabase().historyDao().deleteById(history.id));
+        AppDatabase.databaseExecutor.execute(() -> {
+            AppDatabase.getDatabase().historyDao().deleteById(history.id);
+            Library.refresh(history.mangaId);
+        });
         Snackbar.make(binding.getRoot(), R.string.history_entry_removed, Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, v -> AppDatabase.databaseExecutor.execute(() ->
-                        AppDatabase.getDatabase().historyDao().insert(history)))
+                .setAction(R.string.undo, v -> AppDatabase.databaseExecutor.execute(() -> {
+                    AppDatabase.getDatabase().historyDao().insert(history);
+                    Library.refresh(history.mangaId);
+                }))
                 .show();
     }
 }

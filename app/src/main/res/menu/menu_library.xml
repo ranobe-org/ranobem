@@ -9,12 +9,6 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/sort"
-        android:icon="@drawable/ic_sort"
-        android:title="@string/sort"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/chapter_updates"
         android:icon="@drawable/ic_notifications"
         android:title="@string/settings_chapter_updates"

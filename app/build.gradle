@@ -10,8 +10,8 @@ android {
         applicationId "in.atulpatare.ranobem"
         minSdk 24
         targetSdk 36
-        versionCode 15
-        versionName "15"
+        versionCode 16
+        versionName "16"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -19,21 +19,6 @@ android {
             annotationProcessorOptions {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
-        }
-    }
-
-    flavorDimensions "version"
-    productFlavors {
-        free {
-            dimension "version"
-            buildConfigField "boolean", "IS_PRO", "false"
-        }
-        pro {
-            dimension "version"
-            applicationIdSuffix ".pro"
-            versionNameSuffix "-pro"
-
-            buildConfigField "boolean", "IS_PRO", "true"
         }
     }
 
@@ -50,8 +35,23 @@ android {
         }
     }
 
+    signingConfigs {
+        // populated by CI (.github/workflows/release.yml); local release builds stay unsigned
+        if (System.getenv("KEYSTORE_PATH")) {
+            release {
+                storeFile file(System.getenv("KEYSTORE_PATH"))
+                storePassword System.getenv("KEYSTORE_PASSWORD")
+                keyAlias System.getenv("KEY_ALIAS")
+                keyPassword System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (System.getenv("KEYSTORE_PATH")) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -89,4 +89,8 @@ dependencies {
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
+
+    testImplementation libs.junit
+    // reports leaked activities and fragments in debug builds
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.14"
 }
