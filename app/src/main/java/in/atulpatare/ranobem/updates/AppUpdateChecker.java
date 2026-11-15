@@ -36,6 +36,10 @@ public final class AppUpdateChecker {
      * dismissed, or null. Uses the last result while it's fresh, so it's cheap to call often.
      */
     public static void check(Context context, Callback callback) {
+        if (!BuildConfig.GITHUB_UPDATES) {
+            callback.onResult(null);
+            return;
+        }
         Context app = context.getApplicationContext();
         Handler main = new Handler(Looper.getMainLooper());
         executor.execute(() -> {

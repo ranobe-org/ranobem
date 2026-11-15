@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kiri: the character 切 (kiri, "cut"). The right-hand blade stroke is coral. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group android:translateX="0.5" android:translateY="1.6">
+        <path android:fillColor="#59000000" android:pathData="M49.73 33.62V39.25H57.14C56.94 53.28 56.3 65.14 45.13 71.86C46.66 72.95 48.44 75.02 49.33 76.6C61.58 68.75 62.77 55.01 63.07 39.25H70.73C70.33 59.36 69.74 67.32 68.4 69C67.86 69.79 67.37 69.98 66.48 69.98C65.29 69.98 63.02 69.98 60.4 69.79C61.44 71.47 62.23 74.18 62.33 75.86C64.94 75.96 67.66 76.01 69.49 75.72C71.37 75.32 72.65 74.73 73.99 72.7C75.86 69.98 76.36 61.34 76.9 36.63C76.95 35.84 77 33.62 77 33.62Z" />
+        <path android:fillColor="#59000000" android:pathData="M36.53 31.4V44.04L31 45.13L31.94 50.62L36.53 49.73V58.72C36.53 64.85 37.72 66.67 42.36 66.67C43.25 66.67 45.58 66.67 46.51 66.67C50.42 66.67 51.85 64.25 52.44 56.99C50.81 56.59 48.44 55.61 47.21 54.57C47.06 59.85 46.86 61.04 45.92 61.04C45.48 61.04 43.85 61.04 43.45 61.04C42.51 61.04 42.41 60.74 42.41 58.72V48.54L53.04 46.47L52.05 41.08L42.41 42.96V31.4Z" />
+    </group>
+    <path android:fillColor="#FFFFFF" android:pathData="M36.53 31.4V44.04L31 45.13L31.94 50.62L36.53 49.73V58.72C36.53 64.85 37.72 66.67 42.36 66.67C43.25 66.67 45.58 66.67 46.51 66.67C50.42 66.67 51.85 64.25 52.44 56.99C50.81 56.59 48.44 55.61 47.21 54.57C47.06 59.85 46.86 61.04 45.92 61.04C45.48 61.04 43.85 61.04 43.45 61.04C42.51 61.04 42.41 60.74 42.41 58.72V48.54L53.04 46.47L52.05 41.08L42.41 42.96V31.4Z" />
+    <path android:pathData="M49.73 33.62V39.25H57.14C56.94 53.28 56.3 65.14 45.13 71.86C46.66 72.95 48.44 75.02 49.33 76.6C61.58 68.75 62.77 55.01 63.07 39.25H70.73C70.33 59.36 69.74 67.32 68.4 69C67.86 69.79 67.37 69.98 66.48 69.98C65.29 69.98 63.02 69.98 60.4 69.79C61.44 71.47 62.23 74.18 62.33 75.86C64.94 75.96 67.66 76.01 69.49 75.72C71.37 75.32 72.65 74.73 73.99 72.7C75.86 69.98 76.36 61.34 76.9 36.63C76.95 35.84 77 33.62 77 33.62Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:startX="0" android:startY="28" android:endX="0" android:endY="82" android:type="linear">
+                <item android:color="#FF5C3D" android:offset="0" />
+                <item android:color="#D91E2E" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

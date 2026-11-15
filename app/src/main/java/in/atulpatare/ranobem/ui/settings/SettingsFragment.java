@@ -94,6 +94,7 @@ public class SettingsFragment extends Fragment {
         setUpTracking();
         setUpDownloads();
         setUpAbout();
+        binding.kiriCard.setOnClickListener(v -> in.atulpatare.ranobem.ui.KiriPromo.show(requireActivity()));
     }
 
     @Override
@@ -333,7 +334,12 @@ public class SettingsFragment extends Fragment {
         binding.roadmapOption.showChevron();
         binding.roadmapOption.setOnClickListener(v -> startActivity(new Intent(requireContext(), RoadmapActivity.class)));
         binding.discordLink.setOnClickListener(v -> openLink(Config.DISCORD_LINK));
-        binding.updatesLink.setOnClickListener(v -> openLink(Config.RELEASES_LINK));
+        if (BuildConfig.GITHUB_UPDATES) {
+            binding.updatesLink.setOnClickListener(v -> openLink(Config.RELEASES_LINK));
+        } else {
+            binding.updatesLink.setVisibility(View.GONE);
+            binding.updatesLinkDivider.setVisibility(View.GONE);
+        }
         binding.ranobeLink.setOnClickListener(v -> openLink(Config.RANOBE_LINK));
     }
 
