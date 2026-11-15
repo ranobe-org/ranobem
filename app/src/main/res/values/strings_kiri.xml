@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="kiri_badge">NEW APP · FROM THE SAME DEV</string>
+    <string name="kiri_title">Meet Kiri</string>
+    <string name="kiri_subtitle">Read on the sites you love, and let Kiri keep track of everything for you.</string>
+    <string name="kiri_point_track">Track manga and web novels across Royal Road, MangaDex, WEBTOON, Scribble Hub and more</string>
+    <string name="kiri_point_alerts">New-chapter alerts, reading history, stats and widgets</string>
+    <string name="kiri_point_support">You read on the original site, so authors and site owners get the views and support they deserve</string>
+    <string name="kiri_note">Kiri works a little differently from RanobeM, it opens chapters on the real site instead of rebuilding them. It\'s fairer to creators and built to last. Thanks for reading with me ❤</string>
+    <string name="kiri_get_play">Get it on Google Play</string>
+    <string name="kiri_visit_site">Visit kiri.atulpatare.in</string>
+    <string name="kiri_later">Maybe later</string>
+    <string name="kiri_card_title">Try Kiri, my new tracker app</string>
+    <string name="kiri_card_desc">Track everything you read while supporting creators</string>
+</resources>

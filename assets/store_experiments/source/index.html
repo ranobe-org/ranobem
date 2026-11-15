@@ -1,0 +1,180 @@
+<!doctype html>
+<!--
+  Play Store screenshots and feature graphic for the "Manga Reader Pro" store listing
+  experiment (the pro flavor, in.atulpatare.ranobem.pro). Screens are 1080x1920 and picked
+  with ?s=<n>; ?s=feature is the 1024x500 feature graphic. Render them with render.sh.
+  App screenshots come from ../../store/source/shots, shared with the main listing.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@500;600;700&display=block" rel="stylesheet">
+<style>
+  :root {
+    --bg: #110b0a;
+    --ember: #ff5a3c;
+    --amber: #ffb35c;
+    --text: #fff6f1;
+    --muted: #c3aaa2;
+    --app: #141218;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+  body { font-family: "Plus Jakarta Sans", sans-serif; color: var(--text); }
+
+  .slide { position: relative; width: 1080px; height: 1920px; overflow: hidden; display: none;
+    background:
+      radial-gradient(1000px 760px at 100% 0%, rgba(255, 90, 60, .42), transparent 70%),
+      radial-gradient(900px 900px at 0% 85%, rgba(255, 179, 92, .14), transparent 70%),
+      linear-gradient(180deg, #1d0f0c 0%, var(--bg) 50%, #0a0706 100%); }
+  .slide.on { display: block; }
+  /* diagonal speed lines, a nod to manga panels */
+  .slide::before { content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(115deg, rgba(255,255,255,.035) 0 2px, transparent 2px 46px);
+    mask-image: linear-gradient(180deg, #000 0%, transparent 55%); }
+
+  .copy { position: absolute; top: 116px; left: 88px; right: 88px; z-index: 2; }
+  .tag { display: inline-block; font-size: 26px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--bg); background: var(--amber); padding: 10px 22px; border-radius: 12px; transform: rotate(-2deg); }
+  h1 { margin-top: 34px; font-family: "Bricolage Grotesque", sans-serif; font-size: 104px; line-height: .98;
+    font-weight: 800; letter-spacing: -.035em; }
+  h1 em { font-style: normal; color: var(--ember); }
+  p.sub { margin-top: 30px; font-size: 36px; line-height: 1.38; font-weight: 500; color: var(--muted); max-width: 880px; }
+
+  /* phone */
+  .phone { position: absolute; width: 760px; height: 1689px; border-radius: 92px; padding: 18px;
+    background: linear-gradient(145deg, #4a3632, #1c1311 40%, #33241f);
+    box-shadow: 0 0 0 2px rgba(255,255,255,.08) inset, 0 60px 120px rgba(0,0,0,.6), 0 0 160px rgba(255,90,60,.25); }
+  .phone .screen { width: 100%; height: 100%; border-radius: 76px; overflow: hidden; background: #000; position: relative; }
+  .phone .screen img { width: 100%; display: block; }
+  .phone .screen::after { content: ""; position: absolute; top: 26px; left: 50%; width: 30px; height: 30px;
+    margin-left: -15px; border-radius: 50%; background: #05050a; box-shadow: 0 0 0 3px #15151f; }
+  .low { left: 160px; top: 720px; }
+  .dim { filter: brightness(.5) saturate(.85); }
+  .small { width: 560px; height: 1245px; border-radius: 70px; padding: 14px; }
+  .small .screen { border-radius: 58px; }
+
+  /* cards cut from real screens */
+  .float { position: absolute; z-index: 3; border-radius: 48px; overflow: hidden; background: var(--app);
+    box-shadow: 0 0 0 2px rgba(255,255,255,.07), 0 50px 100px rgba(0,0,0,.65), 0 0 120px rgba(255,90,60,.22); }
+  .float img { display: block; width: 100%; }
+
+  .brand { display: flex; align-items: center; gap: 26px; }
+  .brand img { width: 120px; height: 120px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,.5); }
+  .brand .name { font-family: "Bricolage Grotesque", sans-serif; font-size: 58px; font-weight: 800; letter-spacing: -.02em; }
+  .brand .kinds { font-size: 26px; font-weight: 600; color: var(--amber); letter-spacing: .04em; margin-top: 2px; }
+
+  /* feature graphic, 1024x500 */
+  body.feature { width: 1024px; height: 500px; }
+  .fg { position: relative; width: 1024px; height: 500px; overflow: hidden; display: none;
+    background:
+      radial-gradient(700px 500px at 100% 0%, rgba(255, 90, 60, .5), transparent 70%),
+      radial-gradient(500px 400px at 0% 100%, rgba(255, 179, 92, .16), transparent 70%),
+      linear-gradient(120deg, #1d0f0c, var(--bg)); }
+  .fg.on { display: block; }
+  .fg::before { content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(115deg, rgba(255,255,255,.04) 0 2px, transparent 2px 30px);
+    mask-image: linear-gradient(90deg, #000 0%, transparent 60%); }
+  .fg .copy { top: 92px; left: 64px; right: auto; width: 520px; }
+  .fg .brand img { width: 84px; height: 84px; border-radius: 22px; }
+  .fg .brand .name { font-size: 44px; }
+  .fg .brand .kinds { font-size: 19px; }
+  .fg h1 { margin-top: 30px; font-size: 64px; }
+  .fg .phone { width: 330px; height: 733px; border-radius: 46px; padding: 9px; }
+  .fg .phone .screen { border-radius: 38px; }
+  .fg .phone .screen::after { top: 13px; width: 16px; height: 16px; margin-left: -8px; }
+</style>
+</head>
+<body>
+
+<!-- 1. hero: keyword-first title over the reader, library and series page -->
+<section class="slide" data-s="1">
+  <div class="copy">
+    <div class="brand">
+      <img src="../../store/source/shots/icon.png" alt="">
+      <div><div class="name">Manga Reader Pro</div><div class="kinds">Manga · Manhwa · Manhua · Webtoons</div></div>
+    </div>
+    <h1 style="margin-top:70px">All your comics.<br><em>One reader.</em></h1>
+    <p class="sub">Webtoon scroll, new chapter alerts, AniList sync and offline EPUBs.</p>
+  </div>
+  <div class="phone small" style="left:-70px;top:820px;transform:rotate(-8deg)"><div class="screen"><img src="../../store/source/shots/library.png" alt=""></div></div>
+  <div class="phone small" style="left:590px;top:820px;transform:rotate(8deg)"><div class="screen"><img src="../../store/source/shots/details_frieren.png" alt=""></div></div>
+  <div class="phone" style="left:220px;top:700px;width:640px;height:1422px;border-radius:80px;padding:16px;z-index:2">
+    <div class="screen" style="border-radius:66px"><img src="../../store/source/shots/fr_ui.png" alt=""></div></div>
+</section>
+
+<!-- 2. reading modes -->
+<section class="slide" data-s="2">
+  <div class="copy">
+    <span class="tag">Reader</span>
+    <h1>Long strips or <em>classic pages.</em></h1>
+    <p class="sub">Webtoon scroll, right to left, left to right or vertical pages.</p>
+  </div>
+  <div class="phone low"><div class="screen"><img src="../../store/source/shots/fr_ui.png" alt=""></div></div>
+  <div class="float" style="left:60px;top:1340px;width:960px"><img src="../../store/source/shots/reader_modes.png" alt=""></div>
+</section>
+
+<!-- 3. new chapter alerts -->
+<section class="slide" data-s="3">
+  <div class="copy">
+    <span class="tag">Alerts</span>
+    <h1>New chapter out? <em>You'll know.</em></h1>
+    <p class="sub">Your library is checked every 12 hours and updates land in your notifications.</p>
+  </div>
+  <div class="phone low dim"><div class="screen"><img src="../../store/source/shots/library.png" alt=""></div></div>
+  <div class="float" style="left:70px;top:1010px;width:940px;border-radius:52px"><img src="../../store/source/shots/notif_card.png" alt=""></div>
+</section>
+
+<!-- 4. reading progress -->
+<section class="slide" data-s="4">
+  <div class="copy">
+    <span class="tag">Progress</span>
+    <h1>Pick up right <em>where you stopped.</em></h1>
+    <p class="sub">Read chapters are checked off and your last one is always marked. Syncs with AniList.</p>
+  </div>
+  <div class="phone low dim"><div class="screen"><img src="../../store/source/shots/details_op.png" alt=""></div></div>
+  <div class="float" style="left:70px;top:720px;width:940px;border-radius:52px"><img src="../../store/source/shots/chapters_card.png" alt=""></div>
+</section>
+
+<!-- 5. EPUB downloads -->
+<section class="slide" data-s="5">
+  <div class="copy">
+    <span class="tag">Offline</span>
+    <h1>No signal? <em>Keep reading.</em></h1>
+    <p class="sub">Save whole series or a few chapters as EPUB books.</p>
+  </div>
+  <div class="phone low dim"><div class="screen"><img src="../../store/source/shots/details_frieren.png" alt=""></div></div>
+  <div class="float" style="left:70px;top:1000px;width:940px;padding:22px 0;border-radius:52px"><img src="../../store/source/shots/downloads_cards.png" alt=""></div>
+</section>
+
+<!-- 6. reader settings -->
+<section class="slide" data-s="6">
+  <div class="copy">
+    <span class="tag">Settings</span>
+    <h1>Tune <em>every page.</em></h1>
+    <p class="sub">Page fit, padding, background, orientation and fullscreen, set the way you read.</p>
+  </div>
+  <div class="phone low"><div class="screen"><img src="../../store/source/shots/fr_settings.png" alt=""></div></div>
+</section>
+
+<!-- feature graphic -->
+<section class="fg" data-s="feature">
+  <div class="copy">
+    <div class="brand">
+      <img src="../../store/source/shots/icon.png" alt="">
+      <div><div class="name">Manga Reader Pro</div><div class="kinds">Manga · Manhwa · Webtoons</div></div>
+    </div>
+    <h1>All your comics. <em>One reader.</em></h1>
+  </div>
+  <div class="phone" style="left:610px;top:60px;transform:rotate(-7deg)"><div class="screen"><img src="../../store/source/shots/library.png" alt=""></div></div>
+  <div class="phone" style="left:790px;top:110px;transform:rotate(7deg)"><div class="screen"><img src="../../store/source/shots/fr_ui.png" alt=""></div></div>
+</section>
+
+<script>
+  const n = new URLSearchParams(location.search).get("s") || "1";
+  if (n === "feature") document.body.classList.add("feature");
+  document.querySelector(`[data-s="${n}"]`).classList.add("on");
+</script>
+</body>
+</html>

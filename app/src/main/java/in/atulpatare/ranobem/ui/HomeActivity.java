@@ -73,6 +73,7 @@ public class HomeActivity extends AppCompatActivity {
         graph.setStartDestination(destinationFor(getIntent().getStringExtra(TARGET_FRAGMENT)));
         navController.setGraph(graph, getIntent().getExtras());
         NavigationUI.setupWithNavController(binding.navView, navController);
+        if (savedInstanceState == null) KiriPromo.showOnce(this);
     }
 
     @Override

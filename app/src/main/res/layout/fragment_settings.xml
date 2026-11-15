@@ -209,6 +209,72 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Kiri promo, opens the same sheet shown once at launch -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/kiri_card"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="?colorTertiaryContainer"
+                app:cardCornerRadius="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="14dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        app:cardCornerRadius="12dp"
+                        app:strokeWidth="0dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:importantForAccessibility="no"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/kiri_logo" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/kiri_card_title"
+                            android:textAppearance="?textAppearanceTitleSmall"
+                            android:textColor="?colorOnTertiaryContainer"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/kiri_card_desc"
+                            android:textAppearance="?textAppearanceBodySmall"
+                            android:textColor="?colorOnTertiaryContainer" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="?colorOnTertiaryContainer" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Appearance -->
             <TextView
                 style="@style/Widget.RanobeM.Settings.SectionTitle"
@@ -388,7 +454,9 @@
                         app:settingSubtitle="@string/releases_url_label"
                         app:settingTitle="@string/updates_form" />
 
-                    <com.google.android.material.divider.MaterialDivider style="@style/Widget.RanobeM.Settings.Divider" />
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/updates_link_divider"
+                        style="@style/Widget.RanobeM.Settings.Divider" />
 
                     <in.atulpatare.ranobem.ui.settings.SettingOptionView
                         android:id="@+id/ranobe_link"

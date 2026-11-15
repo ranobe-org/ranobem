@@ -1,0 +1,40 @@
+Manga Reader Pro is a fast, focused reader for manga, manhwa, manhua and webtoons. Build your library, get a notification when a new chapter is out, and read in the layout that suits the series: long webtoon strips or classic right to left pages.
+
+
+📖 A READER FOR EVERY KIND OF COMIC
+• Webtoon mode: one continuous vertical scroll for manhwa and long strips
+• Right to left for Japanese manga, left to right, or vertical pages
+• Smart fit, fit width or fit screen, with side padding and page gap controls
+• Black, gray or white background, fullscreen, keep screen on, brightness and orientation lock
+• Turn pages by tapping the screen edges or with the volume keys
+• The next chapter loads on its own when you reach the end
+
+🔔 NEW CHAPTER ALERTS
+• Your library is checked every 12 hours, and a notification tells you which series updated and which chapter is out
+• Tap "Check now" whenever you can't wait
+• New chapters are tagged in the chapter list
+
+✅ ALWAYS KNOW WHERE YOU STOPPED
+• Read chapters are checked off and your last read chapter is marked
+• Reading history takes you back to any series in one tap
+• Search a chapter list or flip its order
+
+🔄 ANILIST SYNC
+• Link a series to your AniList account and your progress, status, score, dates and notes update as you read
+• Chapters you read on AniList or in another app show up as read here
+• Offline changes are sent when you're back online
+
+📥 READ OFFLINE
+• Save a whole series or a few chapters as EPUB books
+• Open them in any e-book reader, share them, or keep them for a flight
+
+📚 FIND YOUR NEXT SERIES
+• Browse the latest updates, search by title or filter by genre
+• Series pages show status, release year, followers, genres, authors, related series and recommendations
+
+🌙 BUILT FOR LONG READING SESSIONS
+• Light and dark themes, or follow your phone
+• Small, quick to open, and no sign-up (AniList login is optional)
+• In English and Russian
+
+Questions or ideas? Find us on Discord, linked in the app's Settings.
